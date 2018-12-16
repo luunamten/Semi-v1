@@ -4,27 +4,18 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.provider.SearchRecentSuggestions;
-import android.support.annotation.RestrictTo;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.support.v7.widget.SearchView;
-
-import com.google.android.gms.tasks.Task;
 
 import org.nam.contract.Contract;
 import org.nam.custom.MyFragmentAdapter;
-import org.nam.custom.MySuggestionProvider;
 import org.nam.fragment.ErrorFragment;
 
 public class SearchActivity extends AppCompatActivity {
@@ -67,9 +58,7 @@ public class SearchActivity extends AppCompatActivity {
         viewPager.setAdapter(fragmentAdapter);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
+    private void setupSearchView(Menu menu) {
         final Intent intent = getIntent();
         final int hintResource = intent.getIntExtra(Contract.BUNDLE_SEARCH_HINT_KEY, -1);
         final MenuItem searchItem = menu.findItem(R.id.actionSearchItem);
@@ -94,6 +83,12 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void run() { searchItem.expandActionView(); }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        setupSearchView(menu);
         return true;
     }
 
