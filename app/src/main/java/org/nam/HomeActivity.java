@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import org.nam.contract.Contract;
+import org.nam.custom.MyFragmentAdapter;
 import org.nam.firebase.IResult;
 import org.nam.firebase.ProductConnector;
 import org.nam.firebase.StoreConnector;
@@ -67,6 +69,8 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     private Fragment currentFragment;
     private TextView nearbyTextView;
     private Toolbar toolbar;
+    private ViewPager viewPager;
+    private MyFragmentAdapter fragmentAdapter;
     //Firebase connector
     private StoreConnector storeConnector;
     private ProductConnector productConnector;
@@ -83,11 +87,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         //set flag
         isAfterPause = false;
         //Set Toolbar for ActionBar
-        toolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setIcon(R.drawable.ic_actionbar_logo);
-        actionBar.setDisplayShowTitleEnabled(false);
+        setupActionBar();
         //init
         searchModeSpinner = findViewById(R.id.searchModeSpinner);
         typeSpinner = findViewById(R.id.typesSpinner);
@@ -96,11 +96,47 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         storeConnector = StoreConnector.getInstance();
         productConnector = ProductConnector.getInstance();
         locationProvider = LocationServices.getFusedLocationProviderClient(this);
+        setupViewPager();
         //event, permission, config
         searchModeSpinner.setOnItemSelectedListener(modeListener);
         typeSpinner.setOnItemSelectedListener(new TypeSpinnerItemSelectedListener(this));
         nearbyTextView.setOnClickListener(new NearbyTextViewClickListener(this));
         checkAndRequestPermission();
+    }
+
+    private static final int STORE_VIEW = 0;
+    private static final int PRODUCT_VIEW = 1;
+    private static final int NETWORK_ERR_VIEW = 2;
+    private static final int EMPTY_ERR_VIEW = 3;
+    private static final int LOCATION_ERR_VIEW = 4;
+    private static final int LOADING_VIEW = 5;
+
+    private void setupViewPager() {
+        ErrorFragment networkErrFragment = new ErrorFragment();
+        ErrorFragment emptyErrFragment = new ErrorFragment();
+        ErrorFragment locationErrFragment = new ErrorFragment();
+        ErrorFragment loadingFragment = new ErrorFragment();
+        networkErrFragment.setArguments(R.drawable.ic_trees, R.string.networkErrorMessage);
+        emptyErrFragment.setArguments(R.drawable.ic_blank, R.string.emptyResultMessage);
+        locationErrFragment.setArguments(R.drawable.ic_desert, R.string.locationErrorMessage);
+        loadingFragment.setArguments(R.drawable.ic_beach, R.string.loadMessage);
+        viewPager = findViewById(R.id.viewPager);
+        fragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager());
+        fragmentAdapter.addFragment(new StoreViewFragment(), "Store View")
+                .addFragment(new ProductViewFragment(), "Product View")
+                .addFragment(networkErrFragment, "Network Error")
+                .addFragment(emptyErrFragment, "Empty Result Error")
+                .addFragment(locationErrFragment, "Location Error")
+                .addFragment(loadingFragment, "Loading");
+        viewPager.setAdapter(fragmentAdapter);
+    }
+
+    private void setupActionBar() {
+        toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setIcon(R.drawable.ic_actionbar_logo);
+        actionBar.setDisplayShowTitleEnabled(false);
     }
 
     public AppCompatSpinner getModeSpinner() {
@@ -116,7 +152,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     }
 
     private void setFragment(Fragment fragment) {
-        if(fragment != null) {
+        /*if(fragment != null) {
             currentFragment = fragment;
             if(!isAfterPause) {
                 final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -124,18 +160,18 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.commit();
             }
-        }
+        }*/
     }
 
     public void setFragment(Class<? extends Fragment> cl) {
-        try {
+        /*try {
             Fragment fragment = cl.newInstance();
             setFragment(fragment);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private void checkAndRequestPermission() {
@@ -253,7 +289,8 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     //load from offset 0,discard old data in RecyclerView and load new data to it.
     public void loadAllNewStores() {
         if (currentLocation == null) {
-            setErrorFragment(R.drawable.ic_desert, R.string.locationErrorMessage);
+            //setErrorFragment(R.drawable.ic_desert, R.string.locationErrorMessage);
+            viewPager.setCurrentItem(LOCATION_ERR_VIEW, false);
             return;
         }
         if (searchModeSpinner.getSelectedItemPosition()
@@ -264,6 +301,8 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         if (selectedItem == null) {
             return;
         }
+        viewPager.setCurrentItem(LOADING_VIEW);
+        //setErrorFragment(R.drawable.ic_beach, R.string.loadMessage);
         storeConnector.getNearbyStores(currentLocation, 0, selectedItem.getId(),
                 new IResult<List<Store>>() {
                     @Override
@@ -275,19 +314,20 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                             return;
                         }
                         if (result.size() == 0) {
-                            setErrorFragment(R.drawable.ic_blank, R.string.emptyResultMessage);
+                            //setErrorFragment(R.drawable.ic_blank, R.string.emptyResultMessage);
+                            viewPager.setCurrentItem(EMPTY_ERR_VIEW, false);
                             return;
                         }
-                        if (setUniqueFragment(StoreViewFragment.class)) {
+                        viewPager.setCurrentItem(STORE_VIEW, false);
+                        currentFragment = fragmentAdapter.getItem(STORE_VIEW);
+                        //if (setUniqueFragment(StoreViewFragment.class)) {
                             ((StoreViewFragment) currentFragment).updateDataSet(result, currentLocation);
-                        } else {
-                            setErrorFragment(R.drawable.ic_beach, R.string.loadErrorMessage);
-                        }
+                        //}
                     }
-
                     @Override
                     public void onFailure(@NonNull Exception exp) {
-                        setErrorFragment(R.drawable.ic_trees, R.string.networkErrorMessage);
+                        viewPager.setCurrentItem(NETWORK_ERR_VIEW, false);
+                        //setErrorFragment(R.drawable.ic_trees, R.string.networkErrorMessage);
                     }
                 });
     }
@@ -306,6 +346,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         if (selectedItem == null) {
             return;
         }
+        setErrorFragment(R.drawable.ic_beach, R.string.loadMessage);
         productConnector.getNearbyProducts(currentLocation, 0, selectedItem.getId(),
                 new IResult<List<Product>>() {
                     @Override
@@ -322,8 +363,6 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                         }
                         if (setUniqueFragment(ProductViewFragment.class)) {
                             ((ProductViewFragment) currentFragment).updateDataSet(result, currentLocation);
-                        } else {
-                            setErrorFragment(R.drawable.ic_beach, R.string.loadErrorMessage);
                         }
                     }
                     @Override
@@ -335,7 +374,8 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
 
     private void loadProductsAt(int index) {
         if (currentLocation == null) {
-            setErrorFragment(R.drawable.ic_desert, R.string.locationErrorMessage);
+            //setErrorFragment(R.drawable.ic_desert, R.string.locationErrorMessage);
+            viewPager.setCurrentItem(LOCATION_ERR_VIEW, false);
             return;
         }
         if (searchModeSpinner.getSelectedItemPosition()
@@ -358,25 +398,26 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                         }
                         if (result.size() == 0 && (!(currentFragment instanceof ProductViewFragment) ||
                                 ((ProductViewFragment) currentFragment).getItemCount() == 0)) {
-                            setErrorFragment(R.drawable.ic_blank, R.string.emptyResultMessage);
+                            //setErrorFragment(R.drawable.ic_blank, R.string.emptyResultMessage);
+                            viewPager.setCurrentItem(EMPTY_ERR_VIEW, false);
                             return;
                         }
                         if(setUniqueFragment(ProductViewFragment.class)) {
                             ((ProductViewFragment) currentFragment).addDataSet(result, currentLocation);
-                        } else {
-                            setErrorFragment(R.drawable.ic_beach, R.string.loadErrorMessage);
                         }
                     }
                     @Override
                     public void onFailure(@NonNull Exception exp) {
-                        setErrorFragment(R.drawable.ic_trees, R.string.networkErrorMessage);
+                        viewPager.setCurrentItem(NETWORK_ERR_VIEW, false);
+                        //setErrorFragment(R.drawable.ic_trees, R.string.networkErrorMessage);
                     }
                 });
     }
 
     private void loadStoresAt(int position) {
         if (currentLocation == null) {
-            setErrorFragment(R.drawable.ic_desert, R.string.locationErrorMessage);
+            //setErrorFragment(R.drawable.ic_desert, R.string.locationErrorMessage);
+            viewPager.setCurrentItem(LOCATION_ERR_VIEW, false);
             return;
         }
         if (searchModeSpinner.getSelectedItemPosition()
@@ -399,18 +440,20 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                         }
                         if (result.size() == 0 && (!(currentFragment instanceof StoreViewFragment) ||
                                 ((StoreViewFragment) currentFragment).getItemCount() == 0)) {
-                            setErrorFragment(R.drawable.ic_blank, R.string.emptyResultMessage);
+                            //setErrorFragment(R.drawable.ic_blank, R.string.emptyResultMessage);
+                            viewPager.setCurrentItem(EMPTY_ERR_VIEW, false);
                             return;
                         }
-                        if(setUniqueFragment(StoreViewFragment.class)) {
+                        viewPager.setCurrentItem(STORE_VIEW, false);
+                        currentFragment = fragmentAdapter.getItem(STORE_VIEW);
+                        //if(setUniqueFragment(StoreViewFragment.class)) {
                             ((StoreViewFragment) currentFragment).addDataSet(result, currentLocation);
-                        } else {
-                            setErrorFragment(R.drawable.ic_beach, R.string.loadErrorMessage);
-                        }
+                        //}
                     }
                     @Override
                     public void onFailure(@NonNull Exception exp) {
-                        setErrorFragment(R.drawable.ic_trees, R.string.networkErrorMessage);
+                        //setErrorFragment(R.drawable.ic_trees, R.string.networkErrorMessage);
+                        viewPager.setCurrentItem(NETWORK_ERR_VIEW, false);
                     }
                 });
     }
@@ -502,6 +545,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
             }
             @Override
             public void onFailure(@NonNull Exception exp) {
+                setErrorFragment(R.drawable.ic_trees, R.string.networkErrorMessage);
             }
         });
     }
@@ -520,7 +564,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         if(currentFragment != null && currentFragment != fragment) {
             setFragment(currentFragment);
         } else if(currentFragment == null) {
-            setErrorFragment(R.drawable.ic_beach, R.string.loadErrorMessage);
+            setErrorFragment(R.drawable.ic_beach, R.string.loadMessage);
         }
     }
 

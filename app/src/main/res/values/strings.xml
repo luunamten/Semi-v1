@@ -17,10 +17,10 @@
     <string name="storeRVLogoDescription">Logo</string>
     <string name="errorImgDescription">Error</string>
     <!-- Error Label-->
-    <string name="networkErrorMessage">Không thể kết nối! Hãy thử kiểm Internet, Wifi!</string>
+    <string name="networkErrorMessage">Không thể kết nối! Hãy thử kiểm tra Internet, Wifi!</string>
     <string name="emptyResultMessage">Không có kết quả!</string>
     <string name="locationErrorMessage">Không thể lấy vị trí! Hãy chắc chắn là bạn đã cho phép và bật vị trí!</string>
-    <string name="loadErrorMessage">Hãy thử nhấn vào "...gần bạn"!</string>
+    <string name="loadMessage">Đang tải...</string>
     <string name="actionSearchTitle">Tìm kiếm</string>
     <string name="defaultSearchHint">Cửa hàng, Hàng hóa</string>
     <string name="storeSearchHint">Cửa hàng</string>

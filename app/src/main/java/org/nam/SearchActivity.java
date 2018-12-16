@@ -51,7 +51,7 @@ public class SearchActivity extends AppCompatActivity {
         fragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager());
         ErrorFragment error1 = new ErrorFragment();
         ErrorFragment error2 = new ErrorFragment();
-        error1.setArguments(R.drawable.ic_beach, R.string.loadErrorMessage);
+        error1.setArguments(R.drawable.ic_beach, R.string.loadMessage);
         error2.setArguments(R.drawable.ic_trees, R.string.networkErrorMessage);
         fragmentAdapter.addFragment(error1, getString(R.string.searchTabText))
                 .addFragment(error2, getString(R.string.nearbyTabText));
