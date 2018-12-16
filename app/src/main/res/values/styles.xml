@@ -52,4 +52,7 @@
     <style name="SearchTabTheme" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:background">@color/colorPrimary</item>
     </style>
+    <style name="DefaultBackground" parent="AppTheme">
+        <item name="android:background">@color/colorDefaultBackground</item>
+    </style>
 </resources>
