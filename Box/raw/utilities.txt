@@ -1,0 +1,2 @@
+0,Wifi
+1,Vận chuyển
