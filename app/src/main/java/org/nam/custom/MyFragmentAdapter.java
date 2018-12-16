@@ -24,6 +24,10 @@ public class MyFragmentAdapter extends FragmentPagerAdapter {
         return this;
     }
 
+    public void setFragment(int position, Fragment fragment) {
+        fragmentList.set(position, fragment);
+    }
+
     @Override
     public Fragment getItem(int position) {
         return fragmentList.get(position);
