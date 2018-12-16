@@ -81,18 +81,16 @@ public class SearchActivity extends AppCompatActivity {
                 searchView.clearFocus();
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String s) {
                 return true;
             }
         });
+        //expand SearchView first time
         final Handler handler = new Handler();
         handler.post(new Runnable() {
             @Override
-            public void run() {
-                searchItem.expandActionView();
-            }
+            public void run() { searchItem.expandActionView(); }
         });
         return true;
     }
