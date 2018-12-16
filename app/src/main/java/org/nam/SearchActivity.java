@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.SearchView;
 
+import com.google.android.gms.tasks.Task;
+
 import org.nam.contract.Contract;
 import org.nam.custom.MyFragmentAdapter;
 import org.nam.custom.MySuggestionProvider;

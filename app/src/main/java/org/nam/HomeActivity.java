@@ -96,7 +96,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         storeConnector = StoreConnector.getInstance();
         productConnector = ProductConnector.getInstance();
         locationProvider = LocationServices.getFusedLocationProviderClient(this);
-        //event, config
+        //event, permission, config
         searchModeSpinner.setOnItemSelectedListener(modeListener);
         typeSpinner.setOnItemSelectedListener(new TypeSpinnerItemSelectedListener(this));
         nearbyTextView.setOnClickListener(new NearbyTextViewClickListener(this));
