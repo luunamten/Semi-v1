@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/SearchTabTheme"
-        app:tabTextColor="@color/colorDefaultTabText"
+        app:tabTextColor="@color/colorAccent"
         app:tabSelectedTextColor="@color/colorSelectedTabText"
         app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
         app:tabIndicatorHeight="3dp">
