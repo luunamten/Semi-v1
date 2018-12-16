@@ -25,4 +25,6 @@
     <string name="defaultSearchHint">Cửa hàng, Hàng hóa</string>
     <string name="storeSearchHint">Cửa hàng</string>
     <string name="productSearchHint">Hàng hóa</string>
+    <string name="searchTabText">Tìm kiếm</string>
+    <string name="nearbyTabText">Xung quanh</string>
 </resources>
