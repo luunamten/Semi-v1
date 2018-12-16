@@ -12,6 +12,7 @@
     <color name="colorHighRating">#00aa00</color>
     <color name="colorRVItemClickBackground">#cccccc</color>
     <color name="colorDefaultTabText">#e2aaee</color>
+    <color name="colorSelectedTabText">#ffffff</color>
 
     <!--Store RecyclerView-->
     <color name="colorStoreRVBackground">#ffffff</color>

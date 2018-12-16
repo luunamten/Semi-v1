@@ -16,18 +16,20 @@
         android:layout_below="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/SearchTabTheme"
+        style="@style/SearchTabTheme"
         app:tabTextColor="@color/colorDefaultTabText"
-        app:tabIndicatorHeight="3dp"
-        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget">
+        app:tabSelectedTextColor="@color/colorSelectedTabText"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+        app:tabIndicatorHeight="3dp">
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00000000"
+            android:background="@color/colorDefaultBackground"
             android:text="Tìm kiếm"/>
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/colorDefaultBackground"
             android:text="Gần tôi"/>
     </android.support.design.widget.TabLayout>
 </RelativeLayout>
