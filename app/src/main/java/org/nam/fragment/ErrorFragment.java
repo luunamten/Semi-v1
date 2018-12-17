@@ -23,16 +23,19 @@ public class ErrorFragment extends Fragment {
         // Required empty public constructor
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_error, container, false);
+    public static ErrorFragment newInstance(int imageResource, int message){
+        Bundle bundle = new Bundle();
+        bundle.putInt(IMAGE_RESOURCE, imageResource);
+        bundle.putString(MESSAGE, MyApp.getInstance().getString(message));
+        ErrorFragment fragment = new ErrorFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_error, container, false);
         ImageView imageView = view.findViewById(R.id.errorImageView);
         TextView textView= view.findViewById(R.id.errorTextView);
         Bundle args = getArguments();
@@ -40,22 +43,14 @@ public class ErrorFragment extends Fragment {
         String message = args.getString(MESSAGE);
         imageView.setImageResource(imageResource);
         textView.setText(message);
+        // Inflate the layout for this fragment
+        return view;
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    public void setArguments (int imageResource, int message){
-        Bundle bundle = new Bundle();
-        bundle.putInt(IMAGE_RESOURCE, imageResource);
-        bundle.putString(MESSAGE, MyApp.getInstance().getString(message));
-        setArguments(bundle);
-    }
 }

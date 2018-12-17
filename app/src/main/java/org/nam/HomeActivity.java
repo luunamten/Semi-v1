@@ -43,6 +43,7 @@ import org.nam.firebase.ProductConnector;
 import org.nam.firebase.StoreConnector;
 import org.nam.fragment.ErrorFragment;
 import org.nam.fragment.FragmentHolder;
+import org.nam.fragment.MyMapFragment;
 import org.nam.fragment.ProductViewFragment;
 import org.nam.fragment.StoreViewFragment;
 import org.nam.listener.ModeSpinnerItemSelectedListener;
@@ -105,14 +106,10 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     }
 
     private void setupFragmentHolder() {
-        ErrorFragment networkErrFragment = new ErrorFragment();
-        ErrorFragment emptyErrFragment = new ErrorFragment();
-        ErrorFragment locationErrFragment = new ErrorFragment();
-        ErrorFragment loadFragment = new ErrorFragment();
-        networkErrFragment.setArguments(R.drawable.ic_trees, R.string.networkErrorMessage);
-        emptyErrFragment.setArguments(R.drawable.ic_blank, R.string.emptyResultMessage);
-        locationErrFragment.setArguments(R.drawable.ic_desert, R.string.locationErrorMessage);
-        loadFragment.setArguments(R.drawable.ic_beach, R.string.loadMessage);
+        ErrorFragment networkErrFragment = ErrorFragment.newInstance(R.drawable.ic_trees, R.string.networkErrorMessage);
+        ErrorFragment emptyErrFragment = ErrorFragment.newInstance(R.drawable.ic_blank, R.string.emptyResultMessage);
+        ErrorFragment locationErrFragment = ErrorFragment.newInstance(R.drawable.ic_desert, R.string.locationErrorMessage);
+        ErrorFragment loadFragment = ErrorFragment.newInstance(R.drawable.ic_beach, R.string.loadMessage);
         fragmentHolder = new FragmentHolder(R.id.homeFragmentContainer,
                 getSupportFragmentManager());
         fragmentHolder.add(new StoreViewFragment())

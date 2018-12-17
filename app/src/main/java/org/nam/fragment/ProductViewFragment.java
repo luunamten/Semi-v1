@@ -43,19 +43,16 @@ public class ProductViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_view, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_product_view, container, false);
         RecyclerView productRecyclerView = view.findViewById(R.id.productRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         productRecyclerView.setHasFixedSize(true);
         productRecyclerView.setNestedScrollingEnabled(false);
         productRecyclerView.setLayoutManager(layoutManager);
         productRecyclerView.setAdapter(recyclerViewAdapter);
+        if(listener == null) {
+            return view;
+        }
         recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
             @Override
             public void onBottomReached(Object obj, int position) {
@@ -68,17 +65,28 @@ public class ProductViewFragment extends Fragment {
                 listener.onProductItemClick((Product) obj);
             }
         });
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = (Listener)context;
+        if(context instanceof Listener) {
+            listener = (Listener) context;
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        listener = null;
     }
 
     public void updateDataSet(List<Product> products, Location location) {

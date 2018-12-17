@@ -80,7 +80,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setInterval(2000);
         locProvider = LocationServices.getFusedLocationProviderClient(this);
         //action bar
-        Toolbar toolbar = findViewById(R.id.mainToolbar);
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         Geocoder g = new Geocoder(this, new Locale("vi"));
         try {

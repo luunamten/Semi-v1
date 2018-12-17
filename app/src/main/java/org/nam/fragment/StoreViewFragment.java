@@ -43,18 +43,16 @@ public class StoreViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_store_view, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_store_view, container, false);
         RecyclerView storeRecyclerView = view.findViewById(R.id.storeRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         storeRecyclerView.setHasFixedSize(true);
         storeRecyclerView.setNestedScrollingEnabled(false);
         storeRecyclerView.setLayoutManager(layoutManager);
         storeRecyclerView.setAdapter(recyclerViewAdapter);
+        if(listener == null) {
+            return view;
+        }
         recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
             @Override
             public void onBottomReached(Object obj, int position) {
@@ -67,12 +65,27 @@ public class StoreViewFragment extends Fragment {
                 listener.onStoreItemClick((Store) obj);
             }
         });
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = (Listener)context;
+        if(context instanceof Listener) {
+            listener = (Listener) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
     public void updateDataSet(List<Store> stores, Location location) {

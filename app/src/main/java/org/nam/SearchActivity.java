@@ -14,9 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 
+import com.google.android.gms.maps.MapFragment;
+
 import org.nam.contract.Contract;
 import org.nam.custom.MyFragmentAdapter;
 import org.nam.fragment.ErrorFragment;
+import org.nam.fragment.MyMapFragment;
 
 public class SearchActivity extends AppCompatActivity {
     private int mode;
@@ -49,12 +52,10 @@ public class SearchActivity extends AppCompatActivity {
     private void setupViewPager() {
         viewPager = findViewById(R.id.viewPaper);
         fragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager());
-        ErrorFragment error1 = new ErrorFragment();
-        ErrorFragment error2 = new ErrorFragment();
-        error1.setArguments(R.drawable.ic_beach, R.string.loadMessage);
-        error2.setArguments(R.drawable.ic_trees, R.string.networkErrorMessage);
-        fragmentAdapter.addFragment(error1, getString(R.string.searchTabText))
-                .addFragment(error2, getString(R.string.nearbyTabText));
+        ErrorFragment error = ErrorFragment.newInstance(R.drawable.ic_trees, R.string.loadMessage);
+        MyMapFragment mapFragment = new MyMapFragment();
+        fragmentAdapter.addFragment(error, getString(R.string.searchTabText))
+                .addFragment(mapFragment, getString(R.string.nearbyTabText));
         viewPager.setAdapter(fragmentAdapter);
     }
 
