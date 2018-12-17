@@ -152,7 +152,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     }
 
     private void setFragment(Fragment fragment) {
-        /*if(fragment != null) {
+        if(fragment != null) {
             currentFragment = fragment;
             if(!isAfterPause) {
                 final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -160,18 +160,18 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.commit();
             }
-        }*/
+        }
     }
 
     public void setFragment(Class<? extends Fragment> cl) {
-        /*try {
+        try {
             Fragment fragment = cl.newInstance();
             setFragment(fragment);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     private void checkAndRequestPermission() {
