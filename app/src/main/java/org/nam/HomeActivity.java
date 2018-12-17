@@ -359,7 +359,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                             fragmentHolder.setCurrentFragment(EMPTY_ERR_VIEW);
                             return;
                         }
-                        fragment.updateDataSet(result, currentLocation);
+                        fragment.addDataSet(result, currentLocation);
                     }
                     @Override
                     public void onFailure(@NonNull Exception exp) {
