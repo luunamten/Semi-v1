@@ -61,12 +61,16 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     private static final int CHECK_LOCATION_SETTINGS_CODE = 0;
     private static final int REQUEST_LOCATION_PERMISSION_CODE = 1;
     private static final String FRAGMENT_TAG = "fragment";
+    private static final int STORE_VIEW = 0;
+    private static final int PRODUCT_VIEW = 1;
+    private static final int NETWORK_ERR_VIEW = 2;
+    private static final int EMPTY_ERR_VIEW = 3;
+    private static final int LOCATION_ERR_VIEW = 4;
     //View
     private AppCompatSpinner searchModeSpinner;
     private AppCompatSpinner typeSpinner;
     private ModeSpinnerItemSelectedListener modeListener;
     //this Fragment's desired to be attached to Activity, but not sure it's attached
-    private Fragment currentFragment;
     private TextView nearbyTextView;
     private Toolbar toolbar;
     private FragmentHolder fragmentHolder;
@@ -76,15 +80,11 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     //Location
     private FusedLocationProviderClient locationProvider;
     private org.nam.object.Location currentLocation;
-    //flag, to ensure fragmentTransaction commit cannot perform after onSaveInstanceState
-    private boolean isAfterPause = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        //set flag
-        isAfterPause = false;
         //Set Toolbar for ActionBar
         setupActionBar();
         //init
@@ -102,12 +102,6 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         nearbyTextView.setOnClickListener(new NearbyTextViewClickListener(this));
         checkAndRequestPermission();
     }
-
-    private static final int STORE_VIEW = 0;
-    private static final int PRODUCT_VIEW = 1;
-    private static final int NETWORK_ERR_VIEW = 2;
-    private static final int EMPTY_ERR_VIEW = 3;
-    private static final int LOCATION_ERR_VIEW = 4;
 
     private void setupFragmentHolder() {
         ErrorFragment networkErrFragment = new ErrorFragment();
@@ -143,6 +137,10 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
 
     public TextView getNearbyTextView() {
         return nearbyTextView;
+    }
+
+    public FragmentHolder getFragmentHolder() {
+        return fragmentHolder;
     }
 
     private void checkAndRequestPermission() {

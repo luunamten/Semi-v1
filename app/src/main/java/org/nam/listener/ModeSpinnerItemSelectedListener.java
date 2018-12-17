@@ -31,12 +31,14 @@ public class ModeSpinnerItemSelectedListener implements AdapterView.OnItemSelect
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch(position) {
             case Contract.STORE_MODE:
-                setFragmentAndNearbyLabel(StoreViewFragment.class,
+                //Contract.STORE_MODE == HomeActivity.STORE_VIEW
+                setFragmentAndNearbyLabel(Contract.STORE_MODE,
                         R.string.nearbyStoreLabel);
                 loadStoreTypesToSpinner();
                 break;
             case Contract.PRODUCT_MODE:
-                setFragmentAndNearbyLabel(ProductViewFragment.class,
+                //Contract.PRODUCT_MODE == HomeActivity.PRODUCT_VIEW
+                setFragmentAndNearbyLabel(Contract.PRODUCT_MODE,
                         R.string.nearbyProductLabel);
                 loadProductTypesToSpinner();
                 break;
@@ -46,9 +48,9 @@ public class ModeSpinnerItemSelectedListener implements AdapterView.OnItemSelect
     @Override
     public void onNothingSelected(AdapterView<?> parent) { }
 
-    private void setFragmentAndNearbyLabel(Class<? extends Fragment> cl, int label) {
+    private void setFragmentAndNearbyLabel(int framentIndex, int label) {
         activity.getNearbyTextView().setText(label);
-        activity.setFragment(cl);
+        activity.getFragmentHolder().setCurrentFragment(framentIndex);
     }
 
     private void loadStoreTypesToSpinner() {
