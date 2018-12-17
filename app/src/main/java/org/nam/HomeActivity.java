@@ -66,6 +66,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     private static final int NETWORK_ERR_VIEW = 2;
     private static final int EMPTY_ERR_VIEW = 3;
     private static final int LOCATION_ERR_VIEW = 4;
+    private static final int LOAD_VIEW = 5;
     //View
     private AppCompatSpinner searchModeSpinner;
     private AppCompatSpinner typeSpinner;
@@ -107,16 +108,19 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         ErrorFragment networkErrFragment = new ErrorFragment();
         ErrorFragment emptyErrFragment = new ErrorFragment();
         ErrorFragment locationErrFragment = new ErrorFragment();
+        ErrorFragment loadFragment = new ErrorFragment();
         networkErrFragment.setArguments(R.drawable.ic_trees, R.string.networkErrorMessage);
         emptyErrFragment.setArguments(R.drawable.ic_blank, R.string.emptyResultMessage);
         locationErrFragment.setArguments(R.drawable.ic_desert, R.string.locationErrorMessage);
+        loadFragment.setArguments(R.drawable.ic_beach, R.string.loadMessage);
         fragmentHolder = new FragmentHolder(R.id.homeFragmentContainer,
                 getSupportFragmentManager());
         fragmentHolder.add(new StoreViewFragment())
                 .add(new ProductViewFragment())
                 .add(networkErrFragment)
                 .add(emptyErrFragment)
-                .add(locationErrFragment);
+                .add(locationErrFragment)
+                .add(loadFragment);
     }
 
     private void setupActionBar() {
@@ -269,6 +273,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         if (selectedItem == null) {
             return;
         }
+        fragmentHolder.setCurrentFragment(LOAD_VIEW);
         storeConnector.getNearbyStores(currentLocation, 0, selectedItem.getId(),
                 new IResult<List<Store>>() {
                     @Override
@@ -307,6 +312,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         if (selectedItem == null) {
             return;
         }
+        fragmentHolder.setCurrentFragment(LOAD_VIEW);
         productConnector.getNearbyProducts(currentLocation, 0, selectedItem.getId(),
                 new IResult<List<Product>>() {
                     @Override
@@ -333,7 +339,6 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
 
     private void loadProductsAt(int index) {
         if (currentLocation == null) {
-            fragmentHolder.setCurrentFragment(LOCATION_ERR_VIEW);
             return;
         }
         if (searchModeSpinner.getSelectedItemPosition()
@@ -354,23 +359,23 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                                 != Contract.PRODUCT_MODE) {
                             return;
                         }
-                        ProductViewFragment fragment = (ProductViewFragment) fragmentHolder.setCurrentFragment(PRODUCT_VIEW);
+                        ProductViewFragment fragment =
+                                (ProductViewFragment) fragmentHolder.getFragment(PRODUCT_VIEW);
                         if (result.size() == 0 && fragment.getItemCount() == 0) {
                             fragmentHolder.setCurrentFragment(EMPTY_ERR_VIEW);
                             return;
                         }
+                        fragmentHolder.setCurrentFragment(PRODUCT_VIEW);
                         fragment.addDataSet(result, currentLocation);
                     }
                     @Override
                     public void onFailure(@NonNull Exception exp) {
-                        fragmentHolder.setCurrentFragment(NETWORK_ERR_VIEW);
                     }
                 });
     }
 
     private void loadStoresAt(int position) {
         if (currentLocation == null) {
-            fragmentHolder.setCurrentFragment(LOCATION_ERR_VIEW);
             return;
         }
         if (searchModeSpinner.getSelectedItemPosition()
@@ -391,16 +396,17 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                                 != Contract.STORE_MODE) {
                             return;
                         }
-                        StoreViewFragment fragment = (StoreViewFragment) fragmentHolder.setCurrentFragment(STORE_VIEW);
+                        StoreViewFragment fragment =
+                                (StoreViewFragment) fragmentHolder.getFragment(STORE_VIEW);
                         if (result.size() == 0 && fragment.getItemCount() == 0) {
                             fragmentHolder.setCurrentFragment(EMPTY_ERR_VIEW);
                             return;
                         }
+                        fragment = (StoreViewFragment) fragmentHolder.setCurrentFragment(STORE_VIEW);
                         fragment.addDataSet(result, currentLocation);
                     }
                     @Override
                     public void onFailure(@NonNull Exception exp) {
-                        fragmentHolder.setCurrentFragment(NETWORK_ERR_VIEW);
                     }
                 });
     }

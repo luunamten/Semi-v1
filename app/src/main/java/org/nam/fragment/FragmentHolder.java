@@ -23,7 +23,7 @@ public class FragmentHolder {
     }
 
     public Fragment setCurrentFragment(int index) {
-        if(index < 0 || fragmentList.size() == 0 || fragmentList.size() <= index) {
+        if(index < 0 || fragmentList.size() <= index) {
             return null;
         }
         if (currentIndex == index && !isStateLoss) {
@@ -58,8 +58,15 @@ public class FragmentHolder {
         return fragmentList.get(currentIndex);
     }
 
+    public Fragment getFragment(int index) {
+        if(index < 0 || fragmentList.size() <= index) {
+            return null;
+        }
+        return fragmentList.get(index);
+    }
+
     public void recovery() {
-        if(isStateLoss == true) {
+        if(isStateLoss) {
             setCurrentFragment(currentIndex);
         }
     }
