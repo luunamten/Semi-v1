@@ -1,9 +1,12 @@
 package org.nam;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -14,12 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.location.LocationSettingsResponse;
 
 import org.nam.contract.Contract;
 import org.nam.custom.MyFragmentAdapter;
+import org.nam.firebase.IResult;
 import org.nam.fragment.ErrorFragment;
 import org.nam.fragment.MyMapFragment;
+import org.nam.util.LocationUtils;
 
 public class SearchActivity extends AppCompatActivity {
     private int mode;
@@ -37,6 +42,7 @@ public class SearchActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         setupViewPager();
         tabLayout.setupWithViewPager(viewPager);
+        checkAndRequestPermission();
     }
 
     private void setupActionBar(Intent intent) {
@@ -102,4 +108,45 @@ public class SearchActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int request, String[] permission,
+                                           int[] results) {
+        super.onRequestPermissionsResult(request, permission, results);
+        if(request == LocationUtils.REQUEST_LOCATION_PERMISSION_CODE) {
+            if(results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
+                onPermissionGranted();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int request, int result, Intent intent) {
+        super.onActivityResult(request, result, intent);
+        if(result == Activity.RESULT_OK) {
+            if(request == LocationUtils.RESOLUTION_CODE) {
+                onLocationSettingsOK();
+            }
+        }
+    }
+
+    private void checkAndRequestPermission() {
+        if(LocationUtils.checkAndRequestPermission(this)) {
+            onPermissionGranted();
+        }
+    }
+
+    private void onPermissionGranted() {
+        LocationUtils.checkAndRequestLocationSettings(this,
+                new IResult<LocationSettingsResponse>() {
+            @Override
+            public void onResult(LocationSettingsResponse result) {
+                onLocationSettingsOK();
+            }
+            @Override
+            public void onFailure(@NonNull Exception exp) { }
+        });
+    }
+
+    private void onLocationSettingsOK() { }
 }
