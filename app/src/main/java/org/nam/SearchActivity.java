@@ -23,7 +23,11 @@ import org.nam.contract.Contract;
 import org.nam.custom.MyFragmentAdapter;
 import org.nam.firebase.IResult;
 import org.nam.fragment.ErrorFragment;
+import org.nam.fragment.FragmentHolder;
 import org.nam.fragment.MyMapFragment;
+import org.nam.fragment.ProductViewFragment;
+import org.nam.fragment.SearchFragment;
+import org.nam.fragment.StoreViewFragment;
 import org.nam.util.LocationUtils;
 
 public class SearchActivity extends AppCompatActivity {
@@ -58,9 +62,9 @@ public class SearchActivity extends AppCompatActivity {
     private void setupViewPager() {
         viewPager = findViewById(R.id.viewPaper);
         fragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager());
-        ErrorFragment error = ErrorFragment.newInstance(R.drawable.ic_trees, R.string.loadMessage);
+        SearchFragment searchFragment = new SearchFragment();
         MyMapFragment mapFragment = new MyMapFragment();
-        fragmentAdapter.addFragment(error, getString(R.string.searchTabText))
+        fragmentAdapter.addFragment(searchFragment, getString(R.string.searchTabText))
                 .addFragment(mapFragment, getString(R.string.nearbyTabText));
         viewPager.setAdapter(fragmentAdapter);
     }

@@ -59,7 +59,6 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements StoreViewFragment.Listener,
         ProductViewFragment.Listener {
-    //Code
     private static final int STORE_VIEW = 0;
     private static final int PRODUCT_VIEW = 1;
     private static final int NETWORK_ERR_VIEW = 2;
