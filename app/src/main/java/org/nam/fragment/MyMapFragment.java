@@ -44,6 +44,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         this.map = map;
-
     }
+
 }

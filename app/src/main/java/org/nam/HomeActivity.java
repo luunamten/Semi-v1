@@ -52,6 +52,7 @@ import org.nam.listener.TypeSpinnerItemSelectedListener;
 import org.nam.object.IHaveIdAndName;
 import org.nam.object.Product;
 import org.nam.object.Store;
+import org.nam.util.LocationUtils;
 import org.nam.util.ObjectUtils;
 
 import java.util.List;
@@ -59,9 +60,6 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity implements StoreViewFragment.Listener,
         ProductViewFragment.Listener {
     //Code
-    private static final int CHECK_LOCATION_SETTINGS_CODE = 0;
-    private static final int REQUEST_LOCATION_PERMISSION_CODE = 1;
-    private static final String FRAGMENT_TAG = "fragment";
     private static final int STORE_VIEW = 0;
     private static final int PRODUCT_VIEW = 1;
     private static final int NETWORK_ERR_VIEW = 2;
@@ -140,76 +138,53 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         return nearbyTextView;
     }
 
-    public FragmentHolder getFragmentHolder() {
-        return fragmentHolder;
-    }
-
     private void checkAndRequestPermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            int locationResult = ContextCompat.checkSelfPermission(
-                    this, Manifest.permission.ACCESS_FINE_LOCATION);
-            if (locationResult != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_LOCATION_PERMISSION_CODE);
-                return;
-            }
+        if(LocationUtils.checkAndRequestPermission(this)) {
+            onPermissionGranted();
         }
-        onPermissionGranted();
     }
 
     private void onPermissionGranted() {
         checkAndRequestLocationSettings();
     }
 
+
+    private void checkAndRequestLocationSettings() {
+        LocationUtils.checkAndRequestLocationSettings(this,
+                new IResult<LocationSettingsResponse>() {
+            @Override
+            public void onResult(LocationSettingsResponse result) {
+                //Settings OK!
+                onSettingsOK();
+            }
+            @Override
+            public void onFailure(@NonNull Exception exp) { }
+        });
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_LOCATION_PERMISSION_CODE) {
+        if (requestCode == LocationUtils.REQUEST_LOCATION_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 onPermissionGranted();
             }
         }
     }
 
-    private void checkAndRequestLocationSettings() {
-        LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(Contract.LOCATION_INTERVAL)
-                .setFastestInterval(Contract.LOCATION_FASTEST_INTERVAL);
-        LocationSettingsRequest request = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest).build();
-        Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(this)
-                .checkLocationSettings(request);
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+    @Override
+    public void onActivityResult(int requestCode, int result, Intent data) {
+        if (result == RESULT_OK) {
+            if (requestCode == LocationUtils.RESOLUTION_CODE) {
                 onSettingsOK();
             }
-        }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                final ResolvableApiException rexp = (ResolvableApiException) e;
-                try {
-                    rexp.startResolutionForResult(HomeActivity.this, CHECK_LOCATION_SETTINGS_CODE);
-                } catch (IntentSender.SendIntentException sexp) {
-                    Log.w("my_error", sexp);
-                }
-            }
-        });
+        }
     }
+
 
     private void onSettingsOK() {
         loadFirst();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int result, Intent data) {
-        if (result == RESULT_OK) {
-            if (requestCode == CHECK_LOCATION_SETTINGS_CODE) {
-                onSettingsOK();
-            }
-        }
-    }
 
     @SuppressLint("MissingPermission")
     public void getLastLocation(final IResult<Location> result) {
