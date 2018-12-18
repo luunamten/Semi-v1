@@ -12,7 +12,7 @@ import org.nam.R;
 
 public class SearchFragment extends Fragment {
 
-    private FragmentHolder fragmentHolder;
+    private FragmentCreator fragmentCreator;
     private static final int STORE_VIEW = 0;
     private static final int PRODUCT_VIEW = 1;
     private static final int NETWORK_ERR_VIEW = 2;
@@ -30,24 +30,32 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupFragmentHolder();
+        setupFragmentCreator();
     }
 
-    private void setupFragmentHolder() {
-        ErrorFragment networkErrFragment = ErrorFragment.newInstance(R.drawable.ic_trees, R.string.networkErrorMessage);
-        ErrorFragment emptyErrFragment = ErrorFragment.newInstance(R.drawable.ic_blank, R.string.emptyResultMessage);
-        ErrorFragment locationErrFragment = ErrorFragment.newInstance(R.drawable.ic_desert, R.string.locationErrorMessage);
-        ErrorFragment loadFragment = ErrorFragment.newInstance(R.drawable.ic_beach, R.string.loadMessage);
-        fragmentHolder = new FragmentHolder(R.id.fragmentContainer,
+    private void setupFragmentCreator() {
+        final Bundle networkError = new Bundle();
+        final Bundle emptyError = new Bundle();
+        final Bundle locationError = new Bundle();
+        final Bundle loading = new Bundle();
+        networkError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_trees);
+        networkError.putString(ErrorFragment.MESSAGE, getString(R.string.networkErrorMessage));
+        emptyError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_blank);
+        emptyError.putString(ErrorFragment.MESSAGE, getString(R.string.emptyResultMessage));
+        locationError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_desert);
+        locationError.putString(ErrorFragment.MESSAGE, getString(R.string.locationErrorMessage));
+        loading.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_beach);
+        loading.putString(ErrorFragment.MESSAGE, getString(R.string.loadMessage));
+        fragmentCreator = new FragmentCreator(R.id.fragmentContainer,
                 getChildFragmentManager());
-        fragmentHolder.add(new StoreViewFragment())
-                .add(new ProductViewFragment())
-                .add(networkErrFragment)
-                .add(emptyErrFragment)
-                .add(locationErrFragment)
-                .add(loadFragment);
-        fragmentHolder.setCurrentFragment(LOCATION_ERR_VIEW);
+        fragmentCreator.add(StoreViewFragment.class, (Bundle)null)
+                .add(ProductViewFragment.class, (Bundle) null)
+                .add(ErrorFragment.class, networkError)
+                .add(ErrorFragment.class, emptyError)
+                .add(ErrorFragment.class, locationError)
+                .add(ErrorFragment.class, loading);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
