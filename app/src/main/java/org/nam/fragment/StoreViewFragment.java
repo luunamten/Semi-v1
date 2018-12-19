@@ -50,21 +50,21 @@ public class StoreViewFragment extends Fragment {
         storeRecyclerView.setNestedScrollingEnabled(false);
         storeRecyclerView.setLayoutManager(layoutManager);
         storeRecyclerView.setAdapter(recyclerViewAdapter);
-        if(listener == null) {
-            return view;
+        if(listener != null) {
+            recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
+                @Override
+                public void onBottomReached(Object obj, int position) {
+                    listener.onStoreScrollToLimit((Store)obj, position);
+                }
+            });
+            recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(Object obj) {
+                    listener.onStoreItemClick((Store) obj);
+                }
+            });;
         }
-        recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
-            @Override
-            public void onBottomReached(Object obj, int position) {
-                listener.onStoreScrollToLimit((Store)obj, position);
-            }
-        });
-        recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(Object obj) {
-                listener.onStoreItemClick((Store) obj);
-            }
-        });
+
         return view;
     }
 

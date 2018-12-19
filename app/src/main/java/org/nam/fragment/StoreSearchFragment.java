@@ -5,12 +5,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LogWriter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.nam.R;
+import org.nam.SearchActivity;
 import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 import org.nam.firebase.StoreConnector;
@@ -35,9 +37,11 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     private LocationUtils locationUtils;
     private int type;
     private String query;
+    private int count = 0;
 
     @Override
     public void search(int type, String query) {
+        Log.w("cccc", String.valueOf(getActivity()));
         this.type = type;
         this.query = query;
         searchStores(type, query);
@@ -49,15 +53,16 @@ public class StoreSearchFragment extends Fragment implements ISearch {
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {
-                        StoreViewFragment fragment = (StoreViewFragment) fragmentCreator.getCurrentFragment();
+                        Fragment fragment = fragmentCreator.getCurrentFragment();
                         if(!(fragment instanceof StoreViewFragment)) {
                             return;
                         }
-                        if (result.size() == 0 && fragment.getItemCount() == 0) {
+                        StoreViewFragment storeFragment = (StoreViewFragment) fragment;
+                        if (result.size() == 0 && storeFragment.getItemCount() == 0) {
                             fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
                             return;
                         }
-                        fragment.addDataSet(result, currentLocation);
+                        storeFragment.addDataSet(result, currentLocation);
                     }
                     @Override
                     public void onFailure(@NonNull Exception exp) { }
@@ -74,12 +79,23 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         setupFragmentCreator();
         storeConnector = StoreConnector.getInstance();
         locationUtils = new LocationUtils();
         requestLocationUpdate();
+        SearchActivity searchActivity = (SearchActivity) context;
+        searchActivity.fragment = this;
+        if(searchActivity.i == 0) {
+            searchActivity.i++;
+            SearchActivity.my = this;
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     private void setupFragmentCreator() {
@@ -119,6 +135,12 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     public void onPause() {
         super.onPause();
         removeLocationUpdates();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.w("sat_f", "detach");
     }
 
     @Override

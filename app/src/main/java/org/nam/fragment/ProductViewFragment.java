@@ -50,21 +50,20 @@ public class ProductViewFragment extends Fragment {
         productRecyclerView.setNestedScrollingEnabled(false);
         productRecyclerView.setLayoutManager(layoutManager);
         productRecyclerView.setAdapter(recyclerViewAdapter);
-        if(listener == null) {
-            return view;
+        if(listener != null) {
+            recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
+                @Override
+                public void onBottomReached(Object obj, int position) {
+                    listener.onProductScrollToLimit((Product)obj, position);
+                }
+            });
+            recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(Object obj) {
+                    listener.onProductItemClick((Product) obj);
+                }
+            });
         }
-        recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
-            @Override
-            public void onBottomReached(Object obj, int position) {
-                listener.onProductScrollToLimit((Product)obj, position);
-            }
-        });
-        recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(Object obj) {
-                listener.onProductItemClick((Product) obj);
-            }
-        });
         // Inflate the layout for this fragment
         return view;
     }

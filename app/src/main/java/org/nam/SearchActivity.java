@@ -9,11 +9,13 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
@@ -43,19 +45,25 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private MyFragmentAdapter fragmentAdapter;
+    public int i = 0;
+    public static Fragment my;
+    public Fragment fragment;
+    static SearchActivity myy;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        if(i == 0) {
+            i++;
+            myy = this;
+        }
         final Intent intent = getIntent();
         setupActionBar(intent);
         mode = intent.getIntExtra(Contract.BUNDLE_MODE_KEY, -1);
         typeId = intent.getIntExtra(Contract.BUNDLE_MODE_TYPE_KEY, -1);
         //TabLayout, ViewPager
         tabLayout = findViewById(R.id.tabLayout);
-        if(!setupViewPager()) {
-            finish();
-        }
+        setupViewPager();
         tabLayout.setupWithViewPager(viewPager);
         checkAndRequestPermission();
     }
@@ -70,7 +78,7 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
         actionBar.setIcon(logoResource);
     }
 
-    private boolean setupViewPager() {
+    private void setupViewPager() {
         viewPager = findViewById(R.id.viewPaper);
         fragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager());
         Fragment searchFragment = null;
@@ -78,14 +86,11 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
             searchFragment = new StoreSearchFragment();
         } else if(mode == Contract.PRODUCT_MODE) {
             searchFragment = new ProductSearchFragment();
-        } else {
-            return false;
         }
         MyMapFragment mapFragment = new MyMapFragment();
         fragmentAdapter.addFragment(searchFragment, getString(R.string.searchTabText))
                 .addFragment(mapFragment, getString(R.string.nearbyTabText));
         viewPager.setAdapter(fragmentAdapter);
-        return true;
     }
 
     private void setupSearchView(Menu menu) {
@@ -101,7 +106,8 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
             public boolean onQueryTextSubmit(String s) {
                 searchView.clearFocus();
                 ISearch iSearch = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-                iSearch.search(typeId, StringUtils.normalize(s));
+                Log.w("compe", String.valueOf(myy == SearchActivity.this ));
+                //iSearch.search(typeId, StringUtils.normalize(s));
                 return true;
             }
             @Override
@@ -146,6 +152,11 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onActivityResult(int request, int result, Intent intent) {
         super.onActivityResult(request, result, intent);
         if(result == Activity.RESULT_OK) {
@@ -179,25 +190,25 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
 
     @Override
     public void onProductItemClick(Product product) {
-        ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-        fragment.clickItem(product.getId());
+        //ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
+        //fragment.clickItem(product.getId());
     }
 
     @Override
     public void onProductScrollToLimit(Product product, int position) {
-        ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-        fragment.scroll(product.getId());
+        //ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
+        //fragment.scroll(product.getId());
     }
 
     @Override
     public void onStoreItemClick(Store store) {
-        ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-        fragment.clickItem(store.getId());
+        //ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
+        //fragment.clickItem(store.getId());
     }
 
     @Override
     public void onStoreScrollToLimit(Store store, int position) {
-        ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-        fragment.scroll(store.getId());
+        //ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
+        //fragment.scroll(store.getId());
     }
 }
