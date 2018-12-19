@@ -170,9 +170,7 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
 
     @Override
     public void onFragmentAttached(Fragment fragment) {
-        Log.w("King", "out");
         if(fragment instanceof ISearch) {
-            Log.w("King", "in");
             searchFragment = (ISearch) fragment;
         }
     }

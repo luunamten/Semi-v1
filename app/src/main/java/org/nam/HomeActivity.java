@@ -84,7 +84,6 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         setContentView(R.layout.activity_home);
         //Set Toolbar for ActionBar
         setupActionBar();
