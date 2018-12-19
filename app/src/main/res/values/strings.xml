@@ -16,6 +16,7 @@
     <!--Store RecyclerView-->
     <string name="storeRVLogoDescription">Logo</string>
     <string name="errorImgDescription">Error</string>
+    <string name="mapFlagDescription">Map flag</string>
     <!-- Error Label-->
     <string name="networkErrorMessage">Không thể kết nối! Hãy thử kiểm tra Internet, Wifi!</string>
     <string name="emptyResultMessage">Không có kết quả!</string>
@@ -27,7 +28,4 @@
     <string name="productSearchHint">Hàng hóa</string>
     <string name="searchTabText">Tìm kiếm</string>
     <string name="nearbyTabText">Xung quanh</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
