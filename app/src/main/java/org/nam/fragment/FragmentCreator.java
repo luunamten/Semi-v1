@@ -31,8 +31,10 @@ public class FragmentCreator {
 
     public FragmentCreator add(Class<? extends Fragment> fragmentClass, Bundle...bundles) {
         classes.add(fragmentClass);
-        this.bundles.addAll(Arrays.asList(bundles));
-        return this;
+        if(bundles.length > 0) {
+            this.bundles.addAll(Arrays.asList(bundles));
+        }
+        return this; 
     }
 
     public Fragment setCurrentFragment(int index) {
