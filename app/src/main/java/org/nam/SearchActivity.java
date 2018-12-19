@@ -179,7 +179,8 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
 
     @Override
     public void onProductItemClick(Product product) {
-
+        ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
+        fragment.clickItem(product.getId());
     }
 
     @Override
@@ -190,7 +191,8 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
 
     @Override
     public void onStoreItemClick(Store store) {
-        
+        ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
+        fragment.clickItem(store.getId());
     }
 
     @Override
