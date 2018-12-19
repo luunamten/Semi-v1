@@ -20,6 +20,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -27,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 import org.nam.R;
 import org.nam.firebase.IResult;
 import org.nam.util.LocationUtils;
+import org.nam.util.MathUtils;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -62,6 +64,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(final GoogleMap map) {
         this.map = map;
         map.setMyLocationEnabled(true);
+        LatLng[] latLngs = MathUtils.getBoxPoints(map.getCameraPosition().target, 2);
+        map.addPolygon(new PolygonOptions().add(latLngs).fillColor(0xff000000));
         getLastLocation(new IResult<Location>() {
             @Override
             public void onResult(Location result) {
