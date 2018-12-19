@@ -190,7 +190,7 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
 
     @Override
     public void onStoreItemClick(Store store) {
-
+        
     }
 
     @Override

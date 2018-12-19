@@ -131,13 +131,14 @@ public class StoreConnector {
                         List<Map<String, Object>> listMap = (List<Map<String, Object>>) httpsCallableResult.getData();
                         if (listMap.size() > 0) {
                             for (Map map : listMap) {
-                                /*GET id, title, address, imageURL, rating*/
+                                /*GET id, title, address, imageURL, geo, rating*/
                                 //Init store
                                 Store store = new Store();
                                 store.setId((String) map.get(DBContract.ID));
                                 store.setTitle((String) map.get(DBContract.Store.TITLE));
                                 store.setImageURL((String) map.get(DBContract.Store.IMAGE_URL));
                                 store.setAddress(getAddress(map));
+                                store.setGeo(getGeo(map));
                                 //Error occurs when casting Integer to Float
                                 store.setRating(((Number) map.get(DBContract.Store.RATING)).floatValue());
                                 stores.add(store);

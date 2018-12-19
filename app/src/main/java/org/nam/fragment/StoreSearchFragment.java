@@ -29,8 +29,7 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     private static final int STORE_VIEW = 0;
     private static final int NETWORK_ERR_VIEW = 1;
     private static final int EMPTY_ERR_VIEW = 2;
-    private static final int LOCATION_ERR_VIEW = 3;
-    private static final int LOAD_VIEW = 4;
+    private static final int LOAD_VIEW = 3;
     private StoreConnector storeConnector;
     private Location currentLocation;
     private LocationUtils locationUtils;
@@ -41,12 +40,33 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     public void search(int type, String query) {
         this.type = type;
         this.query = query;
-        searchStores(type, query, "");
+        searchStores(type, query);
     }
 
     @Override
     public void scroll(String lastId) {
-        searchStores(type, query, lastId);
+        storeConnector.getStoresByKeywords(type, query, lastId,
+                new IResult<List<Store>>() {
+                    @Override
+                    public void onResult(List<Store> result) {
+                        StoreViewFragment fragment = (StoreViewFragment) fragmentCreator.getCurrentFragment();
+                        if(!(fragment instanceof StoreViewFragment)) {
+                            return;
+                        }
+                        if (result.size() == 0 && fragment.getItemCount() == 0) {
+                            fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
+                            return;
+                        }
+                        fragment.addDataSet(result, currentLocation);
+                    }
+                    @Override
+                    public void onFailure(@NonNull Exception exp) { }
+                });
+    }
+
+    @Override
+    public void clickItem(String id) {
+        Log.w("Test_t", id);
     }
 
     public StoreSearchFragment() {
@@ -58,7 +78,6 @@ public class StoreSearchFragment extends Fragment implements ISearch {
         super.onCreate(savedInstanceState);
         setupFragmentCreator();
         storeConnector = StoreConnector.getInstance();
-        currentLocation = new Location(0,0);
         locationUtils = new LocationUtils();
         requestLocationUpdate();
     }
@@ -66,14 +85,11 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     private void setupFragmentCreator() {
         final Bundle networkError = new Bundle();
         final Bundle emptyError = new Bundle();
-        final Bundle locationError = new Bundle();
         final Bundle loading = new Bundle();
         networkError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_trees);
         networkError.putString(ErrorFragment.MESSAGE, getString(R.string.networkErrorMessage));
         emptyError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_blank);
         emptyError.putString(ErrorFragment.MESSAGE, getString(R.string.emptyResultMessage));
-        locationError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_desert);
-        locationError.putString(ErrorFragment.MESSAGE, getString(R.string.locationErrorMessage));
         loading.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_beach);
         loading.putString(ErrorFragment.MESSAGE, getString(R.string.loadMessage));
         fragmentCreator = new FragmentCreator(R.id.fragmentContainer,
@@ -81,7 +97,6 @@ public class StoreSearchFragment extends Fragment implements ISearch {
         fragmentCreator.add(StoreViewFragment.class, (Bundle)null)
                 .add(ErrorFragment.class, networkError)
                 .add(ErrorFragment.class, emptyError)
-                .add(ErrorFragment.class, locationError)
                 .add(ErrorFragment.class, loading);
         fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
     }
@@ -112,9 +127,9 @@ public class StoreSearchFragment extends Fragment implements ISearch {
         fragmentCreator.recovery();
     }
 
-    public void searchStores(int storeType, String keywords, String lastId) {
+    public void searchStores(int storeType, String keywords) {
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
-        storeConnector.getStoresByKeywords(storeType, keywords, lastId,
+        storeConnector.getStoresByKeywords(storeType, keywords, "",
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {

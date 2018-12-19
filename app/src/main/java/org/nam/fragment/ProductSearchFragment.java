@@ -4,6 +4,7 @@ package org.nam.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,11 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     @Override
     public void scroll(String lastId) {
 
+    }
+
+    @Override
+    public void clickItem(String id) {
+        Log.w("Test_t", id);
     }
 
     public ProductSearchFragment() {
