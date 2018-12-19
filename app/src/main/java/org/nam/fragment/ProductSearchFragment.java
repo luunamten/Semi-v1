@@ -3,6 +3,7 @@ package org.nam.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nam.R;
+import org.nam.firebase.IResult;
+import org.nam.firebase.ProductConnector;
+import org.nam.firebase.StoreConnector;
+import org.nam.object.Location;
+import org.nam.object.Product;
+import org.nam.object.Store;
+import org.nam.util.LocationUtils;
+import org.nam.util.ObjectUtils;
+
+import java.util.List;
 
 public class ProductSearchFragment extends Fragment implements ISearch {
     private FragmentCreator fragmentCreator;
@@ -17,20 +28,43 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     private static final int NETWORK_ERR_VIEW = 1;
     private static final int EMPTY_ERR_VIEW = 2;
     private static final int LOAD_VIEW = 3;
+    private ProductConnector productConnector;
+    private Location currentLocation;
+    private LocationUtils locationUtils;
+    private int type;
+    private String query;
 
     @Override
     public void search(int type, String query) {
-
+        this.type = type;
+        this.query = query;
+        searchProducts();
     }
 
     @Override
     public void scroll(String lastId) {
-
+        productConnector.getProductsByKeywords(type, query, lastId,
+                new IResult<List<Product>>() {
+                    @Override
+                    public void onResult(List<Product> result) {
+                        Fragment fragment = fragmentCreator.getCurrentFragment();
+                        if(!(fragment instanceof ProductViewFragment)) {
+                            return;
+                        }
+                        ProductViewFragment storeFragment = (ProductViewFragment) fragment;
+                        if (result.size() == 0 && storeFragment.getItemCount() == 0) {
+                            fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
+                            return;
+                        }
+                        storeFragment.addDataSet(result, currentLocation);
+                    }
+                    @Override
+                    public void onFailure(@NonNull Exception exp) { }
+                });
     }
 
     @Override
     public void clickItem(String id) {
-        Log.w("Test_t", id);
     }
 
     public ProductSearchFragment() {
@@ -40,7 +74,18 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof IUseFragment) {
+            ((IUseFragment)context).onFragmentAttached(this);
+        }
         setupFragmentCreator();
+        productConnector = ProductConnector.getInstance();
+        locationUtils = new LocationUtils();
+        requestLocationUpdate();
     }
 
     private void setupFragmentCreator() {
@@ -62,6 +107,27 @@ public class ProductSearchFragment extends Fragment implements ISearch {
         fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
     }
 
+    public void searchProducts() {
+        fragmentCreator.setCurrentFragment(LOAD_VIEW);
+        productConnector.getProductsByKeywords(type, query, "",
+                new IResult<List<Product>>() {
+                    @Override
+                    public void onResult(List<Product> result) {
+                        if (result.size() == 0) {
+                            fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
+                            return;
+                        }
+                        ProductViewFragment fragment = (ProductViewFragment)
+                                fragmentCreator.setCurrentFragmentNoArgs(PRODUCT_VIEW);
+                        fragment.updateDataSet(result, currentLocation);
+                    }
+                    @Override
+                    public void onFailure(@NonNull Exception exp) {
+                        fragmentCreator.setCurrentFragment(NETWORK_ERR_VIEW);
+                    }
+                });
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,12 +137,27 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
+        removeLocationUpdates();
     }
+
+    public void requestLocationUpdate() {
+        locationUtils.requestLocationUpdates(new IResult<android.location.Location>() {
+            @Override
+            public void onResult(android.location.Location result) {
+                if(result == null) {
+                    currentLocation = null;
+                } else {
+                    currentLocation = ObjectUtils.toMyLocation(result);
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Exception exp) { }
+        });
+    }
+    public void removeLocationUpdates() {
+        locationUtils.removeLocationUpdates();
+    }
+
 }

@@ -95,8 +95,4 @@ public class ProductViewFragment extends Fragment {
     public int getItemCount() {
         return recyclerViewAdapter.getItemCount();
     }
-
-    public String getLastProductId() {
-        return recyclerViewAdapter.getLastProductId();
-    }
 }

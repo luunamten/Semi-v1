@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -83,6 +84,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         setContentView(R.layout.activity_home);
         //Set Toolbar for ActionBar
         setupActionBar();

@@ -42,7 +42,7 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     public void search(int type, String query) {
         this.type = type;
         this.query = query;
-        searchStores(type, query);
+        searchStores();
     }
 
     @Override
@@ -79,7 +79,6 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     public void onAttach(Context context) {
         super.onAttach(context);
         if(context instanceof IUseFragment) {
-            Log.w("King", "attach");
             ((IUseFragment)context).onFragmentAttached(this);
         }
         setupFragmentCreator();
@@ -143,9 +142,9 @@ public class StoreSearchFragment extends Fragment implements ISearch {
         fragmentCreator.recovery();
     }
 
-    public void searchStores(int storeType, String keywords) {
+    public void searchStores() {
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
-        storeConnector.getStoresByKeywords(storeType, keywords, "",
+        storeConnector.getStoresByKeywords(type, query, "",
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {

@@ -98,8 +98,4 @@ public class StoreViewFragment extends Fragment {
     public int getItemCount() {
         return recyclerViewAdapter.getItemCount();
     }
-
-    public String getLastStoreId() {
-        return recyclerViewAdapter.getLastStoreId();
-    }
 }
