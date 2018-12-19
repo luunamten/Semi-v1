@@ -2,6 +2,7 @@ package org.nam.custom;
 
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,6 @@ import java.util.List;
 
 public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHolder> {
     private List<Store> stores;
-    private List<Double> distances;
     private Location location;
     private OnBottomReachedListener bottomReachedListener;
     private OnItemClickListener itemClickListener;
@@ -71,18 +71,20 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         this.stores = stores;
     }
 
-    public void setDataSet(List<Store> stores, Location location) {
+    public void setDataSet(List<Store> stores, @Nullable Location location) {
         this.stores = stores;
         this.location = location;
-        distances = new ArrayList<>(Collections.nCopies(stores.size(), -1.0));
         notifyDataSetChanged();
     }
 
-    public void addDataSet(Collection<Store> stores, Location location) {
+    public void addDataSet(Collection<Store> stores, @Nullable Location location) {
         this.stores.addAll(stores);
         this.location = location;
-        distances.addAll(Collections.nCopies(stores.size(), -1.0));
         notifyItemRangeInserted(this.stores.size(), stores.size());
+    }
+
+    public void setLocation(@Nullable Location location) {
+        this.location = location;
     }
 
     @NonNull
@@ -97,10 +99,11 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     @Override
     public void onBindViewHolder(@NonNull StoreViewHolder viewHolder, int i) {
         final Store store = stores.get(i);
-        if(distances.get(i) < 0) {
-            distances.set(i, MathUtils.haversine(location, store.getGeo()));
+        String distanceStr = "";
+        if(location != null) {
+            double distance = MathUtils.haversine(location, store.getGeo());
+            distanceStr = StringUtils.toDistanceFormat(distance);
         }
-        String distanceStr = StringUtils.toDistanceFormat(distances.get(i));
         viewHolder.setStore(stores.get(i), distanceStr);
         if(bottomReachedListener != null && i == stores.size() - 1) {
             bottomReachedListener.onBottomReached(stores.get(i), i);
@@ -124,5 +127,9 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.itemClickListener = listener;
+    }
+
+    public String getLastStoreId() {
+        return stores.get(stores.size() - 1).getId();
     }
 }

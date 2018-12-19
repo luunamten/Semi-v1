@@ -1,6 +1,7 @@
 package org.nam.custom;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +22,9 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder> {
     private List<Product> products;
-    private List<Double> distances;
     private Location location;
     private OnBottomReachedListener bottomReachedListener;
     private OnItemClickListener itemClickListener;
-
     public ProductAdapter(List<Product> products) {
         this.products = products;
     }
@@ -64,10 +63,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     @Override
     public void onBindViewHolder(@NonNull ProductHolder viewHolder, int i) {
         final Product product = products.get(i);
-        if(distances.get(i) < 0) {
-            distances.set(i, MathUtils.haversine(location, product.getStore().getGeo()));
+        String distanceStr = "";
+        if(location != null) {
+            double distance = MathUtils.haversine(location, product.getStore().getGeo());
+            distanceStr = StringUtils.toDistanceFormat(distance);
         }
-        String distanceStr = StringUtils.toDistanceFormat(distances.get(i));
         viewHolder.setProduct(product, distanceStr);
         if(bottomReachedListener != null && i == products.size() - 1) {
             bottomReachedListener.onBottomReached(products.get(i), i);
@@ -89,18 +89,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         return holder;
     }
 
-    public void setDataSet(List<Product> products, Location location) {
+    public void setDataSet(List<Product> products, @Nullable Location location) {
         this.products = products;
         this.location = location;
-        distances = new ArrayList<>(Collections.nCopies(products.size(), -1.0));
         notifyDataSetChanged();
     }
 
-    public void addDataSet(Collection<Product> products, Location location) {
+    public void addDataSet(Collection<Product> products, @Nullable Location location) {
         this.products.addAll(products);
         this.location = location;
-        distances.addAll(Collections.nCopies(products.size(), -1.0));
         notifyItemRangeInserted(this.products.size(), products.size());
+    }
+
+    public void setLocation(@Nullable Location location) {
+        this.location = location;
     }
 
     public void setOnBottomReachedListener(OnBottomReachedListener listener) {
@@ -109,5 +111,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.itemClickListener = listener;
+    }
+
+    public String getLastProductId() {
+        return products.get(products.size() - 1).getId();
     }
 }

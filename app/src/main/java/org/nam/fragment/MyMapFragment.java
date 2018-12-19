@@ -75,7 +75,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void getLastLocation(final IResult<Location> result) {
-        LocationUtils.getLastLocation(context)
+        LocationUtils.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {

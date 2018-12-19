@@ -1,5 +1,7 @@
 package org.nam.contract;
 
+import com.google.android.gms.location.LocationRequest;
+
 public final class Contract {
     public static final float RATING_LOW_MIN = 0;
     public static final float RATING_LOW_MAX = 4.9f;
@@ -13,11 +15,13 @@ public final class Contract {
     public static final String BUNDLE_MODE_KEY = "mode";
     public static final String BUNDLE_SEARCH_HINT_KEY = "string";
     public static final String BUNDLE_ACTION_LOGO_KEY = "logo";
+    public static final String BUNDLE_MODE_TYPE_KEY = "type";
     //currency
     public static final String VN_CURRENCY = "đ";
     //location
-    public static final int LOCATION_INTERVAL = 2000; //ms
-    public static final int LOCATION_FASTEST_INTERVAL = 2000; //ms
+    public static final int LOCATION_ACCURACY = LocationRequest.PRIORITY_HIGH_ACCURACY;
+    public static final int LOCATION_INTERVAL = 3000; //ms
+    public static final int LOCATION_FASTEST_INTERVAL = 3000; //ms
 
     private Contract() {}
 }

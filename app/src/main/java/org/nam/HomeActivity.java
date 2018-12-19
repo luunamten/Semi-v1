@@ -77,8 +77,8 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     private StoreConnector storeConnector;
     private ProductConnector productConnector;
     //Location
-    private FusedLocationProviderClient locationProvider;
     private org.nam.object.Location currentLocation;
+    private LocationUtils locationUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,19 +93,13 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
         modeListener = new ModeSpinnerItemSelectedListener(this);
         storeConnector = StoreConnector.getInstance();
         productConnector = ProductConnector.getInstance();
-        locationProvider = LocationServices.getFusedLocationProviderClient(this);
+        locationUtils = new LocationUtils();
         setupFragmentCreator();
-        //setupFragmentHolder();
         //event, permission, config
         searchModeSpinner.setOnItemSelectedListener(modeListener);
         typeSpinner.setOnItemSelectedListener(new TypeSpinnerItemSelectedListener(this));
         nearbyTextView.setOnClickListener(new NearbyTextViewClickListener(this));
         checkAndRequestPermission();
-        ErrorFragment err = new ErrorFragment();
-        Bundle networkError = new Bundle();
-        networkError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_trees);
-        networkError.putString(ErrorFragment.MESSAGE, getString(R.string.networkErrorMessage));
-        Log.w("Fuck_i", String.valueOf(networkError == err.getArguments()));
     }
 
     private void setupFragmentCreator() {
@@ -199,7 +193,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
 
     @SuppressLint("MissingPermission")
     public void getLastLocation(final IResult<Location> result) {
-        final Task<Location> task = locationProvider.getLastLocation();
+        final Task<Location> task = LocationUtils.getLastLocation();
         task.addOnSuccessListener(this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -220,17 +214,12 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
 
     @SuppressLint("MissingPermission")
     private void loadFirst() {
-        final LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(Contract.LOCATION_INTERVAL)
-                .setFastestInterval(Contract.LOCATION_FASTEST_INTERVAL);
-        final LocationCallback locationCallback = new LocationCallback() {
+        locationUtils.requestLocationUpdates(new IResult<Location>() {
             @Override
-            public void onLocationResult(LocationResult locationResult) {
-                final Location location = locationResult.getLastLocation();
-                if (location != null) {
-                    locationProvider.removeLocationUpdates(this);
-                    currentLocation = ObjectUtils.toMyLocation(location);
+            public void onResult(Location result) {
+                if (result != null) {
+                    locationUtils.removeLocationUpdates();
+                    currentLocation = ObjectUtils.toMyLocation(result);
                     final int modePosition = searchModeSpinner.getSelectedItemPosition();
                     if (modePosition == Contract.STORE_MODE) {
                         loadAllNewStores();
@@ -239,8 +228,9 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                     }
                 }
             }
-        };
-        locationProvider.requestLocationUpdates(locationRequest, locationCallback, null);
+            @Override
+            public void onFailure(@NonNull Exception exp) { }
+        });
     }
     //load from offset 0,discard old data in RecyclerView and load new data to it.
     public void loadAllNewStores() {
@@ -272,7 +262,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                             return;
                         }
                         StoreViewFragment fragment = (StoreViewFragment)
-                                fragmentCreator.setCurrentFragment(STORE_VIEW);
+                                fragmentCreator.setCurrentFragmentNoArgs(STORE_VIEW);
                         fragment.updateDataSet(result, currentLocation);
                     }
                     @Override
@@ -312,7 +302,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                             return;
                         }
                         ProductViewFragment fragment = (ProductViewFragment)
-                                fragmentCreator.setCurrentFragment(PRODUCT_VIEW);
+                                fragmentCreator.setCurrentFragmentNoArgs(PRODUCT_VIEW);
                         fragment.updateDataSet(result, currentLocation);
                     }
                     @Override
@@ -439,14 +429,20 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     private void launchSearchActivity() {
         final int mode = searchModeSpinner.getSelectedItemPosition();
         final Intent intent = new Intent(this, SearchActivity.class);
+        final IHaveIdAndName selectedItem = ((IHaveIdAndName) typeSpinner.getSelectedItem());
+        if (selectedItem == null) {
+            return;
+        }
         if(mode == Contract.STORE_MODE) {
             intent.putExtra(Contract.BUNDLE_MODE_KEY, Contract.STORE_MODE);
             intent.putExtra(Contract.BUNDLE_SEARCH_HINT_KEY, R.string.storeSearchHint);
             intent.putExtra(Contract.BUNDLE_ACTION_LOGO_KEY, R.drawable.ic_actionbar_shop);
+            intent.putExtra(Contract.BUNDLE_MODE_TYPE_KEY, selectedItem.getId());
         } else if(mode == Contract.PRODUCT_MODE) {
             intent.putExtra(Contract.BUNDLE_MODE_KEY, Contract.PRODUCT_MODE);
             intent.putExtra(Contract.BUNDLE_SEARCH_HINT_KEY, R.string.productSearchHint);
             intent.putExtra(Contract.BUNDLE_ACTION_LOGO_KEY, R.drawable.ic_actionbar_product);
+            intent.putExtra(Contract.BUNDLE_MODE_TYPE_KEY, selectedItem.getId());
         } else {
             return;
         }

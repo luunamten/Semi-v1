@@ -34,7 +34,7 @@ public class FragmentCreator {
         if(bundles.length > 0) {
             this.bundles.addAll(Arrays.asList(bundles));
         }
-        return this; 
+        return this;
     }
 
     public Fragment setCurrentFragment(int index) {

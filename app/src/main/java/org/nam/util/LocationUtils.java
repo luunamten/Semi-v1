@@ -14,7 +14,10 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
@@ -22,12 +25,15 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import org.nam.MyApp;
 import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 
-public final class LocationUtils {
+public class LocationUtils {
 
-    private  LocationUtils() {}
+    private LocationCallback callback;
+
+    public LocationUtils() {}
 
     public static final int RESOLUTION_CODE = 0;
     public static final int REQUEST_LOCATION_PERMISSION_CODE = 1;
@@ -35,7 +41,7 @@ public final class LocationUtils {
     public static void checkAndRequestLocationSettings(final Activity activity,
                                                     final IResult<LocationSettingsResponse> result) {
         LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setPriority(Contract.LOCATION_ACCURACY)
                 .setInterval(Contract.LOCATION_INTERVAL)
                 .setFastestInterval(Contract.LOCATION_FASTEST_INTERVAL);
         final LocationSettingsRequest request = new LocationSettingsRequest.Builder()
@@ -62,8 +68,8 @@ public final class LocationUtils {
     }
 
     @SuppressLint("MissingPermission")
-    public static Task<Location> getLastLocation(Context context) {
-        final Task<Location> task = LocationServices.getFusedLocationProviderClient(context)
+    public static Task<Location> getLastLocation() {
+        final Task<Location> task = LocationServices.getFusedLocationProviderClient(MyApp.getInstance())
                 .getLastLocation();
         return task;
     }
@@ -80,5 +86,35 @@ public final class LocationUtils {
             }
         }
         return true;
+    }
+
+    @SuppressLint("MissingPermission")
+    public void requestLocationUpdates(final IResult<Location> result) {
+        final FusedLocationProviderClient locationProvider =
+                LocationServices.getFusedLocationProviderClient(MyApp.getInstance());
+        if(callback != null) {
+            locationProvider.removeLocationUpdates(callback);
+        }
+        callback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                result.onResult(locationResult.getLastLocation());
+            }
+        };
+        final LocationRequest locationRequest = LocationRequest.create()
+                .setPriority(Contract.LOCATION_ACCURACY)
+                .setInterval(Contract.LOCATION_INTERVAL)
+                .setFastestInterval(Contract.LOCATION_FASTEST_INTERVAL);
+        LocationServices.getFusedLocationProviderClient(MyApp.getInstance())
+                .requestLocationUpdates(locationRequest, callback, null);
+    }
+
+    public void removeLocationUpdates() {
+        if(callback != null) {
+            LocationServices.getFusedLocationProviderClient(MyApp.getInstance())
+                    .removeLocationUpdates(callback);
+            callback = null;
+        }
     }
 }
