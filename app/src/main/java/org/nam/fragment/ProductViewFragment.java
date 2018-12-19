@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nam.R;
+import org.nam.object.IHaveIdAndName;
 import org.nam.object.Location;
 import org.nam.object.Product;
 import org.nam.custom.OnBottomReachedListener;
@@ -24,12 +25,7 @@ import java.util.List;
 public class ProductViewFragment extends Fragment {
 
     private ProductAdapter recyclerViewAdapter;
-    private Listener listener;
-
-    public static interface Listener {
-        public void onProductItemClick(Product product);
-        public void onProductScrollToLimit(Product product, int position);
-    }
+    private IInteractionWithList<IHaveIdAndName<String>> listener;
 
     public ProductViewFragment() {
         recyclerViewAdapter = new ProductAdapter(new ArrayList<Product>());
@@ -51,16 +47,16 @@ public class ProductViewFragment extends Fragment {
         productRecyclerView.setLayoutManager(layoutManager);
         productRecyclerView.setAdapter(recyclerViewAdapter);
         if(listener != null) {
-            recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
+            recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener<Product>() {
                 @Override
-                public void onBottomReached(Object obj, int position) {
-                    listener.onProductScrollToLimit((Product)obj, position);
+                public void onBottomReached(Product obj, int position) {
+                    listener.onScrollToLimit(obj, position);
                 }
             });
-            recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+            recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener<Product>() {
                 @Override
-                public void onItemClick(Object obj) {
-                    listener.onProductItemClick((Product) obj);
+                public void onItemClick(Product obj) {
+                    listener.onItemClick(obj);
                 }
             });
         }
@@ -77,8 +73,8 @@ public class ProductViewFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof Listener) {
-            listener = (Listener) context;
+        if(context instanceof IInteractionWithList) {
+            listener = (IInteractionWithList<IHaveIdAndName<String>>) context;
         }
     }
 

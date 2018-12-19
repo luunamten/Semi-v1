@@ -23,8 +23,8 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder> {
     private List<Product> products;
     private Location location;
-    private OnBottomReachedListener bottomReachedListener;
-    private OnItemClickListener itemClickListener;
+    private OnBottomReachedListener<Product> bottomReachedListener;
+    private OnItemClickListener<Product> itemClickListener;
     public ProductAdapter(List<Product> products) {
         this.products = products;
     }
@@ -105,11 +105,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         this.location = location;
     }
 
-    public void setOnBottomReachedListener(OnBottomReachedListener listener) {
+    public void setOnBottomReachedListener(OnBottomReachedListener<Product> listener) {
         this.bottomReachedListener = listener;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener<Product> listener) {
         this.itemClickListener = listener;
     }
 

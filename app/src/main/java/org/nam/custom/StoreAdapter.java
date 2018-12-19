@@ -26,8 +26,8 @@ import java.util.List;
 public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHolder> {
     private List<Store> stores;
     private Location location;
-    private OnBottomReachedListener bottomReachedListener;
-    private OnItemClickListener itemClickListener;
+    private OnBottomReachedListener<Store> bottomReachedListener;
+    private OnItemClickListener<Store> itemClickListener;
 
 
     public static class StoreViewHolder extends RecyclerView.ViewHolder {
@@ -121,11 +121,11 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         return stores.size();
     }
 
-    public void setOnBottomReachedListener(OnBottomReachedListener listener) {
+    public void setOnBottomReachedListener(OnBottomReachedListener<Store> listener) {
         this.bottomReachedListener = listener;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener<Store> listener) {
         this.itemClickListener = listener;
     }
 

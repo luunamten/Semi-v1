@@ -1,5 +1,7 @@
 package org.nam.custom;
 
-public interface OnBottomReachedListener {
-    public void onBottomReached(Object obj, int position);
+import org.nam.object.IHaveIdAndName;
+
+public interface OnBottomReachedListener<T> {
+    public void onBottomReached(T obj, int position);
 }

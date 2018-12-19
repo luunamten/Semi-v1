@@ -1,10 +1,12 @@
 package org.nam.object;
+import android.content.Intent;
+
 import java.util.List;
 
-public class Store {
+public class Store implements IHaveIdAndName<String> {
     private String id;
     private String title;
-    private String fullName;
+    private String name;
     private String description;
     private Type type;
     private List<Utility> utilities;
@@ -16,7 +18,7 @@ public class Store {
     private String startEnd;
     private List<Product> products;
 
-    public static class Type implements IHaveIdAndName {
+    public static class Type implements IHaveIdAndName<Integer> {
         private int id;
         private String name;
         public Type() {}
@@ -25,11 +27,11 @@ public class Store {
             this.name = name;
         }
         @Override
-        public int getId() {
+        public Integer getId() {
             return id;
         }
         @Override
-        public void setId(int id) {
+        public void setId(Integer id) {
             this.id = id;
         }
         @Override
@@ -44,7 +46,7 @@ public class Store {
         public String toString() {return this.name;}
     }
 
-    public static class Utility implements IHaveIdAndName {
+    public static class Utility implements IHaveIdAndName<Integer> {
         private int id;
         private String name;
         public Utility() {}
@@ -53,11 +55,11 @@ public class Store {
             this.name = name;
         }
         @Override
-        public int getId() {
+        public Integer getId() {
             return id;
         }
         @Override
-        public void setId(int id) {
+        public void setId(Integer id) {
             this.id = id;
         }
         @Override
@@ -88,12 +90,12 @@ public class Store {
         this.title = title;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String fullName) {
+        this.name = fullName;
     }
 
     public String getDescription() {

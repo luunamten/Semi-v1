@@ -171,7 +171,7 @@ public class StoreConnector {
                             Store store = new Store();
                             store.setId((String) map.get(DBContract.ID));
                             store.setTitle((String) map.get(DBContract.Store.TITLE));
-                            store.setFullName((String) map.get(DBContract.Store.FULL_NAME));
+                            store.setName((String) map.get(DBContract.Store.FULL_NAME));
                             store.setImageURL((String) map.get(DBContract.Store.IMAGE_URL));
                             store.setDescription((String) map.get(DBContract.Store.DESCRIPTION));
                             store.setContact((String) map.get(DBContract.Store.CONTACT));

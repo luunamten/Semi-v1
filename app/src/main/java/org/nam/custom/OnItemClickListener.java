@@ -1,5 +1,7 @@
 package org.nam.custom;
 
-public interface OnItemClickListener {
-    public void onItemClick(Object obj);
+import org.nam.object.IHaveIdAndName;
+
+public interface OnItemClickListener<T> {
+    public void onItemClick(T obj);
 }

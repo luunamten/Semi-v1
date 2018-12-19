@@ -3,12 +3,12 @@ package org.nam.util;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -38,7 +38,7 @@ public class LocationUtils {
     public static final int RESOLUTION_CODE = 0;
     public static final int REQUEST_LOCATION_PERMISSION_CODE = 1;
 
-    public static void checkAndRequestLocationSettings(final Activity activity,
+    public static void checkAndRequestLocationSettings(final Activity activity,@Nullable
                                                     final IResult<LocationSettingsResponse> result) {
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(Contract.LOCATION_ACCURACY)
@@ -51,7 +51,9 @@ public class LocationUtils {
         task.addOnSuccessListener(activity, new OnSuccessListener<LocationSettingsResponse>() {
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                result.onResult(locationSettingsResponse);
+                if (result != null) {
+                    result.onResult(locationSettingsResponse);
+                }
             }
         }).addOnFailureListener(activity, new OnFailureListener() {
             @Override
@@ -60,7 +62,9 @@ public class LocationUtils {
                 try {
                     rexp.startResolutionForResult(activity, RESOLUTION_CODE);
                 } catch (IntentSender.SendIntentException sexp) {
-                    result.onFailure(sexp);
+                    if (result != null) {
+                        result.onFailure(sexp);
+                    }
                     Log.w("my_error", sexp);
                 }
             }

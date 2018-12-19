@@ -43,6 +43,7 @@ import org.nam.firebase.ProductConnector;
 import org.nam.firebase.StoreConnector;
 import org.nam.fragment.ErrorFragment;
 import org.nam.fragment.FragmentCreator;
+import org.nam.fragment.IInteractionWithList;
 import org.nam.fragment.MyMapFragment;
 import org.nam.fragment.ProductViewFragment;
 import org.nam.fragment.StoreViewFragment;
@@ -57,8 +58,7 @@ import org.nam.util.ObjectUtils;
 
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements StoreViewFragment.Listener,
-        ProductViewFragment.Listener {
+public class HomeActivity extends AppCompatActivity implements IInteractionWithList<IHaveIdAndName<String>> {
     private static final int STORE_VIEW = 0;
     private static final int PRODUCT_VIEW = 1;
     private static final int NETWORK_ERR_VIEW = 2;
@@ -152,21 +152,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     }
 
     private void onPermissionGranted() {
-        checkAndRequestLocationSettings();
-    }
-
-
-    private void checkAndRequestLocationSettings() {
-        LocationUtils.checkAndRequestLocationSettings(this,
-                new IResult<LocationSettingsResponse>() {
-            @Override
-            public void onResult(LocationSettingsResponse result) {
-                //Settings OK!
-                onSettingsOK();
-            }
-            @Override
-            public void onFailure(@NonNull Exception exp) { }
-        });
+        LocationUtils.checkAndRequestLocationSettings(this, null);
     }
 
     @Override
@@ -182,13 +168,10 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     public void onActivityResult(int requestCode, int result, Intent data) {
         if (result == RESULT_OK) {
             if (requestCode == LocationUtils.RESOLUTION_CODE) {
-                onSettingsOK();
+                //Settings OK, load stores
+                loadFirst();
             }
         }
-    }
-
-    private void onSettingsOK() {
-        loadFirst();
     }
 
     @SuppressLint("MissingPermission")
@@ -242,7 +225,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                 != Contract.STORE_MODE) {
             return;
         }
-        IHaveIdAndName selectedItem = ((IHaveIdAndName) typeSpinner.getSelectedItem());
+        final IHaveIdAndName<Integer> selectedItem = (IHaveIdAndName<Integer>) typeSpinner.getSelectedItem();
         if (selectedItem == null) {
             return;
         }
@@ -282,7 +265,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                 != Contract.PRODUCT_MODE) {
             return;
         }
-        IHaveIdAndName selectedItem = ((IHaveIdAndName) typeSpinner.getSelectedItem());
+        final IHaveIdAndName<Integer> selectedItem = (IHaveIdAndName<Integer>) typeSpinner.getSelectedItem();
         if (selectedItem == null) {
             return;
         }
@@ -320,7 +303,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                 != Contract.PRODUCT_MODE) {
             return;
         }
-        final IHaveIdAndName selectedItem = ((IHaveIdAndName) typeSpinner.getSelectedItem());
+        final IHaveIdAndName<Integer> selectedItem = (IHaveIdAndName<Integer>) typeSpinner.getSelectedItem();
         if (selectedItem == null) {
             return;
         }
@@ -359,7 +342,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
                 != Contract.STORE_MODE) {
             return;
         }
-        IHaveIdAndName selectedItem = ((IHaveIdAndName) typeSpinner.getSelectedItem());
+        final IHaveIdAndName<Integer> selectedItem = (IHaveIdAndName<Integer>) typeSpinner.getSelectedItem();
         if (selectedItem == null) {
             return;
         }
@@ -391,25 +374,6 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     }
 
     @Override
-    public void onStoreItemClick(Store store) {
-
-    }
-
-    @Override
-    public void onStoreScrollToLimit(Store store, final int position) {
-        loadStoresAt(position + 1);
-    }
-
-    @Override
-    public void onProductItemClick(Product product) {
-    }
-
-    @Override
-    public void onProductScrollToLimit(Product product, final int position) {
-        loadProductsAt(position + 1);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
@@ -429,7 +393,7 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     private void launchSearchActivity() {
         final int mode = searchModeSpinner.getSelectedItemPosition();
         final Intent intent = new Intent(this, SearchActivity.class);
-        final IHaveIdAndName selectedItem = ((IHaveIdAndName) typeSpinner.getSelectedItem());
+        final IHaveIdAndName<Integer> selectedItem = ((IHaveIdAndName<Integer>) typeSpinner.getSelectedItem());
         if (selectedItem == null) {
             return;
         }
@@ -473,5 +437,21 @@ public class HomeActivity extends AppCompatActivity implements StoreViewFragment
     protected void onStart() {
         super.onStart();
         fragmentCreator.recovery();
+    }
+
+    @Override
+    public void onItemClick(IHaveIdAndName<String> obj) {
+        if(obj instanceof Store) {
+        } else if(obj instanceof Product) {
+        }
+    }
+
+    @Override
+    public void onScrollToLimit(IHaveIdAndName<String> obj, int position) {
+        if(obj instanceof Store) {
+            loadStoresAt(position + 1);
+        } else if(obj instanceof Product) {
+            loadProductsAt(position + 1);
+        }
     }
 }

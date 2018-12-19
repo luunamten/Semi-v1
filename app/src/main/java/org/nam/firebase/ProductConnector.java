@@ -88,8 +88,8 @@ public class ProductConnector {
                             Product product = new Product();
                             product.setId((String) map.get(DBContract.ID));
                             product.setTitle((String) map.get(DBContract.Product.TITLE));
-                            product.setFullName((String) map.get(DBContract.Product.FULL_NAME));
-                            product.setFullName((String) map.get(DBContract.Product.DESCRIPTION));
+                            product.setName((String) map.get(DBContract.Product.FULL_NAME));
+                            product.setDescription((String) map.get(DBContract.Product.DESCRIPTION));
                             product.setImageURL((String) map.get(DBContract.Product.IMAGE_URL));
                             product.setCost(((Number)map.get(DBContract.Product.COST)).longValue());
                             product.setType(

@@ -37,11 +37,9 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     private LocationUtils locationUtils;
     private int type;
     private String query;
-    private int count = 0;
 
     @Override
     public void search(int type, String query) {
-        Log.w("cccc", String.valueOf(getActivity()));
         this.type = type;
         this.query = query;
         searchStores(type, query);
@@ -71,7 +69,6 @@ public class StoreSearchFragment extends Fragment implements ISearch {
 
     @Override
     public void clickItem(String id) {
-        Log.w("Test_t", id);
     }
 
     public StoreSearchFragment() {
@@ -81,16 +78,14 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if(context instanceof IUseFragment) {
+            Log.w("King", "attach");
+            ((IUseFragment)context).onFragmentAttached(this);
+        }
         setupFragmentCreator();
         storeConnector = StoreConnector.getInstance();
         locationUtils = new LocationUtils();
         requestLocationUpdate();
-        SearchActivity searchActivity = (SearchActivity) context;
-        searchActivity.fragment = this;
-        if(searchActivity.i == 0) {
-            searchActivity.i++;
-            SearchActivity.my = this;
-        }
     }
 
     @Override
@@ -140,7 +135,6 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.w("sat_f", "detach");
     }
 
     @Override

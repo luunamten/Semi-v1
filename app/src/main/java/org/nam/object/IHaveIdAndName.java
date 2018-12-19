@@ -1,8 +1,8 @@
 package org.nam.object;
 
-public interface IHaveIdAndName {
-    public int getId();
-    public void setId(int id);
+public interface IHaveIdAndName<T> {
+    public T getId();
+    public void setId(T id);
     public String getName();
     public void setName(String name);
 }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nam.R;
+import org.nam.object.IHaveIdAndName;
 import org.nam.object.Location;
 import org.nam.object.Store;
 import org.nam.custom.OnBottomReachedListener;
@@ -24,12 +25,7 @@ import java.util.List;
 public class StoreViewFragment extends Fragment {
 
     private StoreAdapter recyclerViewAdapter;
-    private Listener listener;
-
-    public static interface Listener {
-        public void onStoreItemClick(Store store);
-        public void onStoreScrollToLimit(Store store, int position);
-    }
+    private IInteractionWithList<IHaveIdAndName<String>> listener;
 
     public StoreViewFragment() {
         recyclerViewAdapter = new StoreAdapter(new ArrayList<Store>());
@@ -51,16 +47,16 @@ public class StoreViewFragment extends Fragment {
         storeRecyclerView.setLayoutManager(layoutManager);
         storeRecyclerView.setAdapter(recyclerViewAdapter);
         if(listener != null) {
-            recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
+            recyclerViewAdapter.setOnBottomReachedListener(new OnBottomReachedListener<Store>() {
                 @Override
-                public void onBottomReached(Object obj, int position) {
-                    listener.onStoreScrollToLimit((Store)obj, position);
+                public void onBottomReached(Store obj, int position) {
+                    listener.onScrollToLimit(obj, position);
                 }
             });
-            recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+            recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener<Store>() {
                 @Override
-                public void onItemClick(Object obj) {
-                    listener.onStoreItemClick((Store) obj);
+                public void onItemClick(Store obj) {
+                    listener.onItemClick(obj);
                 }
             });;
         }
@@ -77,8 +73,8 @@ public class StoreViewFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof Listener) {
-            listener = (Listener) context;
+        if(context instanceof IInteractionWithList) {
+            listener = (IInteractionWithList<IHaveIdAndName<String>>) context;
         }
     }
 

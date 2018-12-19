@@ -1,15 +1,17 @@
 package org.nam.object;
 
-public class Product {
+import android.content.Intent;
+
+public class Product implements IHaveIdAndName<String>{
     private String id;
     private Store store;
     private String title;
-    private String fullName;
+    private String name;
     private String description;
     private long cost;
     private String imageURL;
     private Type type;
-    public static class Type implements IHaveIdAndName {
+    public static class Type implements IHaveIdAndName<Integer> {
         private int id;
         private String name;
         public Type() {}
@@ -18,11 +20,11 @@ public class Product {
             this.name = name;
         }
         @Override
-        public int getId() {
+        public Integer getId() {
             return id;
         }
         @Override
-        public void setId(int id) {
+        public void setId(Integer id) {
             this.id = id;
         }
         @Override
@@ -36,11 +38,11 @@ public class Product {
         @Override
         public String toString() {return this.name;}
     }
-
+    @Override
     public String getId() {
         return id;
     }
-
+    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -68,13 +70,13 @@ public class Product {
     public void setTitle(String title) {
         this.title = title;
     }
-
-    public String getFullName() {
-        return fullName;
+    @Override
+    public String getName() {
+        return name;
     }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    @Override
+    public void setName(String fullName) {
+        this.name = fullName;
     }
 
     public long getCost() {

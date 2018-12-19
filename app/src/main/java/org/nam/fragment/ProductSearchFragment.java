@@ -16,8 +16,7 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     private static final int PRODUCT_VIEW = 0;
     private static final int NETWORK_ERR_VIEW = 1;
     private static final int EMPTY_ERR_VIEW = 2;
-    private static final int LOCATION_ERR_VIEW = 3;
-    private static final int LOAD_VIEW = 4;
+    private static final int LOAD_VIEW = 3;
 
     @Override
     public void search(int type, String query) {
@@ -47,14 +46,11 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     private void setupFragmentCreator() {
         final Bundle networkError = new Bundle();
         final Bundle emptyError = new Bundle();
-        final Bundle locationError = new Bundle();
         final Bundle loading = new Bundle();
         networkError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_trees);
         networkError.putString(ErrorFragment.MESSAGE, getString(R.string.networkErrorMessage));
         emptyError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_blank);
         emptyError.putString(ErrorFragment.MESSAGE, getString(R.string.emptyResultMessage));
-        locationError.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_desert);
-        locationError.putString(ErrorFragment.MESSAGE, getString(R.string.locationErrorMessage));
         loading.putInt(ErrorFragment.IMAGE_RESOURCE, R.drawable.ic_beach);
         loading.putString(ErrorFragment.MESSAGE, getString(R.string.loadMessage));
         fragmentCreator = new FragmentCreator(R.id.fragmentContainer,
@@ -62,7 +58,6 @@ public class ProductSearchFragment extends Fragment implements ISearch {
         fragmentCreator.add(ProductViewFragment.class, (Bundle) null)
                 .add(ErrorFragment.class, networkError)
                 .add(ErrorFragment.class, emptyError)
-                .add(ErrorFragment.class, locationError)
                 .add(ErrorFragment.class, loading);
         fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
     }

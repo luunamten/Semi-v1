@@ -25,19 +25,22 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import org.nam.contract.Contract;
 import org.nam.custom.MyFragmentAdapter;
 import org.nam.firebase.IResult;
+import org.nam.fragment.IInteractionWithList;
 import org.nam.fragment.ISearch;
+import org.nam.fragment.IUseFragment;
 import org.nam.fragment.MyMapFragment;
 import org.nam.fragment.ProductSearchFragment;
 import org.nam.fragment.ProductViewFragment;
 import org.nam.fragment.StoreSearchFragment;
 import org.nam.fragment.StoreViewFragment;
+import org.nam.object.IHaveIdAndName;
 import org.nam.object.Product;
 import org.nam.object.Store;
 import org.nam.util.LocationUtils;
 import org.nam.util.StringUtils;
 
-public class SearchActivity extends AppCompatActivity implements StoreViewFragment.Listener,
-        ProductViewFragment.Listener {
+public class SearchActivity extends AppCompatActivity implements IUseFragment,
+        IInteractionWithList<IHaveIdAndName<String>> {
     private final static int SEARCH_FRAGMENT = 0;
     private final static int MAP_FRAGMENT = 1;
     private int mode;
@@ -45,18 +48,11 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private MyFragmentAdapter fragmentAdapter;
-    public int i = 0;
-    public static Fragment my;
-    public Fragment fragment;
-    static SearchActivity myy;
+    private ISearch searchFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        if(i == 0) {
-            i++;
-            myy = this;
-        }
         final Intent intent = getIntent();
         setupActionBar(intent);
         mode = intent.getIntExtra(Contract.BUNDLE_MODE_KEY, -1);
@@ -105,9 +101,7 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
             @Override
             public boolean onQueryTextSubmit(String s) {
                 searchView.clearFocus();
-                ISearch iSearch = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-                Log.w("compe", String.valueOf(myy == SearchActivity.this ));
-                //iSearch.search(typeId, StringUtils.normalize(s));
+                searchFragment.search(typeId, StringUtils.normalize(s));
                 return true;
             }
             @Override
@@ -160,9 +154,7 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
     public void onActivityResult(int request, int result, Intent intent) {
         super.onActivityResult(request, result, intent);
         if(result == Activity.RESULT_OK) {
-            if(request == LocationUtils.RESOLUTION_CODE) {
-                onLocationSettingsOK();
-            }
+            if(request == LocationUtils.RESOLUTION_CODE) { }
         }
     }
 
@@ -173,42 +165,25 @@ public class SearchActivity extends AppCompatActivity implements StoreViewFragme
     }
 
     private void onPermissionGranted() {
-        LocationUtils.checkAndRequestLocationSettings(this,
-                new IResult<LocationSettingsResponse>() {
-            @Override
-            public void onResult(LocationSettingsResponse result) {
-                onLocationSettingsOK();
-            }
-            @Override
-            public void onFailure(@NonNull Exception exp) { }
-        });
-    }
-
-    private void onLocationSettingsOK() {
-
+        LocationUtils.checkAndRequestLocationSettings(this, null);
     }
 
     @Override
-    public void onProductItemClick(Product product) {
-        //ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-        //fragment.clickItem(product.getId());
+    public void onFragmentAttached(Fragment fragment) {
+        Log.w("King", "out");
+        if(fragment instanceof ISearch) {
+            Log.w("King", "in");
+            searchFragment = (ISearch) fragment;
+        }
     }
 
     @Override
-    public void onProductScrollToLimit(Product product, int position) {
-        //ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-        //fragment.scroll(product.getId());
+    public void onItemClick(IHaveIdAndName<String> obj) {
+        searchFragment.clickItem(obj.getId());
     }
 
     @Override
-    public void onStoreItemClick(Store store) {
-        //ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-        //fragment.clickItem(store.getId());
-    }
-
-    @Override
-    public void onStoreScrollToLimit(Store store, int position) {
-        //ISearch fragment = (ISearch) fragmentAdapter.getItem(SEARCH_FRAGMENT);
-        //fragment.scroll(store.getId());
+    public void onScrollToLimit(IHaveIdAndName<String> obj, int position) {
+        searchFragment.scroll(obj.getId());
     }
 }
