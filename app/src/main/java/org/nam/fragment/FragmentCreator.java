@@ -19,7 +19,7 @@ public class FragmentCreator {
     private List<Class<? extends Fragment>> classes;
     private List<Bundle> bundles;
     private boolean isStateLoss;
-    private static String TAG = "F";
+    private final static String TAG = "F";
 
     public FragmentCreator(int container, FragmentManager fragmentManager) {
         this.container = container;
