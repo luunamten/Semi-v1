@@ -34,9 +34,11 @@ import org.nam.fragment.ProductViewFragment;
 import org.nam.fragment.StoreSearchFragment;
 import org.nam.fragment.StoreViewFragment;
 import org.nam.object.IHaveIdAndName;
+import org.nam.object.Location;
 import org.nam.object.Product;
 import org.nam.object.Store;
 import org.nam.util.LocationUtils;
+import org.nam.util.SearchBox;
 import org.nam.util.StringUtils;
 
 public class SearchActivity extends AppCompatActivity implements IUseFragment,

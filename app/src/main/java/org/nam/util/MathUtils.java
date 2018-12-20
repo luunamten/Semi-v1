@@ -1,8 +1,8 @@
 package org.nam.util;
 
-import android.location.Location;
-
 import com.google.android.gms.maps.model.LatLng;
+
+import org.nam.object.Location;
 
 public final class MathUtils {
     /*
@@ -61,8 +61,8 @@ public final class MathUtils {
         return points;
     }
 
-    public static double haversine(org.nam.object.Location from,
-                                      org.nam.object.Location to) {
+    public static double haversine(Location from,
+                                      Location to) {
         double fromLat = Math.toRadians(from.getLatitude());
         double fromLng = Math.toRadians(from.getLongitude());
         double toLat = Math.toRadians(to.getLatitude());

@@ -3,11 +3,11 @@ package org.nam.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,18 +31,22 @@ import com.google.android.gms.tasks.Task;
 import org.nam.R;
 import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
+import org.nam.firebase.StoreConnector;
+import org.nam.object.Location;
 import org.nam.util.LocationUtils;
 import org.nam.util.MathUtils;
+import org.nam.util.SearchBox;
 
 import java.util.Arrays;
 
-public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISearch {
+public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISearch, View.OnClickListener {
 
     private GoogleMap map;
-    private Context context;
-    private double currentBoxDimen;
     private int type;
     private String query;
+    private SearchBox searchBox;
+    private StoreConnector storeConnector;
+    private int scaleFactor;
     public MyMapFragment() {
         // Required empty public constructor
     }
@@ -52,15 +57,19 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         View view = inflater.inflate(R.layout.fragment_my_map, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
+        AppCompatImageButton upButton = view.findViewById(R.id.upButton);
+        AppCompatImageButton downButton = view.findViewById(R.id.downButton);
         mapFragment.getMapAsync(this);
+        upButton.setOnClickListener(this);
+        downButton.setOnClickListener(this);
         return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
-        currentBoxDimen = Contract.VISIBLE_BOX_MIN_DIMEN;
+        storeConnector = StoreConnector.getInstance();
+        scaleFactor = 0;
     }
 
     @Override
@@ -72,28 +81,36 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     @Override
     public void onMapReady(final GoogleMap map) {
         this.map = map;
+        searchBox = new SearchBox();
+        searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN);
         map.setMyLocationEnabled(true);
-        map.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+        map.setIndoorEnabled(false);
+        map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
-            public void onCameraMoveCanceled() {
+            public void onCameraIdle() {
+                LatLng cameraTarget = map.getCameraPosition().target;
+                if(!searchBox.isContains(cameraTarget)) {
+                    searchBox.setCenter(cameraTarget);
+                    searchBox.draw(map);
+                }
             }
         });
-        getLastLocation(new IResult<Location>() {
+        getLastLocation(new IResult<android.location.Location>() {
             @Override
-            public void onResult(Location result) {
+            public void onResult(android.location.Location result) {
                 final LatLng location = new LatLng(result.getLatitude(), result.getLongitude());
-                map.moveCamera(CameraUpdateFactory.newLatLng(location));
+                moveCameraToSearchBox(location);
             }
             @Override
             public void onFailure(@NonNull Exception exp) { }
         });
     }
 
-    private void getLastLocation(final IResult<Location> result) {
+    private void getLastLocation(final IResult<android.location.Location> result) {
         LocationUtils.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                .addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
                     @Override
-                    public void onSuccess(Location location) {
+                    public void onSuccess(android.location.Location location) {
                         if(location == null) {
                             return;
                         }
@@ -107,11 +124,12 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         });
     }
 
-    private void drawBox() {
-        final LatLng[] hidingBoxPoints = MathUtils.getBoxPoints(map.getCameraPosition().target, 10);
-        final LatLng[] visibleBoxPoints = MathUtils.getBoxPoints(map.getCameraPosition().target, 2);
-        map.addPolygon(new PolygonOptions().add(hidingBoxPoints)
-                .addHole(Arrays.asList(visibleBoxPoints)).fillColor(0x55000000));
+    private void moveCameraToSearchBox(LatLng location) {
+        searchBox.setCenter(location);
+        searchBox.draw(map);
+        LatLngBounds bounds = new LatLngBounds( searchBox.getSouthWest(),
+                searchBox.getNorthEast());
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, Contract.VISIBLE_BOX_PADDING));
     }
 
     @Override
@@ -120,9 +138,35 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         this.query = query;
     }
 
+    private void searchNearbyCenterStores() {
+        //storeConnector.getNearbyStoresByKeywords();
+    }
+
     @Override
     public void scroll(String lastId) { }
 
     @Override
     public void clickItem(String id) { }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.upButton:
+                if(scaleFactor == Contract.DIMEN_SCALE_FACTOR_MAX) {
+                    return;
+                }
+                scaleFactor++;
+                searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN * (1 << scaleFactor));
+                moveCameraToSearchBox(map.getCameraPosition().target);
+                break;
+            case R.id.downButton:
+                if(scaleFactor == 0) {
+                    return;
+                }
+                scaleFactor--;
+                searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN * (1 << scaleFactor));
+                moveCameraToSearchBox(map.getCameraPosition().target);
+                break;
+        }
+    }
 }

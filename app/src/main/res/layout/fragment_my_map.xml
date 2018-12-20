@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         map:cameraZoom="15"
-        map:mapType="normal"
+        map:mapType="terrain"
         map:uiCompass="true"
         map:uiTiltGestures="false"
         map:uiZoomControls="false" />
@@ -32,6 +32,7 @@
         android:layout_marginBottom="15dp"
         android:background="@drawable/map_up_button_selector" />
     <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/downButton"
         android:layout_alignEnd="@+id/upButton"
         android:layout_below="@+id/upButton"
         android:layout_alignParentEnd="true"

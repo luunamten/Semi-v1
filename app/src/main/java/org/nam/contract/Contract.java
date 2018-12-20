@@ -24,7 +24,10 @@ public final class Contract {
     public static final int LOCATION_FASTEST_INTERVAL = 3000; //ms
     //box
     public static final double VISIBLE_BOX_MIN_DIMEN = 0.25; //km
-    public static final double VISIBLE_BOX_MAX_DIMEN = 4; //km
+    public static final int DIMEN_SCALE_FACTOR_MAX = 4;
+    public static final double VISIBLE_BOX_MAX_DIMEN = 0.25 * (1 << DIMEN_SCALE_FACTOR_MAX); //km
     public static final double HIDING_BOX_DIMEN = 16;
+    public static final int HIDING_BOX_COLOR = 0x33000000;
+    public static final int VISIBLE_BOX_PADDING = 100; //px
     private Contract() {}
 }
