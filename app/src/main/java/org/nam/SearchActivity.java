@@ -49,6 +49,7 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
     private ViewPager viewPager;
     private MyFragmentAdapter fragmentAdapter;
     private ISearch searchFragment;
+    private ISearch mapFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +102,10 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
             @Override
             public boolean onQueryTextSubmit(String s) {
                 searchView.clearFocus();
-                searchFragment.search(typeId, StringUtils.normalize(s));
+                int currentItem = viewPager.getCurrentItem();
+                if(currentItem == SEARCH_FRAGMENT) {
+                    searchFragment.search(typeId, StringUtils.normalize(s));
+                } else if(currentItem == MAP_FRAGMENT) { }
                 return true;
             }
             @Override

@@ -22,6 +22,9 @@ public final class Contract {
     public static final int LOCATION_ACCURACY = LocationRequest.PRIORITY_HIGH_ACCURACY;
     public static final int LOCATION_INTERVAL = 3000; //ms
     public static final int LOCATION_FASTEST_INTERVAL = 3000; //ms
-
+    //box
+    public static final double VISIBLE_BOX_MIN_DIMEN = 0.25; //km
+    public static final double VISIBLE_BOX_MAX_DIMEN = 4; //km
+    public static final double HIDING_BOX_DIMEN = 16;
     private Contract() {}
 }

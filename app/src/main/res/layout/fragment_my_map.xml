@@ -22,4 +22,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/mapFlagDescription" />
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/upButton"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/map_up_button_selector" />
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_alignEnd="@+id/upButton"
+        android:layout_below="@+id/upButton"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/map_down_button_selector" />
 </RelativeLayout>

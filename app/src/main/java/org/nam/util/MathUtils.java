@@ -37,7 +37,7 @@ public final class MathUtils {
         double halfDimen = dimen / 2;
         double extraLat = kmToLat(halfDimen);
         double extraLng = kmToLng(halfDimen, center.latitude);
-        LatLng[] points = new LatLng[]{
+        LatLng[] points = {
                 new LatLng(center.latitude + extraLat, center.longitude - extraLng),
                 new LatLng(center.latitude - extraLat, center.longitude - extraLng),
                 new LatLng(center.latitude - extraLat, center.longitude + extraLng),
@@ -52,7 +52,7 @@ public final class MathUtils {
         double longitude = location.getLongitude();
         double extraLat = kmToLat(halfDimen);
         double extraLng = kmToLng(halfDimen, latitude);
-        LatLng[] points = new LatLng[]{
+        LatLng[] points = {
                 new LatLng(latitude + extraLat, longitude - extraLng),
                 new LatLng(latitude - extraLat, longitude - extraLng),
                 new LatLng(latitude - extraLat, longitude + extraLng),
