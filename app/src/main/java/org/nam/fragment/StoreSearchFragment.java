@@ -47,24 +47,7 @@ public class StoreSearchFragment extends Fragment implements ISearch {
 
     @Override
     public void scroll(String lastId) {
-        storeConnector.getStoresByKeywords(type, query, lastId,
-                new IResult<List<Store>>() {
-                    @Override
-                    public void onResult(List<Store> result) {
-                        Fragment fragment = fragmentCreator.getCurrentFragment();
-                        if(!(fragment instanceof StoreViewFragment)) {
-                            return;
-                        }
-                        StoreViewFragment storeFragment = (StoreViewFragment) fragment;
-                        if (result.size() == 0 && storeFragment.getItemCount() == 0) {
-                            fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
-                            return;
-                        }
-                        storeFragment.addDataSet(result, currentLocation);
-                    }
-                    @Override
-                    public void onFailure(@NonNull Exception exp) { }
-                });
+        getMoreStores(lastId);
     }
 
     @Override
@@ -160,6 +143,27 @@ public class StoreSearchFragment extends Fragment implements ISearch {
                     public void onFailure(@NonNull Exception exp) {
                         fragmentCreator.setCurrentFragment(NETWORK_ERR_VIEW);
                     }
+                });
+    }
+
+    public void getMoreStores(String lastId) {
+        storeConnector.getStoresByKeywords(type, query, lastId,
+                new IResult<List<Store>>() {
+                    @Override
+                    public void onResult(List<Store> result) {
+                        Fragment fragment = fragmentCreator.getCurrentFragment();
+                        if(!(fragment instanceof StoreViewFragment)) {
+                            return;
+                        }
+                        StoreViewFragment storeFragment = (StoreViewFragment) fragment;
+                        if (result.size() == 0 && storeFragment.getItemCount() == 0) {
+                            fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
+                            return;
+                        }
+                        storeFragment.addDataSet(result, currentLocation);
+                    }
+                    @Override
+                    public void onFailure(@NonNull Exception exp) { }
                 });
     }
 

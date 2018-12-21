@@ -172,6 +172,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
             MarkerOptions options = new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.place))
                     .title(store.getTitle())
+                    .anchor(0.5f,0.5f)
                     .position(new LatLng(store.getGeo().getLatitude(),
                             store.getGeo().getLongitude()));
             Marker marker = map.addMarker(options);
@@ -192,6 +193,13 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     @Override
     public void clickItem(String id) { }
 
+    private void updateWhenScaleSearchBox() {
+        searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN * (1 << scaleFactor));
+        moveCameraToSearchBox(map.getCameraPosition().target);
+        removePlaces();
+        searchNearbyCenterStores();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -200,19 +208,14 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
                     return;
                 }
                 scaleFactor++;
-                searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN * (1 << scaleFactor));
-                moveCameraToSearchBox(map.getCameraPosition().target);
-                searchNearbyCenterStores();
+                updateWhenScaleSearchBox();
                 break;
             case R.id.downButton:
                 if(scaleFactor == 0) {
                     return;
                 }
                 scaleFactor--;
-                searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN * (1 << scaleFactor));
-                moveCameraToSearchBox(map.getCameraPosition().target);
-                removePlaces();
-                searchNearbyCenterStores();
+                updateWhenScaleSearchBox();
                 break;
         }
     }
