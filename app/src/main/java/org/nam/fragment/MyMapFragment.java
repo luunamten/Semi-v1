@@ -92,6 +92,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
                 if(!searchBox.isContains(cameraTarget)) {
                     searchBox.setCenter(cameraTarget);
                     searchBox.draw(map);
+                } else {
+
                 }
             }
         });
