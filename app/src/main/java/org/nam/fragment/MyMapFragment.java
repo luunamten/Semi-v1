@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
@@ -19,9 +20,13 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -38,6 +43,7 @@ import org.nam.util.LocationUtils;
 import org.nam.util.MathUtils;
 import org.nam.util.SearchBox;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,6 +54,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     private String query;
     private SearchBox searchBox;
     private StoreConnector storeConnector;
+    private List<Marker> markers;
     private int scaleFactor;
     public MyMapFragment() {
         // Required empty public constructor
@@ -74,6 +81,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         scaleFactor = 0;
         type = -1;
         query = "";
+        markers = new ArrayList<>();
     }
 
     @Override
@@ -94,11 +102,11 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
             public void onCameraIdle() {
                 LatLng cameraTarget = map.getCameraPosition().target;
                 if(!searchBox.isContains(cameraTarget)) {
+                    removePlaces();
                     searchBox.setCenter(cameraTarget);
                     searchBox.draw(map);
-                } else {
-
                 }
+                searchNearbyCenterStores();
             }
         });
         getLastLocation(new IResult<android.location.Location>() {
@@ -116,7 +124,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         LocationUtils.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
                     @Override
-                    public void onSuccess(android.location.Location location) {
+                    public void onSuccess(@Nullable android.location.Location location) {
                         if(location == null) {
                             return;
                         }
@@ -145,15 +153,37 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     }
 
     private void searchNearbyCenterStores() {
-        storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), 0,
+        storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), markers.size(),
                 type, query, searchBox.getDimen(), new IResult<List<Store>>() {
                     @Override
-                    public void onResult(List<Store> result) {
-
+                    public void onResult(@NonNull List<Store> result) {
+                        if(result.size() == 0) {
+                            return;
+                        }
+                        addPlaces(result);
                     }
                     @Override
                     public void onFailure(@NonNull Exception exp) { }
                 });
+    }
+
+    private void addPlaces(List<Store> stores) {
+        for(Store store : stores) {
+            MarkerOptions options = new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.place))
+                    .title(store.getTitle())
+                    .position(new LatLng(store.getGeo().getLatitude(),
+                            store.getGeo().getLongitude()));
+            Marker marker = map.addMarker(options);
+            markers.add(marker);
+        }
+    }
+
+    private void removePlaces() {
+        for(Marker marker : markers) {
+            marker.remove();
+        }
+        markers.clear();
     }
 
     @Override
@@ -172,6 +202,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
                 scaleFactor++;
                 searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN * (1 << scaleFactor));
                 moveCameraToSearchBox(map.getCameraPosition().target);
+                searchNearbyCenterStores();
                 break;
             case R.id.downButton:
                 if(scaleFactor == 0) {
@@ -180,6 +211,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
                 scaleFactor--;
                 searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN * (1 << scaleFactor));
                 moveCameraToSearchBox(map.getCameraPosition().target);
+                removePlaces();
+                searchNearbyCenterStores();
                 break;
         }
     }

@@ -75,8 +75,8 @@ public class StoreConnector {
                                           final IResult<List<Store>> IResult) {
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put(NearbyStoresByKeywords.CENTER_LATITUDE, location.getLongitude());
-        data.put(NearbyStoresByKeywords.CENTER_LONGITUDE, location.getLatitude());
+        data.put(NearbyStoresByKeywords.CENTER_LATITUDE, location.getLatitude());
+        data.put(NearbyStoresByKeywords.CENTER_LONGITUDE, location.getLongitude());
         data.put(NearbyStoresByKeywords.FROM, from);
         data.put(NearbyStoresByKeywords.STORE_TYPE, storeType);
         data.put(NearbyStoresByKeywords.KEYWORDS, keywords);
