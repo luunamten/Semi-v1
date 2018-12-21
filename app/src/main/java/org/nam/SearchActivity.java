@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 
 import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.maps.MapFragment;
 
 import org.nam.contract.Contract;
 import org.nam.custom.MyFragmentAdapter;
@@ -41,6 +42,9 @@ import org.nam.util.LocationUtils;
 import org.nam.util.SearchBox;
 import org.nam.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SearchActivity extends AppCompatActivity implements IUseFragment,
         IInteractionWithList<IHaveIdAndName<String>> {
     private final static int SEARCH_FRAGMENT = 0;
@@ -50,8 +54,8 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private MyFragmentAdapter fragmentAdapter;
-    private ISearch searchFragment;
-    private ISearch mapFragment;
+    //init hear because onFragmentAttached was called before onCreate
+    private List<ISearch> fragments = new ArrayList<>(2);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +70,7 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
         tabLayout.setupWithViewPager(viewPager);
         checkAndRequestPermission();
     }
+
 
     private void setupActionBar(Intent intent) {
         final int logoResource = intent.getIntExtra(Contract.BUNDLE_ACTION_LOGO_KEY, -1);
@@ -105,9 +110,7 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
             public boolean onQueryTextSubmit(String s) {
                 searchView.clearFocus();
                 int currentItem = viewPager.getCurrentItem();
-                if(currentItem == SEARCH_FRAGMENT) {
-                    searchFragment.search(typeId, StringUtils.normalize(s));
-                } else if(currentItem == MAP_FRAGMENT) { }
+                fragments.get(currentItem).search(typeId, StringUtils.normalize(s));
                 return true;
             }
             @Override
@@ -177,17 +180,19 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
     @Override
     public void onFragmentAttached(Fragment fragment) {
         if(fragment instanceof ISearch) {
-            searchFragment = (ISearch) fragment;
+            fragments.add((ISearch) fragment);
         }
     }
 
     @Override
     public void onItemClick(IHaveIdAndName<String> obj) {
-        searchFragment.clickItem(obj.getId());
+        final int currentItem = viewPager.getCurrentItem();
+        fragments.get(currentItem).clickItem(obj.getId());
     }
 
     @Override
     public void onScrollToLimit(IHaveIdAndName<String> obj, int position) {
-        searchFragment.scroll(obj.getId());
+        final int currentItem = viewPager.getCurrentItem();
+        fragments.get(currentItem).scroll(obj.getId());
     }
 }

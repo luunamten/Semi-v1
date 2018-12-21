@@ -38,6 +38,7 @@ import org.nam.R;
 import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 import org.nam.firebase.StoreConnector;
+import org.nam.object.IHaveIdAndName;
 import org.nam.object.Location;
 import org.nam.object.Store;
 import org.nam.util.LocationUtils;
@@ -66,6 +67,9 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if(context instanceof IUseFragment) {
+            ((IUseFragment)context).onFragmentAttached(this);
+        }
         storeConnector = StoreConnector.getInstance();
         scaleFactor = 0;
         type = -1;
@@ -163,6 +167,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     public void search(int type, String query) {
         this.type = type;
         this.query = query;
+        searchNearbyCenterStores(true);
     }
 
     private void searchNearbyCenterStores(final boolean isGetNew) {
