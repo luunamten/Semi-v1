@@ -67,7 +67,6 @@ public class StoreSearchFragment extends Fragment implements ISearch {
         setupFragmentCreator();
         storeConnector = StoreConnector.getInstance();
         locationUtils = new LocationUtils();
-        requestLocationUpdate();
     }
 
     @Override

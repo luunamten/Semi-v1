@@ -85,7 +85,6 @@ public class ProductSearchFragment extends Fragment implements ISearch {
         setupFragmentCreator();
         productConnector = ProductConnector.getInstance();
         locationUtils = new LocationUtils();
-        requestLocationUpdate();
     }
 
     private void setupFragmentCreator() {
@@ -137,8 +136,14 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onResume() {
+        super.onResume();
+        requestLocationUpdate();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
         removeLocationUpdates();
     }
 

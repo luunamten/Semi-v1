@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,23 +56,11 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     private SearchBox searchBox;
     private StoreConnector storeConnector;
     private List<Marker> markers;
+    private AppCompatImageView flagImageView;
     private int scaleFactor;
+    private long latestCallId;
     public MyMapFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_map, container, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
-        AppCompatImageButton upButton = view.findViewById(R.id.upButton);
-        AppCompatImageButton downButton = view.findViewById(R.id.downButton);
-        mapFragment.getMapAsync(this);
-        upButton.setOnClickListener(this);
-        downButton.setOnClickListener(this);
-        return view;
     }
 
     @Override
@@ -82,6 +71,22 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         type = -1;
         query = "";
         markers = new ArrayList<>();
+        latestCallId = 0L;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_my_map, container, false);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        flagImageView = view.findViewById(R.id.flagImageView);
+        AppCompatImageButton upButton = view.findViewById(R.id.upButton);
+        AppCompatImageButton downButton = view.findViewById(R.id.downButton);
+        mapFragment.getMapAsync(this);
+        upButton.setOnClickListener(this);
+        downButton.setOnClickListener(this);
+        return view;
     }
 
     @Override
@@ -101,12 +106,20 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
             @Override
             public void onCameraIdle() {
                 LatLng cameraTarget = map.getCameraPosition().target;
+                flagImageView.setVisibility(View.INVISIBLE);
                 if(!searchBox.isContains(cameraTarget)) {
-                    removePlaces();
                     searchBox.setCenter(cameraTarget);
                     searchBox.draw(map);
+                    searchNearbyCenterStores(true);
+                } else {
+                    searchNearbyCenterStores(false);
                 }
-                searchNearbyCenterStores();
+            }
+        });
+        map.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int i) {
+                flagImageView.setVisibility(View.VISIBLE);
             }
         });
         getLastLocation(new IResult<android.location.Location>() {
@@ -152,12 +165,16 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         this.query = query;
     }
 
-    private void searchNearbyCenterStores() {
+    private void searchNearbyCenterStores(final boolean isGetNew) {
+        if(isGetNew) {
+            removePlaces();
+        }
+        final long currentCallId = ++latestCallId;
         storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), markers.size(),
                 type, query, searchBox.getDimen(), new IResult<List<Store>>() {
                     @Override
                     public void onResult(@NonNull List<Store> result) {
-                        if(result.size() == 0) {
+                        if(currentCallId != latestCallId || result.size() == 0) {
                             return;
                         }
                         addPlaces(result);
@@ -172,7 +189,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
             MarkerOptions options = new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.place))
                     .title(store.getTitle())
-                    .anchor(0.5f,0.5f)
+                    .anchor(0.5f,0.5f) //center icon
                     .position(new LatLng(store.getGeo().getLatitude(),
                             store.getGeo().getLongitude()));
             Marker marker = map.addMarker(options);
@@ -195,9 +212,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
 
     private void updateWhenScaleSearchBox() {
         searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN * (1 << scaleFactor));
-        moveCameraToSearchBox(map.getCameraPosition().target);
-        removePlaces();
-        searchNearbyCenterStores();
+        moveCameraToSearchBox(searchBox.getCenter());
     }
 
     @Override
@@ -215,6 +230,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
                     return;
                 }
                 scaleFactor--;
+                removePlaces();
                 updateWhenScaleSearchBox();
                 break;
         }
