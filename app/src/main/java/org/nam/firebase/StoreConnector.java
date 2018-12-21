@@ -71,7 +71,7 @@ public class StoreConnector {
     }
 
     public void getNearbyStoresByKeywords(Location location,
-                                          int from, int storeType, String keywords, float dimen,
+                                          int from, int storeType, String keywords, double dimen,
                                           final IResult<List<Store>> IResult) {
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();

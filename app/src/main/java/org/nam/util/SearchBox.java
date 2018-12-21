@@ -106,6 +106,10 @@ public class SearchBox {
         return center;
     }
 
+    public Location getLocationCenter() {
+        return new Location(center.latitude, center.longitude);
+    }
+
     public void draw(@NonNull GoogleMap map) {
         removePolygon();
         LatLng[] hidingBoxPoints = MathUtils.getBoxPoints(center, Contract.HIDING_BOX_DIMEN);

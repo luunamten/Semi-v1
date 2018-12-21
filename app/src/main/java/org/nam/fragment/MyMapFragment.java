@@ -33,11 +33,13 @@ import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 import org.nam.firebase.StoreConnector;
 import org.nam.object.Location;
+import org.nam.object.Store;
 import org.nam.util.LocationUtils;
 import org.nam.util.MathUtils;
 import org.nam.util.SearchBox;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISearch, View.OnClickListener {
 
@@ -70,6 +72,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         super.onAttach(context);
         storeConnector = StoreConnector.getInstance();
         scaleFactor = 0;
+        type = -1;
+        query = "";
     }
 
     @Override
@@ -141,7 +145,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     }
 
     private void searchNearbyCenterStores() {
-        //storeConnector.getNearbyStoresByKeywords();
+        storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), 0,
+                type, query, searchBox.getDimen(), new IResult<List<Store>>() {
+                    @Override
+                    public void onResult(List<Store> result) {
+
+                    }
+                    @Override
+                    public void onFailure(@NonNull Exception exp) { }
+                });
     }
 
     @Override
