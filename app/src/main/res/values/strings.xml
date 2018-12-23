@@ -12,7 +12,7 @@
 
     <string name="nearbyStoreLabel">Cửa hàng gần bạn</string>
     <string name="nearbyProductLabel">Hàng hóa gần bạn</string>
-
+    <string name="modeTypeLabel">Bạn muốn tìm gì?</string>
     <!--Store RecyclerView-->
     <string name="storeRVLogoDescription">Logo</string>
     <string name="errorImgDescription">Error</string>

@@ -179,6 +179,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
                 type, query, searchBox.getDimen(), new IResult<List<Store>>() {
                     @Override
                     public void onResult(@NonNull List<Store> result) {
+                        Log.w("test_order", String.valueOf(currentCallId));
                         if(currentCallId != latestCallId || result.size() == 0) {
                             return;
                         }
