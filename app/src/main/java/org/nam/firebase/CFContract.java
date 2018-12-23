@@ -18,6 +18,9 @@ public final class CFContract {
         public static final String RECT_DIMENSION = "dimen";
         public static final String STORE_TYPE = "storeType";
         public static final String KEYWORDS = "keywords";
+        public static final String COUNTRY = "country";
+        public static final String CITY = "city";
+        public static final String DISTRICT = "district";
     }
 
     public static final class StoresByKeywords {
@@ -25,6 +28,9 @@ public final class CFContract {
         public static final String KEYWORDS = "keywords";
         public static final String LAST_STORE_ID = "lastId";
         public static final String STORE_TYPE = "storeType";
+        public static final String COUNTRY = "country";
+        public static final String CITY = "city";
+        public static final String DISTRICT = "district";
     }
 
     public static final class ProductsByKeywords {
@@ -32,6 +38,9 @@ public final class CFContract {
         public static final String KEYWORDS = "keywords";
         public static final String LAST_PRODUCT_ID = "lastId";
         public static final String PRODUCT_TYPE = "productType";
+        public static final String COUNTRY = "country";
+        public static final String CITY = "city";
+        public static final String DISTRICT = "district";
     }
 
     public static final class ProductById {

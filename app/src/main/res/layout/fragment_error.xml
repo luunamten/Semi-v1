@@ -6,12 +6,11 @@
     style="@style/DefaultBackground"
     tools:context=".fragment.ErrorFragment">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/errorImageView"
         android:layout_centerInParent="true"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginBottom="10dp"
         android:contentDescription="@string/errorImgDescription"/>
     <TextView
         android:id="@+id/errorTextView"
@@ -19,6 +18,7 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:maxWidth="250dp"
         android:textAppearance="@style/ErrorLabel"
         android:gravity="center_horizontal"/>

@@ -10,28 +10,39 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import org.nam.R;
 import org.nam.SearchActivity;
 import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 import org.nam.firebase.StoreConnector;
+import org.nam.listener.CitySpinnerItemSelectedListener;
+import org.nam.listener.CountrySpinnerItemSelectedListener;
+import org.nam.listener.IUseAddressSpinner;
+import org.nam.object.Country;
 import org.nam.object.IHaveIdAndName;
 import org.nam.object.Location;
 import org.nam.object.Store;
+import org.nam.sqlite.AddressDBConnector;
 import org.nam.util.LocationUtils;
 import org.nam.util.MathUtils;
 import org.nam.util.ObjectUtils;
 
 import java.util.List;
 
-public class StoreSearchFragment extends Fragment implements ISearch {
+public class StoreSearchFragment extends Fragment implements ISearch,
+        IUseAddressSpinner {
 
     private FragmentCreator fragmentCreator;
     private static final int STORE_VIEW = 0;
     private static final int NETWORK_ERR_VIEW = 1;
     private static final int EMPTY_ERR_VIEW = 2;
     private static final int LOAD_VIEW = 3;
+    private Spinner countrySpinner;
+    private Spinner citySpinner;
+    private Spinner districtSpinner;
     private StoreConnector storeConnector;
     private Location currentLocation;
     private LocationUtils locationUtils;
@@ -97,7 +108,26 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_store_search, container, false);
+        countrySpinner = view.findViewById(R.id.countrySpinner);
+        citySpinner = view.findViewById(R.id.citySpinner);
+        districtSpinner = view.findViewById(R.id.districtSpinner);
+        //event;
+        countrySpinner.setOnItemSelectedListener(
+                new CountrySpinnerItemSelectedListener(this));
+        citySpinner.setOnItemSelectedListener(
+                new CitySpinnerItemSelectedListener(this));
+        //init country spinner
+        final AddressDBConnector connector = AddressDBConnector.getInstance();
+        List<Country> countries = connector.getCountries();
+        ArrayAdapter<Country> adapter = new ArrayAdapter<Country>(
+                inflater.getContext(), android.R.layout.simple_spinner_item,
+                countries
+        );
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+        countrySpinner.setAdapter(adapter);
+
         return view;
     }
 
@@ -127,6 +157,7 @@ public class StoreSearchFragment extends Fragment implements ISearch {
     public void searchStores() {
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
         storeConnector.getStoresByKeywords(type, query, "",
+                -1, -1, -1,
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {
@@ -147,6 +178,7 @@ public class StoreSearchFragment extends Fragment implements ISearch {
 
     public void getMoreStores(String lastId) {
         storeConnector.getStoresByKeywords(type, query, lastId,
+                -1, -1, -1,
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {
@@ -183,5 +215,25 @@ public class StoreSearchFragment extends Fragment implements ISearch {
 
     public void removeLocationUpdates() {
         locationUtils.removeLocationUpdates();
+    }
+
+    @Override
+    public Spinner getCountrySpinner() {
+        return countrySpinner;
+    }
+
+    @Override
+    public Spinner getCitySpinner() {
+        return citySpinner;
+    }
+
+    @Override
+    public Spinner getDistrictSpinner() {
+        return districtSpinner;
+    }
+
+    @Override
+    public Spinner getTownSpinner() {
+        return null;
     }
 }

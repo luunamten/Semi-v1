@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,8 @@ import android.view.ViewGroup;
 import org.nam.R;
 import org.nam.firebase.IResult;
 import org.nam.firebase.ProductConnector;
-import org.nam.firebase.StoreConnector;
 import org.nam.object.Location;
 import org.nam.object.Product;
-import org.nam.object.Store;
 import org.nam.util.LocationUtils;
 import org.nam.util.ObjectUtils;
 
@@ -44,6 +41,7 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     @Override
     public void scroll(String lastId) {
         productConnector.getProductsByKeywords(type, query, lastId,
+                -1,-1,-1,
                 new IResult<List<Product>>() {
                     @Override
                     public void onResult(List<Product> result) {
@@ -109,6 +107,7 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     public void searchProducts() {
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
         productConnector.getProductsByKeywords(type, query, "",
+                -1,-1,-1,
                 new IResult<List<Product>>() {
                     @Override
                     public void onResult(List<Product> result) {
@@ -131,7 +130,7 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_store_search, container, false);
         return view;
     }
 

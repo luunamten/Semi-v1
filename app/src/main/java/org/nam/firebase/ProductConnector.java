@@ -76,7 +76,7 @@ public class ProductConnector {
     public void getProductById(String productId, final IResult<Product> IResult) {
         //Cloud function data
         Map<String, Object> data = new HashMap<>();
-        data.put(CFContract.ProductById.PRODUCT_ID, productId);
+        data.put(ProductById.PRODUCT_ID, productId);
         //Call cloud function
         functions.getHttpsCallable(CFContract.ProductById.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -115,8 +115,8 @@ public class ProductConnector {
     public void getProductsOfStore(String storeId, String lastId, final IResult<List<Product>> IResult) {
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put(CFContract.ProductsOfStore.STORE_ID, storeId);
-        data.put(CFContract.ProductsOfStore.LAST_PRODUCT_ID, lastId);
+        data.put(ProductsOfStore.STORE_ID, storeId);
+        data.put(ProductsOfStore.LAST_PRODUCT_ID, lastId);
         //Call cloud function
         functions.getHttpsCallable(CFContract.ProductsOfStore.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -149,12 +149,16 @@ public class ProductConnector {
     }
 
     public void getProductsByKeywords(int productType, String keywords, String lastId,
+                                      int country, int city, int district,
                                     final IResult<List<Product>> IResult) {
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put(CFContract.ProductsByKeywords.PRODUCT_TYPE, productType);
-        data.put(CFContract.ProductsByKeywords.KEYWORDS, keywords);
-        data.put(CFContract.ProductsByKeywords.LAST_PRODUCT_ID, lastId);
+        data.put(ProductsByKeywords.PRODUCT_TYPE, productType);
+        data.put(ProductsByKeywords.KEYWORDS, keywords);
+        data.put(ProductsByKeywords.LAST_PRODUCT_ID, lastId);
+        data.put(ProductsByKeywords.COUNTRY, country);
+        data.put(ProductsByKeywords.CITY, city);
+        data.put(ProductsByKeywords.DISTRICT, district);
         //Call cloud function
         functions.getHttpsCallable(CFContract.ProductsByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {

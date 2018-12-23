@@ -55,4 +55,7 @@
     <style name="DefaultBackground" parent="AppTheme">
         <item name="android:background">@color/colorDefaultBackground</item>
     </style>
+    <style name="NoneBackground" parent="AppTheme">
+        <item name="android:background">#00000000</item>
+    </style>
 </resources>
