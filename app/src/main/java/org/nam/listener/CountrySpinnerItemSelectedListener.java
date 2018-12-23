@@ -5,11 +5,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import org.nam.R;
 import org.nam.object.City;
 import org.nam.object.Country;
 import org.nam.object.District;
 import org.nam.sqlite.AddressDBConnector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CountrySpinnerItemSelectedListener implements AdapterView.OnItemSelectedListener {
@@ -22,8 +24,11 @@ public class CountrySpinnerItemSelectedListener implements AdapterView.OnItemSel
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         final AddressDBConnector connector = AddressDBConnector.getInstance();
         Country selectedCountry = (Country) parent.getSelectedItem();
-        List<City> cities = connector.getCitiesFromCountry(
-                selectedCountry.getId());
+        List<City> cities = new ArrayList<>();
+        cities.add(new City(-1,
+                view.getContext().getString(R.string.cityLabel)));
+        cities.addAll(connector.getCitiesFromCountry(
+                selectedCountry.getId()));
         ArrayAdapter<City> adapter = new ArrayAdapter<City>(
                 view.getContext(),
                 android.R.layout.simple_spinner_item, cities);

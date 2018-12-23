@@ -20,11 +20,15 @@ import org.nam.firebase.IResult;
 import org.nam.firebase.StoreConnector;
 import org.nam.listener.CitySpinnerItemSelectedListener;
 import org.nam.listener.CountrySpinnerItemSelectedListener;
+import org.nam.listener.DistrictSpinnerItemSelectedListener;
 import org.nam.listener.IUseAddressSpinner;
+import org.nam.object.City;
 import org.nam.object.Country;
+import org.nam.object.District;
 import org.nam.object.IHaveIdAndName;
 import org.nam.object.Location;
 import org.nam.object.Store;
+import org.nam.object.Town;
 import org.nam.sqlite.AddressDBConnector;
 import org.nam.util.LocationUtils;
 import org.nam.util.MathUtils;
@@ -43,6 +47,7 @@ public class StoreSearchFragment extends Fragment implements ISearch,
     private Spinner countrySpinner;
     private Spinner citySpinner;
     private Spinner districtSpinner;
+    private Spinner townSpinner;
     private StoreConnector storeConnector;
     private Location currentLocation;
     private LocationUtils locationUtils;
@@ -112,11 +117,14 @@ public class StoreSearchFragment extends Fragment implements ISearch,
         countrySpinner = view.findViewById(R.id.countrySpinner);
         citySpinner = view.findViewById(R.id.citySpinner);
         districtSpinner = view.findViewById(R.id.districtSpinner);
+        townSpinner = view.findViewById(R.id.townSpinner);
         //event;
         countrySpinner.setOnItemSelectedListener(
                 new CountrySpinnerItemSelectedListener(this));
         citySpinner.setOnItemSelectedListener(
                 new CitySpinnerItemSelectedListener(this));
+        districtSpinner.setOnItemSelectedListener(
+                new DistrictSpinnerItemSelectedListener(this));
         //init country spinner
         final AddressDBConnector connector = AddressDBConnector.getInstance();
         List<Country> countries = connector.getCountries();
@@ -155,9 +163,13 @@ public class StoreSearchFragment extends Fragment implements ISearch,
     }
 
     public void searchStores() {
+        Country selectedCountry = (Country)countrySpinner.getSelectedItem();
+        City selectedCity = (City)citySpinner.getSelectedItem();
+        District selectedDistrict = (District)districtSpinner.getSelectedItem();
+        Town selectedTown;
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
         storeConnector.getStoresByKeywords(type, query, "",
-                -1, -1, -1,
+                -1, -1, -1, -1,
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {
@@ -178,7 +190,7 @@ public class StoreSearchFragment extends Fragment implements ISearch,
 
     public void getMoreStores(String lastId) {
         storeConnector.getStoresByKeywords(type, query, lastId,
-                -1, -1, -1,
+                -1, -1, -1, -1,
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {

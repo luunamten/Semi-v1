@@ -41,7 +41,7 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     @Override
     public void scroll(String lastId) {
         productConnector.getProductsByKeywords(type, query, lastId,
-                -1,-1,-1,
+                -1,-1,-1, -1,
                 new IResult<List<Product>>() {
                     @Override
                     public void onResult(List<Product> result) {
@@ -107,7 +107,7 @@ public class ProductSearchFragment extends Fragment implements ISearch {
     public void searchProducts() {
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
         productConnector.getProductsByKeywords(type, query, "",
-                -1,-1,-1,
+                -1,-1,-1, -1,
                 new IResult<List<Product>>() {
                     @Override
                     public void onResult(List<Product> result) {

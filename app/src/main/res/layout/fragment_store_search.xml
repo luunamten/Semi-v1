@@ -7,6 +7,7 @@
     tools:context=".fragment.StoreSearchFragment">
 
     <HorizontalScrollView
+        style="@style/NearbyStoreLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -36,6 +37,15 @@
                 android:popupBackground="@drawable/popup_spinner_bg" />
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/districtSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/spinner_bg"
+                android:padding="5dp"
+                android:popupBackground="@drawable/popup_spinner_bg" />
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/townSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"

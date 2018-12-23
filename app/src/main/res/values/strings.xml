@@ -28,4 +28,8 @@
     <string name="productSearchHint">Hàng hóa</string>
     <string name="searchTabText">Tìm kiếm</string>
     <string name="nearbyTabText">Xung quanh</string>
+    <string name="countryLabel">Quốc gia</string>
+    <string name="cityLabel">Thành phố</string>
+    <string name="districtLabel">Quận/huyện</string>
+    <string name="townLabel">Xã/phường</string>
 </resources>

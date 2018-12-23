@@ -21,6 +21,7 @@ public final class CFContract {
         public static final String COUNTRY = "country";
         public static final String CITY = "city";
         public static final String DISTRICT = "district";
+        public static final String TOWN = "town";
     }
 
     public static final class StoresByKeywords {
@@ -31,6 +32,7 @@ public final class CFContract {
         public static final String COUNTRY = "country";
         public static final String CITY = "city";
         public static final String DISTRICT = "district";
+        public static final String TOWN = "town";
     }
 
     public static final class ProductsByKeywords {
@@ -41,6 +43,7 @@ public final class CFContract {
         public static final String COUNTRY = "country";
         public static final String CITY = "city";
         public static final String DISTRICT = "district";
+        public static final String TOWN = "town";
     }
 
     public static final class ProductById {
