@@ -72,7 +72,6 @@ public class StoreConnector {
 
     public void getNearbyStoresByKeywords(Location location,
                                           int from, int storeType, String keywords, double dimen,
-                                          int country, int city, int district, int town,
                                           final IResult<List<Store>> IResult) {
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
@@ -82,10 +81,6 @@ public class StoreConnector {
         data.put(NearbyStoresByKeywords.STORE_TYPE, storeType);
         data.put(NearbyStoresByKeywords.KEYWORDS, keywords);
         data.put(NearbyStoresByKeywords.RECT_DIMENSION, dimen);
-        data.put(NearbyStoresByKeywords.COUNTRY, country);
-        data.put(NearbyStoresByKeywords.CITY, city);
-        data.put(NearbyStoresByKeywords.DISTRICT, district);
-        data.put(NearbyStoresByKeywords.TOWN, town);
         //Call cloud function
         functions.getHttpsCallable(NearbyStoresByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -121,17 +116,17 @@ public class StoreConnector {
     }
 
     public void getStoresByKeywords(int storeType, String keywords, String lastId,
-                                    int country, int city, int district, int town,
+                                    Object[] addressIds,
                                     final IResult<List<Store>> IResult) {
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(StoresByKeywords.STORE_TYPE, storeType);
         data.put(StoresByKeywords.KEYWORDS, keywords);
         data.put(StoresByKeywords.LAST_STORE_ID, lastId);
-        data.put(StoresByKeywords.COUNTRY, country);
-        data.put(StoresByKeywords.CITY, city);
-        data.put(StoresByKeywords.DISTRICT, district);
-        data.put(StoresByKeywords.TOWN, town);
+        data.put(StoresByKeywords.COUNTRY, addressIds[0]);
+        data.put(StoresByKeywords.CITY, addressIds[1]);
+        data.put(StoresByKeywords.DISTRICT, addressIds[2]);
+        data.put(StoresByKeywords.TOWN, addressIds[3]);
         //Call cloud function
         functions.getHttpsCallable(StoresByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {

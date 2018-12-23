@@ -149,17 +149,17 @@ public class ProductConnector {
     }
 
     public void getProductsByKeywords(int productType, String keywords, String lastId,
-                                      int country, int city, int district, int town,
+                                      Object[] addressIds,
                                     final IResult<List<Product>> IResult) {
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(ProductsByKeywords.PRODUCT_TYPE, productType);
         data.put(ProductsByKeywords.KEYWORDS, keywords);
         data.put(ProductsByKeywords.LAST_PRODUCT_ID, lastId);
-        data.put(ProductsByKeywords.COUNTRY, country);
-        data.put(ProductsByKeywords.CITY, city);
-        data.put(ProductsByKeywords.DISTRICT, district);
-        data.put(ProductsByKeywords.TOWN, town);
+        data.put(ProductsByKeywords.COUNTRY, addressIds[0]);
+        data.put(ProductsByKeywords.CITY, addressIds[1]);
+        data.put(ProductsByKeywords.DISTRICT, addressIds[2]);
+        data.put(ProductsByKeywords.TOWN, addressIds[3]);
         //Call cloud function
         functions.getHttpsCallable(CFContract.ProductsByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {

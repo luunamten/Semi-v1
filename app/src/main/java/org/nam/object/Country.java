@@ -1,6 +1,6 @@
 package org.nam.object;
 
-public class Country {
+public class Country implements IHaveIdAndName<Integer> {
     private int id;
     private String name;
 
@@ -15,11 +15,11 @@ public class Country {
         this.name = name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

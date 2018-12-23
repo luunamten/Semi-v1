@@ -135,7 +135,6 @@ public class StoreSearchFragment extends Fragment implements ISearch,
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         countrySpinner.setAdapter(adapter);
-
         return view;
     }
 
@@ -162,14 +161,11 @@ public class StoreSearchFragment extends Fragment implements ISearch,
         fragmentCreator.recovery();
     }
 
-    public void searchStores() {
-        Country selectedCountry = (Country)countrySpinner.getSelectedItem();
-        City selectedCity = (City)citySpinner.getSelectedItem();
-        District selectedDistrict = (District)districtSpinner.getSelectedItem();
-        Town selectedTown;
+    private void searchStores() {
+
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
         storeConnector.getStoresByKeywords(type, query, "",
-                -1, -1, -1, -1,
+                getAddress(),
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {
@@ -188,9 +184,9 @@ public class StoreSearchFragment extends Fragment implements ISearch,
                 });
     }
 
-    public void getMoreStores(String lastId) {
+    private void getMoreStores(String lastId) {
         storeConnector.getStoresByKeywords(type, query, lastId,
-                -1, -1, -1, -1,
+                getAddress(),
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {
@@ -210,7 +206,25 @@ public class StoreSearchFragment extends Fragment implements ISearch,
                 });
     }
 
-    public void requestLocationUpdate() {
+    private Object[] getAddress() {
+        Object[] address = {
+                countrySpinner.getSelectedItem(),
+                citySpinner.getSelectedItem(),
+                districtSpinner.getSelectedItem(),
+                townSpinner.getSelectedItem()
+        };
+        Object[] ids = new Object[4];
+        for(int i = 0; i < address.length; i++) {
+            if(address[i] == null) {
+                ids[i] = -1;
+            } else {
+                ids[i] = ((IHaveIdAndName)address[i]).getId();
+            }
+        }
+        return ids;
+    }
+
+    private void requestLocationUpdate() {
         locationUtils.requestLocationUpdates(new IResult<android.location.Location>() {
             @Override
             public void onResult(android.location.Location result) {
@@ -225,7 +239,7 @@ public class StoreSearchFragment extends Fragment implements ISearch,
         });
     }
 
-    public void removeLocationUpdates() {
+    private void removeLocationUpdates() {
         locationUtils.removeLocationUpdates();
     }
 
@@ -246,6 +260,6 @@ public class StoreSearchFragment extends Fragment implements ISearch,
 
     @Override
     public Spinner getTownSpinner() {
-        return null;
+        return townSpinner;
     }
 }

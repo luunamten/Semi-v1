@@ -176,8 +176,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         }
         final long currentCallId = ++latestCallId;
         storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), markers.size(),
-                type, query, searchBox.getDimen(),
-                -1, -1, -1, new IResult<List<Store>>() {
+                type, query, searchBox.getDimen(), new IResult<List<Store>>() {
                     @Override
                     public void onResult(@NonNull List<Store> result) {
                         Log.w("test_order", String.valueOf(currentCallId));
