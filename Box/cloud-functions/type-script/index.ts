@@ -23,12 +23,15 @@ export const nearbyStores = functions.https.onCall((data, context) => {
     const from: number = data.from;
     const type: number = data.storeType;
     const center: LatLng = new LatLng(data.centerLat, data.centerLng);
-    const dimen: number = utils.kmToLat(C.NEARBY_DIMEN);
-    const rects: Set<number> = grid.searchCollisionBoxes(center, dimen);
-    const limit: number = Math.pow(4, EarthQuadGrid.MAX_LEVELS - grid.getCollisionLevel(dimen));
-    const halfDimen: number = dimen / 2;
-    const topLeft: LatLng = new LatLng(center.latitude + halfDimen, center.longitude - halfDimen);
-    const bottomRight: LatLng = new LatLng(center.latitude - halfDimen, center.longitude + halfDimen);
+    const latDimen: number = utils.kmToLat(C.NEARBY_DIMEN);
+    const lngDimen: number = utils.kmToLng(C.NEARBY_DIMEN, center.latitude);
+    const maxDimen: number = (latDimen >= lngDimen)?latDimen:lngDimen;
+    const rects: Set<number> = grid.searchCollisionBoxes(center, maxDimen);
+    const limit: number = Math.pow(4, EarthQuadGrid.MAX_LEVELS - grid.getCollisionLevel(maxDimen));
+    const halfLatDimen: number = latDimen / 2;
+    const halfLngDimen: number = lngDimen / 2;
+    const topLeft: LatLng = new LatLng(center.latitude + halfLatDimen, center.longitude - halfLngDimen);
+    const bottomRight: LatLng = new LatLng(center.latitude - halfLatDimen, center.longitude + halfLngDimen);
     const promises: Promise<FirebaseFirestore.QuerySnapshot>[] = [];
     for(const rect of rects) {
         const limitRect: number = rect + limit;
@@ -84,13 +87,17 @@ export const nearbyStoresByKeywords = functions.https.onCall((data, context) => 
     const from: number = data.from;
     const type: number = data.storeType;
     const center: LatLng = new LatLng(data.centerLat, data.centerLng);
-    const dimen: number = utils.kmToLat(data.dimen);
-    const rects: Set<number> = grid.searchCollisionBoxes(center, dimen);
+    const dimen: number = data.dimen;
     const keywords: string = data.keywords;
-    const limit: number = Math.pow(4, EarthQuadGrid.MAX_LEVELS - grid.getCollisionLevel(dimen));
-    const halfDimen: number = dimen / 2;
-    const topLeft: LatLng = new LatLng(center.latitude + halfDimen, center.longitude - halfDimen);
-    const bottomRight: LatLng = new LatLng(center.latitude - halfDimen, center.longitude + halfDimen);
+    const latDimen: number = utils.kmToLat(dimen);
+    const lngDimen: number = utils.kmToLng(dimen, center.latitude);
+    const maxDimen: number = (latDimen >= lngDimen)?latDimen:lngDimen;
+    const rects: Set<number> = grid.searchCollisionBoxes(center, maxDimen);
+    const limit: number = Math.pow(4, EarthQuadGrid.MAX_LEVELS - grid.getCollisionLevel(maxDimen));
+    const halfLatDimen: number = latDimen / 2;
+    const halfLngDimen: number = lngDimen / 2;
+    const topLeft: LatLng = new LatLng(center.latitude + halfLatDimen, center.longitude - halfLngDimen);
+    const bottomRight: LatLng = new LatLng(center.latitude - halfLatDimen, center.longitude + halfLngDimen);
     const promises: Promise<FirebaseFirestore.QuerySnapshot>[] = [];
     let keywordArray: string[] = null;
     //Query firestore
@@ -155,16 +162,32 @@ export const storesByKeywords = functions.https.onCall(async (data, context)=> {
     const keywordArray: string[] = data.keywords.split(/\s+/);
     const type: number = data.storeType;
     let lastId: string = data.lastId; 
+    const country: number = data.country;
+    const city: number = data.city;
+    const district: number = data.district;
+    const town: number = data.town;
     const idField: FirebaseFirestore.FieldPath = admin.firestore.FieldPath.documentId();
     const stores: Object[] = [];
     let docCount: number = 0;
     let originQuery: FirebaseFirestore.Query = admin.firestore().collection('store')
-                        .select('title', 'address', 'imageURL', 'rating', 'keywords');
+                        .select('title', 'address', 'imageURL', 'rating', 'keywords','geo');
     if( lastId === undefined || lastId === '') {
         lastId = '\0';
     }
     if(type !== undefined && type >= 0) {
         originQuery = originQuery.where('type', '==', type);
+    }
+    if(country >= 0) {
+        originQuery = originQuery.where('address.country', '==', country);
+    }
+    if(city >= 0) {
+        originQuery = originQuery.where('address.city', '==', city);
+    }
+    if(district >= 0) {
+        originQuery = originQuery.where('address.district', '==', district);
+    }
+    if(town >= 0) {
+        originQuery = originQuery.where('address.town', '==', town);
     }
     originQuery = originQuery.where('keywords', 'array-contains', keywordArray[keywordArray.length - 1]);
     keywordArray.pop();
@@ -182,6 +205,7 @@ export const storesByKeywords = functions.https.onCall(async (data, context)=> {
                         title : storeData.title,
                         address : storeData.address,
                         imageURL : storeData.imageURL,
+                        geo : storeData.geo,
                         rating : storeData.rating
                     }
                     stores.push(newdata);
@@ -297,6 +321,10 @@ export const productsByKeywords = functions.https.onCall(async (data, context) =
     const keywordArray: string[] = data.keywords.split(/\s+/);
     const type: number = data.productType;
     let lastId: string = data.lastId; 
+    const country: number = data.country;
+    const city: number = data.city;
+    const district: number = data.district;
+    const town: number = data.town;
     const idField: FirebaseFirestore.FieldPath = admin.firestore.FieldPath.documentId();
     const products: Object[] = [];
     let docCount: number = 0;
@@ -307,6 +335,18 @@ export const productsByKeywords = functions.https.onCall(async (data, context) =
     }
     if(type !== undefined && type >= 0) {
         originQuery = originQuery.where('type', '==', type);
+    }
+    if(country >= 0) {
+        originQuery = originQuery.where('address.country', '==', country);
+    }
+    if(city >= 0) {
+        originQuery = originQuery.where('address.city', '==', city);
+    }
+    if(district >= 0) {
+        originQuery = originQuery.where('address.district', '==', district);
+    }
+    if(town >= 0) {
+        originQuery = originQuery.where('address.town', '==', town);
     }
     originQuery = originQuery.where('keywords', 'array-contains', keywordArray[keywordArray.length - 1]);
     keywordArray.pop();
@@ -349,12 +389,15 @@ export const nearbyProducts = functions.https.onCall((data, context) => {
     const from: number = data.from;
     const type: number = data.productType;
     const center: LatLng = new LatLng(data.centerLat, data.centerLng);
-    const dimen: number = utils.kmToLat(C.NEARBY_DIMEN);
-    const rects: Set<number> = grid.searchCollisionBoxes(center, dimen);
-    const limit: number = Math.pow(4, EarthQuadGrid.MAX_LEVELS - grid.getCollisionLevel(dimen));
-    const halfDimen: number = dimen / 2;
-    const topLeft: LatLng = new LatLng(center.latitude + halfDimen, center.longitude - halfDimen);
-    const bottomRight: LatLng = new LatLng(center.latitude - halfDimen, center.longitude + halfDimen);
+    const latDimen: number = utils.kmToLat(C.NEARBY_DIMEN);
+    const lngDimen: number = utils.kmToLng(C.NEARBY_DIMEN, center.latitude);
+    const maxDimen: number = (latDimen >= lngDimen)?latDimen:lngDimen;
+    const rects: Set<number> = grid.searchCollisionBoxes(center, maxDimen);
+    const limit: number = Math.pow(4, EarthQuadGrid.MAX_LEVELS - grid.getCollisionLevel(maxDimen));
+    const halfLatDimen: number = latDimen / 2;
+    const halfLngDimen: number = lngDimen / 2;
+    const topLeft: LatLng = new LatLng(center.latitude + halfLatDimen, center.longitude - halfLngDimen);
+    const bottomRight: LatLng = new LatLng(center.latitude - halfLatDimen, center.longitude + halfLngDimen);
     const promises: Promise<FirebaseFirestore.QuerySnapshot>[] = [];
     for(const rect of rects) {
         const limitRect: number = rect + limit;

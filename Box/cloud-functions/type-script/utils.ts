@@ -1,11 +1,13 @@
 import { LatLng } from "./LatLng";
 
+export const RADIAN_PER_DEGREE = Math.PI / 180
+
 export const kmToLat = function(km: number) {
     return km / 111.111;
 }
 
 export const kmToLng = function(km: number, lat: number) {
-    return km / (111.111 * Math.cos(lat * Math.PI / 180));
+    return km / (111.111 * Math.cos(lat * RADIAN_PER_DEGREE));
 }
 
 export const strToNumericArray = function(str: string) {
@@ -39,7 +41,7 @@ export const isObjectInRect = function(topLeft, bottomRight, location) {
 }
 
 export const containsKeywords = function(keywordArray: string[], des: string[]) {
-    if(keywordArray === null) {
+    if(keywordArray === null || keywordArray.length === 0) {
         return true;
     }
     if(keywordArray.length > des.length) {
