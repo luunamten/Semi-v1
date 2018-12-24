@@ -2,6 +2,7 @@ package org.nam.fragment;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import org.nam.MyApp;
 import org.nam.R;
+import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 import org.nam.firebase.ProductConnector;
 import org.nam.listener.CitySpinnerItemSelectedListener;
@@ -106,7 +109,7 @@ public class ProductSearchFragment extends Fragment implements ISearch,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_store_search, container, false);
+        final View view = inflater.inflate(R.layout.fragment_store_search, container, false);
         countrySpinner = view.findViewById(R.id.countrySpinner);
         citySpinner = view.findViewById(R.id.citySpinner);
         districtSpinner = view.findViewById(R.id.districtSpinner);
@@ -130,6 +133,10 @@ public class ProductSearchFragment extends Fragment implements ISearch,
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         countrySpinner.setAdapter(adapter);
+        //Get country's saved value from SharedPreferences, and set it's selected.
+        final SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
+                Context.MODE_PRIVATE);
+        countrySpinner.setSelection(dataStore.getInt(Contract.SHARED_COUNTRY_KEY, 0));
         return view;
     }
 
@@ -173,15 +180,15 @@ public class ProductSearchFragment extends Fragment implements ISearch,
                     }
                 });
     }
-
+    //[country, city, district, town]
     private Object[] getAddress() {
-        Object[] address = {
+        final Object[] address = {
                 countrySpinner.getSelectedItem(),
                 citySpinner.getSelectedItem(),
                 districtSpinner.getSelectedItem(),
                 townSpinner.getSelectedItem()
         };
-        Object[] ids = new Object[4];
+        final Object[] ids = new Object[4];
         for(int i = 0; i < address.length; i++) {
             if(address[i] == null) {
                 ids[i] = -1;

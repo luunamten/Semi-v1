@@ -25,9 +25,9 @@ public class TownSpinnerItemSelectedListener implements AdapterView.OnItemSelect
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
+        final SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
                 Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = dataStore.edit();
+        final SharedPreferences.Editor editor = dataStore.edit();
         editor.putInt(Contract.SHARED_TOWN_KEY, position);
         editor.apply();
     }

@@ -1,6 +1,7 @@
 package org.nam.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import org.nam.MyApp;
 import org.nam.R;
 import org.nam.SearchActivity;
 import org.nam.contract.Contract;
@@ -114,7 +116,7 @@ public class StoreSearchFragment extends Fragment implements ISearch,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_store_search, container, false);
+        final View view = inflater.inflate(R.layout.fragment_store_search, container, false);
         countrySpinner = view.findViewById(R.id.countrySpinner);
         citySpinner = view.findViewById(R.id.citySpinner);
         districtSpinner = view.findViewById(R.id.districtSpinner);
@@ -138,6 +140,10 @@ public class StoreSearchFragment extends Fragment implements ISearch,
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         countrySpinner.setAdapter(adapter);
+        //Get country's saved value from SharedPreferences, and set it's selected.
+        final SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
+                Context.MODE_PRIVATE);
+        countrySpinner.setSelection(dataStore.getInt(Contract.SHARED_COUNTRY_KEY, 0));
         return view;
     }
 

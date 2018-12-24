@@ -28,14 +28,12 @@ public class CitySpinnerItemSelectedListener implements AdapterView.OnItemSelect
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        City selectedCity = (City) parent.getSelectedItem();
-        Spinner districtSpinner = user.getDistrictSpinner();
-        List<District> districts = new ArrayList<>();
-        SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = dataStore.edit();
-        editor.putInt(Contract.SHARED_CITY_KEY, position);
-        editor.apply();
+        final Spinner districtSpinner = user.getDistrictSpinner();
+        if(districtSpinner == null) {
+            return;
+        }
+        final City selectedCity = (City) parent.getSelectedItem();
+        final List<District> districts = new ArrayList<>();
         districts.add(new District(-1,
                 view.getContext().getString(R.string.districtLabel)));
         if(selectedCity.getId() != -1) {
@@ -43,13 +41,23 @@ public class CitySpinnerItemSelectedListener implements AdapterView.OnItemSelect
             districts.addAll(connector.getDistrictsFromCity(
                     selectedCity.getId()));
         }
-        ArrayAdapter<District> adapter = new ArrayAdapter<District>(
+        final ArrayAdapter<District> adapter = new ArrayAdapter<District>(
                 view.getContext(),
                 android.R.layout.simple_spinner_item, districts);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         districtSpinner.setAdapter(adapter);
-        districtSpinner.setSelection(dataStore.getInt( Contract.SHARED_DISTRICT_KEY, 0));
+        final SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
+                Context.MODE_PRIVATE);
+        if(position != dataStore.getInt(Contract.SHARED_CITY_KEY, 0)) {
+            final SharedPreferences.Editor editor = dataStore.edit();
+            editor.putInt(Contract.SHARED_CITY_KEY, position);
+            editor.putInt(Contract.SHARED_DISTRICT_KEY, 0);
+            editor.putInt(Contract.SHARED_TOWN_KEY, 0);
+            editor.apply();
+        } else {
+            districtSpinner.setSelection(dataStore.getInt(Contract.SHARED_DISTRICT_KEY, 0));
+        }
     }
 
     @Override
