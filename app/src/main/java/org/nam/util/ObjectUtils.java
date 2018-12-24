@@ -1,7 +1,11 @@
 package org.nam.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import org.nam.MyApp;
 import org.nam.R;
+import org.nam.contract.Contract;
 import org.nam.object.Location;
 import org.nam.object.Product;
 import org.nam.object.Store;

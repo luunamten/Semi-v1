@@ -27,49 +27,12 @@ public class SearchBox {
         points = MathUtils.getBoxPoints(center, dimen);
     }
 
-    public SearchBox(@NonNull Location location, double dimen) {
-        this.dimen = dimen;
-        center = new LatLng(location.getLatitude(), location.getLongitude());
-        points = MathUtils.getBoxPoints(location, dimen);
-    }
-    public SearchBox(@NonNull LatLng center, double dimen) {
-        this.center = center;
-        this.dimen = dimen;
-        points = MathUtils.getBoxPoints(center, dimen);
-    }
-
     public boolean isContains(@NonNull LatLng point) {
         if(point.longitude > points[0].longitude && point.longitude < points[2].longitude &&
                 point.latitude < points[0].latitude && point.latitude > points[2].latitude) {
             return true;
         }
         return false;
-    }
-
-    public boolean isContains(@NonNull Location location) {
-        LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
-        return isContains(point);
-    }
-
-    public LatLng[] getPoints() {
-        return points;
-    }
-
-    public void setPoints(@NonNull LatLng center, double dimen) {
-        if(dimen <= 0) {
-            return;
-        }
-        this.dimen = dimen;
-        points = MathUtils.getBoxPoints(center, dimen);
-    }
-
-    public void setPoints(@NonNull Location location, double dimen) {
-        if(dimen <= 0) {
-            return;
-        }
-        this.dimen = dimen;
-        center = new LatLng(location.getLatitude(), location.getLongitude());
-        points = MathUtils.getBoxPoints(location, dimen);
     }
 
     public void setCenter(@NonNull LatLng center) {

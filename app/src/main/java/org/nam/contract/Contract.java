@@ -29,5 +29,11 @@ public final class Contract {
     public static final double HIDING_BOX_DIMEN = 16;
     public static final int HIDING_BOX_COLOR = 0x33000000;
     public static final int VISIBLE_BOX_PADDING = 100; //px
+    //shared preferences
+    public static final String SHARED_MY_STATE = "myState";
+    public static final String SHARED_COUNTRY_KEY = "country";
+    public static final String SHARED_CITY_KEY = "city";
+    public static final String SHARED_DISTRICT_KEY = "district";
+    public static final String SHARED_TOWN_KEY = "town";
     private Contract() {}
 }

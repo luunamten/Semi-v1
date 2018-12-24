@@ -22,6 +22,7 @@ import org.nam.listener.CitySpinnerItemSelectedListener;
 import org.nam.listener.CountrySpinnerItemSelectedListener;
 import org.nam.listener.DistrictSpinnerItemSelectedListener;
 import org.nam.listener.IUseAddressSpinner;
+import org.nam.listener.TownSpinnerItemSelectedListener;
 import org.nam.object.City;
 import org.nam.object.Country;
 import org.nam.object.District;
@@ -125,6 +126,8 @@ public class StoreSearchFragment extends Fragment implements ISearch,
                 new CitySpinnerItemSelectedListener(this));
         districtSpinner.setOnItemSelectedListener(
                 new DistrictSpinnerItemSelectedListener(this));
+        townSpinner.setOnItemSelectedListener(
+                new TownSpinnerItemSelectedListener(this));
         //init country spinner
         final AddressDBConnector connector = AddressDBConnector.getInstance();
         List<Country> countries = connector.getCountries();
