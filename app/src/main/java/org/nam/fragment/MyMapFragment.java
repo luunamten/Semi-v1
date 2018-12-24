@@ -52,7 +52,8 @@ import java.util.List;
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISearch, View.OnClickListener {
 
     private GoogleMap map;
-    private int type;
+    private int productOrStoretype;
+    private int mode;
     private String query;
     private SearchBox searchBox;
     private StoreConnector storeConnector;
@@ -70,9 +71,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         if(context instanceof IUseFragment) {
             ((IUseFragment)context).onFragmentAttached(this);
         }
+        mode = Contract.STORE_MODE;
         storeConnector = StoreConnector.getInstance();
         scaleFactor = 0;
-        type = -1;
+        productOrStoretype = -1;
         query = "";
         markers = new ArrayList<>();
         latestCallId = 0L;
@@ -164,9 +166,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     }
 
     @Override
-    public void search(int type, String query) {
-        this.type = type;
+    public void search(int type, String query, int mode) {
+        this.productOrStoretype = type;
         this.query = query;
+        this.mode = mode;
         searchNearbyCenterStores(true);
     }
 
@@ -175,19 +178,25 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
             removePlaces();
         }
         final long currentCallId = ++latestCallId;
-        storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), markers.size(),
-                type, query, searchBox.getDimen(), new IResult<List<Store>>() {
-                    @Override
-                    public void onResult(@NonNull List<Store> result) {
-                        Log.w("test_order", String.valueOf(currentCallId));
-                        if(currentCallId != latestCallId || result.size() == 0) {
-                            return;
-                        }
-                        addPlaces(result);
-                    }
-                    @Override
-                    public void onFailure(@NonNull Exception exp) { }
-                });
+        IResult<List<Store>> result = new IResult<List<Store>>() {
+            @Override
+            public void onResult(@NonNull List<Store> result) {
+                Log.w("test_order", String.valueOf(currentCallId));
+                if(currentCallId != latestCallId || result.size() == 0) {
+                    return;
+                }
+                addPlaces(result);
+            }
+            @Override
+            public void onFailure(@NonNull Exception exp) { }
+        };
+        if(mode == Contract.STORE_MODE) {
+            storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), markers.size(),
+                    productOrStoretype, query, searchBox.getDimen(), result);
+        } else if(mode == Contract.PRODUCT_MODE) {
+            storeConnector.getNearbyStoresByProducts(searchBox.getLocationCenter(), markers.size(),
+                    productOrStoretype, query, searchBox.getDimen(), result);
+        }
     }
 
     private void addPlaces(List<Store> stores) {

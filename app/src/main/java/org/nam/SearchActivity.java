@@ -110,7 +110,7 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
             public boolean onQueryTextSubmit(String s) {
                 searchView.clearFocus();
                 int currentItem = viewPager.getCurrentItem();
-                fragments.get(currentItem).search(typeId, StringUtils.normalize(s));
+                fragments.get(currentItem).search(typeId, StringUtils.normalize(s), mode);
                 return true;
             }
             @Override

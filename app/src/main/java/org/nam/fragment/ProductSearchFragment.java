@@ -49,7 +49,7 @@ public class ProductSearchFragment extends Fragment implements ISearch,
     private String query;
 
     @Override
-    public void search(int type, String query) {
+    public void search(int type, String query, int mode) {
         this.type = type;
         this.query = query;
         searchProducts();

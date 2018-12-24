@@ -113,8 +113,4 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public void setOnItemClickListener(OnItemClickListener<Product> listener) {
         this.itemClickListener = listener;
     }
-
-    public String getLastProductId() {
-        return products.get(products.size() - 1).getId();
-    }
 }

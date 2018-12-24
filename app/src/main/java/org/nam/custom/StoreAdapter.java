@@ -129,8 +129,4 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     public void setOnItemClickListener(OnItemClickListener<Store> listener) {
         this.itemClickListener = listener;
     }
-
-    public String getLastStoreId() {
-        return stores.get(stores.size() - 1).getId();
-    }
 }

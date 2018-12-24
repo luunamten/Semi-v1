@@ -65,4 +65,14 @@ public final class CFContract {
         public static final String FROM = "from";
         public static final String PRODUCT_TYPE = "productType";
     }
+
+    public static final class NearbyStoresByProducts {
+        public static final String NAME = "nearbyStoresByProducts";
+        public static final String CENTER_LATITUDE = "centerLat";
+        public static final String CENTER_LONGITUDE = "centerLng";
+        public static final String FROM = "from";
+        public static final String RECT_DIMENSION = "dimen";
+        public static final String PRODUCT_TYPE = "productType";
+        public static final String KEYWORDS = "keywords";
+    }
 }

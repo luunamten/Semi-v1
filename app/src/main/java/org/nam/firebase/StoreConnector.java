@@ -115,6 +115,51 @@ public class StoreConnector {
                 });
     }
 
+    //get stores containing desired products
+    public void getNearbyStoresByProducts(Location location,
+                                          int from, int productType, String keywords, double dimen,
+                                          final IResult<List<Store>> IResult) {
+        //Cloud function data
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put(NearbyStoresByProducts.CENTER_LATITUDE, location.getLatitude());
+        data.put(NearbyStoresByProducts.CENTER_LONGITUDE, location.getLongitude());
+        data.put(NearbyStoresByProducts.FROM, from);
+        data.put(NearbyStoresByProducts.PRODUCT_TYPE, productType);
+        data.put(NearbyStoresByProducts.KEYWORDS, keywords);
+        data.put(NearbyStoresByProducts.RECT_DIMENSION, dimen);
+        //Call cloud function
+        functions.getHttpsCallable(NearbyStoresByProducts.NAME).call(data)
+                .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
+                    @Override
+                    public void onSuccess(HttpsCallableResult httpsCallableResult) {
+                        /*GET id, title, address, imageURL, rating, geo*/
+                        List<Store> stores = new ArrayList<Store>();
+                        List<Map<String, Object>> listMap = (List<Map<String, Object>>) httpsCallableResult.getData();
+                        if (listMap.size() > 0) {
+                            for (Map map : listMap) {
+                                /*GET id, title, address, imageURL, rating, geo*/
+                                //Init store
+                                Store store = new Store();
+                                store.setId((String) map.get(DBContract.ID));
+                                store.setTitle((String) map.get(DBContract.Store.TITLE));
+                                store.setImageURL((String) map.get(DBContract.Store.IMAGE_URL));
+                                store.setAddress(getAddress(map));
+                                //Error occurs when casting Integer to Float
+                                store.setGeo(getGeo(map));
+                                stores.add(store);
+                            }
+                        }
+                        IResult.onResult(stores);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("my_error", e.getMessage());
+                IResult.onFailure(e);
+            }
+        });
+    }
+
     public void getStoresByKeywords(int storeType, String keywords, String lastId,
                                     Object[] addressIds,
                                     final IResult<List<Store>> IResult) {
