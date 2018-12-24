@@ -78,9 +78,10 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     }
 
     public void addDataSet(Collection<Store> stores, @Nullable Location location) {
+        int start = getItemCount();
         this.stores.addAll(stores);
         this.location = location;
-        notifyItemRangeInserted(this.stores.size(), stores.size());
+        notifyItemRangeInserted(start, stores.size());
     }
 
     public void setLocation(@Nullable Location location) {

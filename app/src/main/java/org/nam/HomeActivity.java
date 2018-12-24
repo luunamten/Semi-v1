@@ -443,7 +443,9 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
     @Override
     public void onItemClick(IHaveIdAndName<String> obj) {
         if(obj instanceof Store) {
+
         } else if(obj instanceof Product) {
+
         }
     }
 

@@ -96,9 +96,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     }
 
     public void addDataSet(Collection<Product> products, @Nullable Location location) {
+        int start = getItemCount();
         this.products.addAll(products);
         this.location = location;
-        notifyItemRangeInserted(this.products.size(), products.size());
+        notifyItemRangeInserted(start, products.size());
     }
 
     public void setLocation(@Nullable Location location) {
