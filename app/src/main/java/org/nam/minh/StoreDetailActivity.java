@@ -198,7 +198,7 @@ public class StoreDetailActivity extends AppCompatActivity {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
         for(int i = 0; i < numberOfUtilities; i++) {
             ImageView img_utility = new ImageView(this);
-            img_utility.setImageResource(Contract.UTILITY_RESOURCES[i]);
+            img_utility.setImageResource(Contract.UTILITY_RESOURCES[utilities.get(i).getId()]);
             img_utility.setLayoutParams(lp);
             store_detail_utilities.addView(img_utility);
         }

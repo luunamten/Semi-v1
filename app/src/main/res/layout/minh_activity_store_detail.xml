@@ -263,11 +263,12 @@
                     android:textColor="@color/colorBlack"
                     android:textSize="13sp" />
 
+                <!--"@color/material_green_700"-->
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:backgroundTint="@color/material_green_700"
+                    android:backgroundTint="@color/colorPrimary"
                     android:drawableLeft="@drawable/minh_ic_store_detail_call"
                     android:text="@string/store_detail_state_contact_title"
                     android:textColor="@color/colorWhite"
