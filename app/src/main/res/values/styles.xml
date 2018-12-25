@@ -58,4 +58,14 @@
     <style name="NoneBackground" parent="AppTheme">
         <item name="android:background">#00000000</item>
     </style>
+    <style name="TextLoadingTheme">
+        <item name="android:background">@color/colorLoadingBackground</item>
+        <item name="android:textColor">@color/colorLoadingText</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/loadingText</item>
+        <item name="android:clickable">true</item>
+    </style>
 </resources>

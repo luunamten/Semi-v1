@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class StorageConnector {
-    private static final String BUCKET = "gs://myfirstfirestore-37483.appspot.com/";
     private static final long MAX_SIZE = 1024 * 1024;
     private static StorageConnector instance;
     private StorageConnector(){}

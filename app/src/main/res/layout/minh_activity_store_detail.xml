@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="false"
+    android:focusable="false"
     tools:context=".minh.StoreDetailActivity">
 
     <!--main toolbar-->
@@ -18,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="SEMI STORE"
+            android:text="Tên cửa hàng"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/toolbar_store_detail_name_text_size" />
     </android.support.v7.widget.Toolbar>
@@ -41,7 +43,7 @@
             android:drawableTop="@drawable/minh_ic_store_detail_direction"
             android:onClick="actionDirectToStore"
             android:padding="@dimen/toolbar_store_detail_btn_fast_tool_padding"
-            android:text="Direct"
+            android:text="@string/directLabel"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/toolbar_store_detail_btn_fast_tool_text_size" />
@@ -55,7 +57,7 @@
             android:drawableTop="@drawable/minh_ic_store_detail_save"
             android:onClick="actionSaveStore"
             android:padding="@dimen/toolbar_store_detail_btn_fast_tool_padding"
-            android:text="Save"
+            android:text="@string/saveLabel"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/toolbar_store_detail_btn_fast_tool_text_size" />
@@ -69,7 +71,7 @@
             android:drawableTop="@drawable/minh_ic_store_detail_comment"
             android:onClick="actionCommentToStore"
             android:padding="@dimen/toolbar_store_detail_btn_fast_tool_padding"
-            android:text="Comment"
+            android:text="@string/commentLabel"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/toolbar_store_detail_btn_fast_tool_text_size" />
@@ -83,7 +85,7 @@
             android:drawableTop="@drawable/minh_ic_store_detail_share"
             android:onClick="actionShareStore"
             android:padding="@dimen/toolbar_store_detail_btn_fast_tool_padding"
-            android:text="Share"
+            android:text="@string/shareLabel"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/toolbar_store_detail_btn_fast_tool_text_size" />
@@ -502,4 +504,9 @@
                 android:background="@color/material_gray_300" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+    <TextView
+        android:id="@+id/loadingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/TextLoadingTheme" />
 </android.support.design.widget.CoordinatorLayout>

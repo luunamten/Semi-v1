@@ -18,5 +18,9 @@
     <string name="store_detail_error_list_mess">Sorry, there are no products here.</string>
     <string name="store_detail_error_comment_mess">Sorry, there are no comments here.</string>
     <string name="store_detail_product_share_mess">Share with</string>
-
+    <string name="loadingText">Loading...</string>
+    <string name="directLabel">Direct</string>
+    <string name="saveLabel">Save</string>
+    <string name="commentLabel">Comment</string>
+    <string name="shareLabel">Share</string>
 </resources>

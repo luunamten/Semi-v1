@@ -1,7 +1,9 @@
 package org.nam.custom;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nam.R;
+import org.nam.firebase.IResult;
+import org.nam.firebase.StorageConnector;
 import org.nam.object.Location;
 import org.nam.object.Product;
 import org.nam.util.MathUtils;
@@ -30,18 +34,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     }
 
     public static class ProductHolder extends RecyclerView.ViewHolder {
-        private ImageView logo;
         private TextView titleTextView;
         private TextView addressTextView;
         private TextView costTextView;
         private TextView distanceTextView;
+        private AppCompatImageView logoImageView;
         private ProductHolder(View view) {
             super(view);
-            logo = view.findViewById(R.id.productRVLogo);
             titleTextView = view.findViewById(R.id.productRVTitle);
             addressTextView = view.findViewById(R.id.productRVAddress);
             costTextView = view.findViewById(R.id.productRVCost);
             distanceTextView = view.findViewById(R.id.productRVDistance);
+            logoImageView = view.findViewById(R.id.productRVLogo);
         }
         private void setProduct(Product product, String distanceStr) {
             String imageURL = product.getImageURL();
@@ -50,7 +54,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             costTextView.setText(StringUtils.toVNDCurrency(product.getCost()));
             distanceTextView.setText(distanceStr);
             if(!imageURL.equals("")) {
-
+                StorageConnector.getInstance().getImageData(product.getImageURL(), new IResult<Bitmap>() {
+                    @Override
+                    public void onResult(Bitmap result) {
+                        if(result != null) {
+                            logoImageView.setImageBitmap(result);
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Exception exp) { }
+                });
+            } else {
+                logoImageView.setImageResource(R.drawable.ic_packing);
             }
         }
     }

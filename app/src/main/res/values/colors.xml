@@ -13,9 +13,10 @@
     <color name="colorRVItemClickBackground">#cccccc</color>
     <color name="colorDefaultTabText">#e2aaee</color>
     <color name="colorSelectedTabText">#ffffff</color>
-
     <!--Store RecyclerView-->
     <color name="colorStoreRVBackground">#ffffff</color>
     <color name="colorTitle">#000000</color>
     <color name="colorAddress">#555555</color>
+    <color name="colorLoadingBackground">#82000000</color>
+    <color name="colorLoadingText">#ffffff</color>
 </resources>

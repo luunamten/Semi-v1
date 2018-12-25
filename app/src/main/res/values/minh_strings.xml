@@ -13,10 +13,14 @@
 
     <string name="store_detail_state_open">Mở cửa</string>
     <string name="store_detail_state_close">Đóng cửa</string>
-    <string name="store_detail_state_contact_title">CONTACT</string>
+    <string name="store_detail_state_contact_title">LIÊN HỆ</string>
     <string name="store_detail_distance_mess"> (Từ vị trí hiện tại)</string>
     <string name="store_detail_error_list_mess">Xin lỗi, không có sản phẩm nào.</string>
     <string name="store_detail_error_comment_mess">Xin lỗi, không có bình luận nào.</string>
     <string name="store_detail_product_share_mess">Chia sẻ</string>
-
+    <string name="loadingText">Đang tải...</string>
+    <string name="directLabel">Chỉ đường</string>
+    <string name="saveLabel">Lưu</string>
+    <string name="commentLabel">Bình luận</string>
+    <string name="shareLabel">Chia sẻ</string>
 </resources>

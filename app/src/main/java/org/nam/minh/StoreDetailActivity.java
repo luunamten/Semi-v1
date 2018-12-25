@@ -149,11 +149,16 @@ public class StoreDetailActivity extends AppCompatActivity {
                     store = result;
                     putDataToView();
                     getProducts();
+                    closeLoading();
                 }
             }
             @Override
             public void onFailure(@NonNull Exception exp) { }
         });
+    }
+
+    private void closeLoading() {
+        findViewById(R.id.loadingTextView).setVisibility(View.GONE);
     }
 
     private void putDataToView() {

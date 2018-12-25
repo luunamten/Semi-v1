@@ -64,16 +64,22 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
                     ratingTextView.setTextColor(Contract.RATING_COLORS[i]);
                 }
             }
-            StorageConnector.getInstance().getImageData(store.getImageURL(), new IResult<Bitmap>() {
-                @Override
-                public void onResult(Bitmap result) {
-                    if(result != null) {
-                        logoImageView.setImageBitmap(result);
+            if(!imageURL.equals("")) {
+                StorageConnector.getInstance().getImageData(store.getImageURL(), new IResult<Bitmap>() {
+                    @Override
+                    public void onResult(Bitmap result) {
+                        if (result != null) {
+                            logoImageView.setImageBitmap(result);
+                        }
                     }
-                }
-                @Override
-                public void onFailure(@NonNull Exception exp) { }
-            });
+
+                    @Override
+                    public void onFailure(@NonNull Exception exp) {
+                    }
+                });
+            } else {
+                logoImageView.setImageResource(R.drawable.ic_store);
+            }
         }
     }
 
