@@ -104,19 +104,19 @@
 
 
             <!--Hình ảnh to của cừa hàng-->
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/img_store"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/minh_test_upload" />
+                android:src="@drawable/ic_default" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
                 android:layout_marginBottom="4dp">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="40dp"
-                    android:text="- Loại cửa hàng"
+                    android:text=" - Loại cửa hàng"
                     android:textSize="@dimen/store_detail_infor_address_text_size"
                     android:textStyle="bold" />
             </android.support.v7.widget.CardView>
@@ -285,7 +285,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/store_detail_ic_direct"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -321,7 +321,7 @@
                     app:layout_constraintStart_toEndOf="@+id/store_detail_distance"
                     app:layout_constraintTop_toTopOf="@+id/store_detail_distance" />
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/store_detail_ic_description"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -347,7 +347,7 @@
                     app:layout_constraintStart_toEndOf="@+id/store_detail_ic_description"
                     app:layout_constraintTop_toTopOf="@+id/store_detail_ic_description" />
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/store_detail_ic_utilities"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -501,12 +501,4 @@
                 android:background="@color/material_gray_300" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#aa000000"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="#ffffff"
-        android:text="Đang tải..."/>
 </android.support.design.widget.CoordinatorLayout>

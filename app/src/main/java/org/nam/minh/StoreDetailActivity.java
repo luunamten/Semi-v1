@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,6 +53,7 @@ public class StoreDetailActivity extends AppCompatActivity {
     private TextView store_detail_name, store_detail_address, store_detail_type, store_detail_state, store_detail_time,
             store_detail_distance, store_detail_description, store_detail_total_product, store_detail_total_comment,
             store_detail_total_rating;
+    private AppCompatImageView storeImage;
     private LinearLayout store_detail_utilities;
     private StoreDetailProductAdapter mProductAdapter;
     private StoreDetailCommentAdapter mCommentAdapter;
@@ -87,6 +89,7 @@ public class StoreDetailActivity extends AppCompatActivity {
         store_detail_distance = findViewById(R.id.store_detail_distance);
         store_detail_description = findViewById(R.id.store_detail_description);
         store_detail_utilities = findViewById(R.id.store_detail_utilities);
+        storeImage = findViewById(R.id.img_store);
         //RecyclerView product
         mRecyclerProduct = findViewById(R.id.store_detail_list_product);
         mRecyclerProduct.setLayoutManager(new GridLayoutManager(this, 3));
