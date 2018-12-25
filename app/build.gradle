@@ -47,5 +47,7 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     //cloud storage
     implementation 'com.google.firebase:firebase-storage:16.0.5'
+    //circle image
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }
 apply plugin: 'com.google.gms.google-services'

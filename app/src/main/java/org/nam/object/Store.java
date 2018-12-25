@@ -43,7 +43,7 @@ public class Store implements IHaveIdAndName<String> {
             this.name = name;
         }
         @Override
-        public String toString() {return this.name;}
+        public String toString() {return Type.this.name;}
     }
 
     public static class Utility implements IHaveIdAndName<Integer> {
@@ -71,7 +71,7 @@ public class Store implements IHaveIdAndName<String> {
             this.name = name;
         }
         @Override
-        public String toString() {return this.name;}
+        public String toString() {return Utility.this.name;}
     }
 
     public String getId() {

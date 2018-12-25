@@ -51,6 +51,7 @@ import org.nam.fragment.StoreViewFragment;
 import org.nam.listener.ModeSpinnerItemSelectedListener;
 import org.nam.listener.NearbyTextViewClickListener;
 import org.nam.listener.TypeSpinnerItemSelectedListener;
+import org.nam.minh.StoreDetailActivity;
 import org.nam.object.IHaveIdAndName;
 import org.nam.object.Product;
 import org.nam.object.Store;
@@ -443,7 +444,9 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
     @Override
     public void onItemClick(IHaveIdAndName<String> obj) {
         if(obj instanceof Store) {
-
+            Intent storeIntent = new Intent(this, StoreDetailActivity.class);
+            storeIntent.putExtra(Contract.BUNDLE_STORE_ID_KEY, obj.getId());
+            startActivity(storeIntent);
         } else if(obj instanceof Product) {
 
         }

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static org.nam.firebase.CFContract.*;
 
@@ -215,7 +217,6 @@ public class StoreConnector {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
                         Map<String, Object> map = (Map<String, Object>) httpsCallableResult.getData();
-                        AddressDBConnector connector = AddressDBConnector.getInstance();
                         if(map != null) {
                             //Easy to get those data
                             Store store = new Store();

@@ -1,6 +1,7 @@
 package org.nam.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import org.nam.listener.CountrySpinnerItemSelectedListener;
 import org.nam.listener.DistrictSpinnerItemSelectedListener;
 import org.nam.listener.IUseAddressSpinner;
 import org.nam.listener.TownSpinnerItemSelectedListener;
+import org.nam.minh.StoreDetailActivity;
 import org.nam.object.City;
 import org.nam.object.Country;
 import org.nam.object.District;
@@ -71,6 +73,8 @@ public class StoreSearchFragment extends Fragment implements ISearch,
 
     @Override
     public void clickItem(String id) {
+        Intent storeIntent = new Intent(MyApp.getInstance(), StoreDetailActivity.class);
+        startActivity(storeIntent);
     }
 
     public StoreSearchFragment() {

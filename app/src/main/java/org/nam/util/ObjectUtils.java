@@ -60,7 +60,7 @@ public final class ObjectUtils {
     public static List<Store.Utility> getNewStoreUtilities() {
         List<Store.Utility> utilities = new ArrayList<>();
         try(BufferedReader bufReader = new BufferedReader(new InputStreamReader(
-                MyApp.getInstance().getResources().openRawResource(R.raw.store_type)
+                MyApp.getInstance().getResources().openRawResource(R.raw.utilities)
         ))) {
             String line;
             int id = 0;

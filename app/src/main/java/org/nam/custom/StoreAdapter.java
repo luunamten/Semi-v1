@@ -47,19 +47,17 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
 
         private void setStore(Store store, String distanceStr) {
             String imageURL = store.getImageURL();
-            Resources resources = MyApp.getInstance().getResources();
             float ratingValue = store.getRating();
-            Location location = store.getGeo();
             titleTextView.setText(store.getTitle());
             addressTextView.setText(store.getAddress().toString());
             ratingTextView.setText(String.format("%.1f", ratingValue));
             distanceTextView.setText(distanceStr);
-            if(ratingValue <= Contract.RATING_LOW_MAX && ratingValue >= Contract.RATING_LOW_MIN) {
-                ratingTextView.setTextColor(resources.getColor(R.color.colorLowRating));
-            } else if(ratingValue >= Contract.RATING_MEDIUM_MIN && ratingValue <= Contract.RATING_MEDIUM_MAX) {
-                ratingTextView.setTextColor(resources.getColor(R.color.colorMediumRating));
-            } else if(ratingValue >= Contract.RATING_HIGH_MIN && ratingValue <= Contract.RATING_HIGH_MAX) {
-                ratingTextView.setTextColor(resources.getColor(R.color.colorHighRating));
+            //set rating color
+            int loopLimit = Contract.RATING_LEVELS.length - 1;
+            for(int i = 0; i < loopLimit; i++) {
+                if(Contract.RATING_LEVELS[i] <= ratingValue && Contract.RATING_LEVELS[i + 1] > ratingValue) {
+                    ratingTextView.setTextColor(Contract.RATING_COLORS[i]);
+                }
             }
             if(!imageURL.equals("")) {
 

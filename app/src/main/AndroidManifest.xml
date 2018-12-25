@@ -47,7 +47,6 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -59,8 +58,12 @@
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
         </activity>
-        <activity android:name=".StoreInfoActivity" />
-        <activity android:name=".ProductInfoActivity"></activity>
+        <!--From minh-->
+        <activity
+            android:name=".minh.SplashActivity"
+            android:theme="@style/minh_SplashTheme" />
+        <activity android:name=".minh.MainActivity" android:theme="@style/minh_AppTheme" />
+        <activity android:name=".minh.StoreDetailActivity" android:theme="@style/minh_AppTheme" />
     </application>
 
 </manifest>
