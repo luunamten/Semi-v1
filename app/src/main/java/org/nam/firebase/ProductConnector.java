@@ -25,9 +25,8 @@ import java.util.Map;
 
 public class ProductConnector {
     private static ProductConnector instance;
-    private FirebaseFunctions functions;
     private ProductConnector() {
-        functions = FirebaseFunctions.getInstance();
+
     }
 
     public void getNearbyProducts(Location location, int from, int productType,
@@ -39,7 +38,7 @@ public class ProductConnector {
         data.put(NearbyProducts.FROM, from);
         data.put(NearbyProducts.PRODUCT_TYPE, productType);
         //Call cloud function
-        functions.getHttpsCallable(NearbyProducts.NAME).call(data)
+        FirebaseFunctions.getInstance().getHttpsCallable(NearbyProducts.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
@@ -78,7 +77,7 @@ public class ProductConnector {
         Map<String, Object> data = new HashMap<>();
         data.put(ProductById.PRODUCT_ID, productId);
         //Call cloud function
-        functions.getHttpsCallable(CFContract.ProductById.NAME).call(data)
+        FirebaseFunctions.getInstance().getHttpsCallable(CFContract.ProductById.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
@@ -118,7 +117,7 @@ public class ProductConnector {
         data.put(ProductsOfStore.STORE_ID, storeId);
         data.put(ProductsOfStore.LAST_PRODUCT_ID, lastId);
         //Call cloud function
-        functions.getHttpsCallable(CFContract.ProductsOfStore.NAME).call(data)
+        FirebaseFunctions.getInstance().getHttpsCallable(CFContract.ProductsOfStore.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
@@ -161,7 +160,7 @@ public class ProductConnector {
         data.put(ProductsByKeywords.DISTRICT, addressIds[2]);
         data.put(ProductsByKeywords.TOWN, addressIds[3]);
         //Call cloud function
-        functions.getHttpsCallable(CFContract.ProductsByKeywords.NAME).call(data)
+        FirebaseFunctions.getInstance().getHttpsCallable(CFContract.ProductsByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {

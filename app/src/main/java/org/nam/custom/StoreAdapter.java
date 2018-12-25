@@ -1,8 +1,10 @@
 package org.nam.custom;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import org.nam.MyApp;
 import org.nam.R;
 import org.nam.contract.Contract;
+import org.nam.firebase.IResult;
+import org.nam.firebase.StorageConnector;
 import org.nam.object.Location;
 import org.nam.object.Store;
 import org.nam.util.MathUtils;
@@ -29,13 +33,13 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     private OnBottomReachedListener<Store> bottomReachedListener;
     private OnItemClickListener<Store> itemClickListener;
 
-
     public static class StoreViewHolder extends RecyclerView.ViewHolder {
         private ImageView logo;
         private TextView titleTextView;
         private TextView addressTextView;
         private TextView ratingTextView;
         private TextView distanceTextView;
+        private AppCompatImageView logoImageView;
         private StoreViewHolder(View view) {
             super(view);
             logo = view.findViewById(R.id.storeRVLogo);
@@ -43,6 +47,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
             addressTextView = view.findViewById(R.id.storeRVAddress);
             ratingTextView = view.findViewById(R.id.storeRVRating);
             distanceTextView = view.findViewById(R.id.storeRVDistance);
+            logoImageView = view.findViewById(R.id.storeRVLogo);
         }
 
         private void setStore(Store store, String distanceStr) {
@@ -59,9 +64,16 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
                     ratingTextView.setTextColor(Contract.RATING_COLORS[i]);
                 }
             }
-            if(!imageURL.equals("")) {
-
-            }
+            StorageConnector.getInstance().getImageData(store.getImageURL(), new IResult<Bitmap>() {
+                @Override
+                public void onResult(Bitmap result) {
+                    if(result != null) {
+                        logoImageView.setImageBitmap(result);
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Exception exp) { }
+            });
         }
     }
 

@@ -26,10 +26,7 @@ import static org.nam.firebase.CFContract.*;
 
 public class StoreConnector {
     private static StoreConnector instance;
-    private FirebaseFunctions functions;
-    private StoreConnector() {
-        this.functions = FirebaseFunctions.getInstance();
-    }
+    private StoreConnector() { }
 
     public void getNearbyStores(Location location, int from, int storeType,
                                final IResult<List<Store>> IResult) {
@@ -40,7 +37,7 @@ public class StoreConnector {
         data.put(NearbyStores.FROM, from);
         data.put(NearbyStores.STORE_TYPE, storeType);
         //Call cloud function
-        functions.getHttpsCallable(NearbyStores.NAME).call(data)
+        FirebaseFunctions.getInstance().getHttpsCallable(NearbyStores.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
@@ -84,7 +81,7 @@ public class StoreConnector {
         data.put(NearbyStoresByKeywords.KEYWORDS, keywords);
         data.put(NearbyStoresByKeywords.RECT_DIMENSION, dimen);
         //Call cloud function
-        functions.getHttpsCallable(NearbyStoresByKeywords.NAME).call(data)
+        FirebaseFunctions.getInstance().getHttpsCallable(NearbyStoresByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
@@ -130,7 +127,7 @@ public class StoreConnector {
         data.put(NearbyStoresByProducts.KEYWORDS, keywords);
         data.put(NearbyStoresByProducts.RECT_DIMENSION, dimen);
         //Call cloud function
-        functions.getHttpsCallable(NearbyStoresByProducts.NAME).call(data)
+        FirebaseFunctions.getInstance().getHttpsCallable(NearbyStoresByProducts.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
@@ -175,7 +172,7 @@ public class StoreConnector {
         data.put(StoresByKeywords.DISTRICT, addressIds[2]);
         data.put(StoresByKeywords.TOWN, addressIds[3]);
         //Call cloud function
-        functions.getHttpsCallable(StoresByKeywords.NAME).call(data)
+        FirebaseFunctions.getInstance().getHttpsCallable(StoresByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
@@ -212,7 +209,7 @@ public class StoreConnector {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(StoreById.STORE_ID, storeId);
         //Call cloud function
-        functions.getHttpsCallable(StoreById.NAME).call(data)
+        FirebaseFunctions.getInstance().getHttpsCallable(StoreById.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {

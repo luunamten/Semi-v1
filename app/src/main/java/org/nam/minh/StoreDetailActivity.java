@@ -2,6 +2,7 @@ package org.nam.minh;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import org.nam.R;
 import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 import org.nam.firebase.ProductConnector;
+import org.nam.firebase.StorageConnector;
 import org.nam.firebase.StoreConnector;
 import org.nam.minh.object.Comment;
 import org.nam.object.Product;
@@ -37,6 +40,7 @@ import org.nam.util.MathUtils;
 import org.nam.util.ObjectUtils;
 import org.nam.util.StringUtils;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -202,6 +206,17 @@ public class StoreDetailActivity extends AppCompatActivity {
             img_utility.setLayoutParams(lp);
             store_detail_utilities.addView(img_utility);
         }
+        //set store image
+        StorageConnector.getInstance().getImageData(store.getImageURL(), new IResult<Bitmap>() {
+            @Override
+            public void onResult(Bitmap result) {
+                if(result != null) {
+                    storeImage.setImageBitmap(result);
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Exception exp) { }
+        });
     }
 
     private boolean isOpened(String startEndStr) {
