@@ -71,4 +71,12 @@ public final class MathUtils {
         double havLng = Math.sin((toLng - fromLng) / 2);
         return 2 * KILO_RADIUS * Math.asin(Math.sqrt(havLat * havLat + Math.cos(fromLat) * Math.cos(toLat) * havLng * havLng));
     }
+
+    public static int getSample(int desiredWidth, int oldWidth) {
+        if(desiredWidth >= oldWidth) {
+            return 0;
+        }
+        double value = oldWidth * 1.0 / desiredWidth;
+        return (int) Math.ceil(Math.log(value) / Math.log(2));
+    }
 }

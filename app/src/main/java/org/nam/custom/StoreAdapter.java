@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,15 +35,14 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     private OnItemClickListener<Store> itemClickListener;
 
     public static class StoreViewHolder extends RecyclerView.ViewHolder {
-        private ImageView logo;
         private TextView titleTextView;
         private TextView addressTextView;
         private TextView ratingTextView;
         private TextView distanceTextView;
         private AppCompatImageView logoImageView;
+
         private StoreViewHolder(View view) {
             super(view);
-            logo = view.findViewById(R.id.storeRVLogo);
             titleTextView = view.findViewById(R.id.storeRVTitle);
             addressTextView = view.findViewById(R.id.storeRVAddress);
             ratingTextView = view.findViewById(R.id.storeRVRating);
@@ -50,7 +50,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
             logoImageView = view.findViewById(R.id.storeRVLogo);
         }
 
-        private void setStore(Store store, String distanceStr) {
+        private void setStore(final Store store, String distanceStr) {
             String imageURL = store.getImageURL();
             float ratingValue = store.getRating();
             titleTextView.setText(store.getTitle());
@@ -59,22 +59,30 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
             distanceTextView.setText(distanceStr);
             //set rating color
             int loopLimit = Contract.RATING_LEVELS.length - 1;
-            for(int i = 0; i < loopLimit; i++) {
-                if(Contract.RATING_LEVELS[i] <= ratingValue && Contract.RATING_LEVELS[i + 1] > ratingValue) {
+            for (int i = 0; i < loopLimit; i++) {
+                if (Contract.RATING_LEVELS[i] <= ratingValue && Contract.RATING_LEVELS[i + 1] > ratingValue) {
                     ratingTextView.setTextColor(Contract.RATING_COLORS[i]);
                 }
             }
-            if(!imageURL.equals("")) {
-                StorageConnector.getInstance().getImageData(store.getImageURL(), new IResult<Bitmap>() {
+            if (!imageURL.equals("")) {
+                logoImageView.post(new Runnable() {
                     @Override
-                    public void onResult(Bitmap result) {
-                        if (result != null) {
-                            logoImageView.setImageBitmap(result);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Exception exp) {
+                    public void run() {
+                        StorageConnector.getInstance().getBitmap(store.getImageURL(),
+                                logoImageView.getMeasuredWidth(), new IResult<Bitmap>() {
+                            @Override
+                            public void onResult(Bitmap result) {
+                                if (result != null) {
+                                    logoImageView.setImageBitmap(result);
+                                } else {
+                                    logoImageView.setImageResource(R.drawable.ic_store);
+                                }
+                            }
+                            @Override
+                            public void onFailure(@NonNull Exception exp) {
+                                logoImageView.setImageResource(R.drawable.ic_store);
+                            }
+                        });
                     }
                 });
             } else {
@@ -117,12 +125,12 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     public void onBindViewHolder(@NonNull StoreViewHolder viewHolder, int i) {
         final Store store = stores.get(i);
         String distanceStr = "";
-        if(location != null) {
+        if (location != null) {
             double distance = MathUtils.haversine(location, store.getGeo());
             distanceStr = StringUtils.toDistanceFormat(distance);
         }
         viewHolder.setStore(stores.get(i), distanceStr);
-        if(bottomReachedListener != null && i == stores.size() - 1) {
+        if (bottomReachedListener != null && i == stores.size() - 1) {
             bottomReachedListener.onBottomReached(stores.get(i), i);
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

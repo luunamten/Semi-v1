@@ -212,7 +212,8 @@ public class StoreDetailActivity extends AppCompatActivity {
             store_detail_utilities.addView(img_utility);
         }
         //set store image
-        StorageConnector.getInstance().getImageData(store.getImageURL(), new IResult<Bitmap>() {
+        StorageConnector.getInstance().getBitmap(store.getImageURL(), storeImage.getWidth(),
+                new IResult<Bitmap>() {
             @Override
             public void onResult(Bitmap result) {
                 if(result != null) {

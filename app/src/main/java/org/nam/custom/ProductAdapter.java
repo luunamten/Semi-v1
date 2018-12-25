@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     private Location location;
     private OnBottomReachedListener<Product> bottomReachedListener;
     private OnItemClickListener<Product> itemClickListener;
+
     public ProductAdapter(List<Product> products) {
         this.products = products;
     }
@@ -39,6 +41,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         private TextView costTextView;
         private TextView distanceTextView;
         private AppCompatImageView logoImageView;
+
         private ProductHolder(View view) {
             super(view);
             titleTextView = view.findViewById(R.id.productRVTitle);
@@ -47,25 +50,36 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             distanceTextView = view.findViewById(R.id.productRVDistance);
             logoImageView = view.findViewById(R.id.productRVLogo);
         }
-        private void setProduct(Product product, String distanceStr) {
+
+        private void setProduct(final Product product, String distanceStr) {
             String imageURL = product.getImageURL();
             titleTextView.setText(product.getTitle());
             addressTextView.setText(product.getStore().getAddress().toString());
             costTextView.setText(StringUtils.toVNDCurrency(product.getCost()));
             distanceTextView.setText(distanceStr);
-            if(!imageURL.equals("")) {
-                StorageConnector.getInstance().getImageData(product.getImageURL(), new IResult<Bitmap>() {
+            if (!imageURL.equals("")) {
+                logoImageView.post(new Runnable() {
                     @Override
-                    public void onResult(Bitmap result) {
-                        if(result != null) {
-                            logoImageView.setImageBitmap(result);
-                        }
+                    public void run() {
+                        StorageConnector.getInstance().getBitmap(product.getImageURL(),
+                                logoImageView.getWidth(), new IResult<Bitmap>() {
+                            @Override
+                            public void onResult(Bitmap result) {
+                                if (result != null) {
+                                    logoImageView.setImageBitmap(result);
+                                } else {
+                                    logoImageView.setImageResource(R.drawable.ic_store);
+                                }
+                            }
+                            @Override
+                            public void onFailure(@NonNull Exception exp) {
+                                logoImageView.setImageResource(R.drawable.ic_store);
+                            }
+                        });
                     }
-                    @Override
-                    public void onFailure(@NonNull Exception exp) { }
                 });
             } else {
-                logoImageView.setImageResource(R.drawable.ic_packing);
+                logoImageView.setImageResource(R.drawable.ic_store);
             }
         }
     }
@@ -79,12 +93,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     public void onBindViewHolder(@NonNull ProductHolder viewHolder, int i) {
         final Product product = products.get(i);
         String distanceStr = "";
-        if(location != null) {
+        if (location != null) {
             double distance = MathUtils.haversine(location, product.getStore().getGeo());
             distanceStr = StringUtils.toDistanceFormat(distance);
         }
         viewHolder.setProduct(product, distanceStr);
-        if(bottomReachedListener != null && i == products.size() - 1) {
+        if (bottomReachedListener != null && i == products.size() - 1) {
             bottomReachedListener.onBottomReached(products.get(i), i);
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -14,16 +14,21 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StreamDownloadTask;
 
+import org.nam.util.MathUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class StorageConnector {
     private static final long MAX_SIZE = 1024 * 1024;
     private static StorageConnector instance;
     private StorageConnector(){}
 
-    public void getImageData(String path, final IResult<Bitmap> result) {
-        if(path == null || path.trim().equals("")) {
+    public void getBitmap(String path, final int desiredWidth , final IResult<Bitmap> result) {
+        if(path == null || path.trim().equals("") || desiredWidth <= 0) {
             return;
         }
         final FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -34,7 +39,15 @@ public class StorageConnector {
                 if(bytes == null) {
                     result.onResult(null);
                 } else {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    int numBytes = bytes.length;
+                    BitmapFactory.Options opts = new BitmapFactory.Options();
+                    //get Width
+                    opts.inJustDecodeBounds = true;
+                    BitmapFactory.decodeByteArray(bytes, 0, numBytes, opts);
+                    //resample image
+                    opts.inJustDecodeBounds = false;
+                    opts.inSampleSize = MathUtils.getSample(desiredWidth, opts.outWidth) + 1;
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, numBytes, opts);
                     result.onResult(bitmap);
                 }
             }
