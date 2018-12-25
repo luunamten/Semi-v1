@@ -34,6 +34,7 @@ import org.nam.fragment.ProductSearchFragment;
 import org.nam.fragment.ProductViewFragment;
 import org.nam.fragment.StoreSearchFragment;
 import org.nam.fragment.StoreViewFragment;
+import org.nam.minh.StoreDetailActivity;
 import org.nam.object.IHaveIdAndName;
 import org.nam.object.Location;
 import org.nam.object.Product;
@@ -188,6 +189,13 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
     public void onItemClick(IHaveIdAndName<String> obj) {
         final int currentItem = viewPager.getCurrentItem();
         fragments.get(currentItem).clickItem(obj.getId());
+        if(mode == Contract.STORE_MODE) {
+            Intent storeIntent = new Intent(this, StoreDetailActivity.class);
+            storeIntent.putExtra(Contract.BUNDLE_STORE_ID_KEY, obj.getId());
+            startActivity(storeIntent);
+        } else if(mode == Contract.PRODUCT_MODE) {
+
+        }
     }
 
     @Override

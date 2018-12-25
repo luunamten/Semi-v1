@@ -73,8 +73,6 @@ public class StoreSearchFragment extends Fragment implements ISearch,
 
     @Override
     public void clickItem(String id) {
-        Intent storeIntent = new Intent(MyApp.getInstance(), StoreDetailActivity.class);
-        startActivity(storeIntent);
     }
 
     public StoreSearchFragment() {
