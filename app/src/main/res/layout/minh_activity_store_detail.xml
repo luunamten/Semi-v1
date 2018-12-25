@@ -501,6 +501,12 @@
                 android:background="@color/material_gray_300" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#aa000000"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:text="Đang tải..."/>
 </android.support.design.widget.CoordinatorLayout>

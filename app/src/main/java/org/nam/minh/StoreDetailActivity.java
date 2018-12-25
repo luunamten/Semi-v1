@@ -29,7 +29,7 @@ import org.nam.firebase.IResult;
 import org.nam.firebase.ProductConnector;
 import org.nam.firebase.StoreConnector;
 import org.nam.minh.object.Comment;
-import org.nam.minh.object.Product;
+import org.nam.object.Product;
 import org.nam.object.Store;
 import org.nam.util.LocationUtils;
 import org.nam.util.MathUtils;
@@ -56,7 +56,6 @@ public class StoreDetailActivity extends AppCompatActivity {
     private StoreDetailProductAdapter mProductAdapter;
     private StoreDetailCommentAdapter mCommentAdapter;
     private RecyclerView mRecyclerProduct, mRecyclerComment;
-    private List<Product> mListProduct;
     private List<Comment> mListComment;
     private Dialog mDialogUtility;
     private Store store;
@@ -67,51 +66,6 @@ public class StoreDetailActivity extends AppCompatActivity {
         setContentView(R.layout.minh_activity_store_detail);
         initView();
         getStoreData();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        toolbar_store_detail_name.setText("Semi Super Infinity Store");
-        store_detail_type.setText("- " + "Tạp hoá");
-        store_detail_name.setText("Cửa hàng Semi");
-        store_detail_address.setText("26 đường 13, P. Bình Thọ, Q. Thủ Đức, TP. HCM");
-        store_detail_total_product.setText("111");
-        store_detail_total_comment.setText("222");
-        String rating = "5.0";
-        store_detail_total_rating.setText(rating);
-        if (Double.valueOf(rating) > 2.5) {
-            store_detail_total_rating.setTextColor(getResources().getColor(R.color.material_green_500));
-        } else {
-            store_detail_total_rating.setTextColor(getResources().getColor(R.color.material_red_a200));
-        }
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        String timeNow = timeFormat.format(calendar.getTime());
-        //TODO - change time open & time close store
-        String timeOpen = "7:00";
-        String timeClose = "23:00";
-        store_detail_time.setText(timeOpen + " - " + timeClose);
-        try {
-            Date timeNoww = timeFormat.parse(timeNow);
-            Date timeOpenn = timeFormat.parse(timeOpen);
-            Date timeClosee = timeFormat.parse(timeClose);
-            if (timeNoww.after(timeOpenn) && timeNoww.before(timeClosee)) {
-                store_detail_state.setText(getResources().getString(R.string.store_detail_state_open));
-                store_detail_state.setTextColor(getResources().getColor(R.color.material_green_500));
-            } else {
-                store_detail_state.setText(getResources().getString(R.string.store_detail_state_close));
-                store_detail_state.setTextColor(getResources().getColor(R.color.material_red_a200));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        //TODO - change distance & description
-        store_detail_distance.setText("100 m");
-        store_detail_description.setText("Cung cấp sỉ lẻ các loại bánh sinh nhật, bánh quy, bánh bông lan, giá cả hợp lý,…");
-
     }
 
     private void initView() {
@@ -133,28 +87,11 @@ public class StoreDetailActivity extends AppCompatActivity {
         store_detail_distance = findViewById(R.id.store_detail_distance);
         store_detail_description = findViewById(R.id.store_detail_description);
         store_detail_utilities = findViewById(R.id.store_detail_utilities);
-        mListProduct = new ArrayList<>();
-        mListProduct.add(new Product("Sản phẩm 1", R.mipmap.minh_test_upload));
-        mListProduct.add(new Product("Sản phẩm 2", R.mipmap.minh_test_upload));
-        if (mListProduct.size() == 0) {
-            /*Toast.makeText(this, "a", Toast.LENGTH_SHORT).show();
-            img_error_list = findViewById(R.id.store_detail_error_list);
-            img_error_list.setImageResource(R.drawable.ic_blank);*/
-            TextView txt_error_list = findViewById(R.id.txt_error_list);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 20, 10, 20);
-            txt_error_list.setLayoutParams(params);
-
-            txt_error_list.setText(R.string.store_detail_error_list_mess);
-            txt_error_list.setTextSize(getResources().getDimension(R.dimen.store_detail_error_list_text_size));
-            txt_error_list.setLines(2);
-        } else {
-            mRecyclerProduct = findViewById(R.id.store_detail_list_product);
-            mRecyclerProduct.setLayoutManager(new GridLayoutManager(this, 3));
-            mProductAdapter = new StoreDetailProductAdapter(this, mListProduct);
-            mRecyclerProduct.setAdapter(mProductAdapter);
-        }
+        //RecyclerView product
+        mRecyclerProduct = findViewById(R.id.store_detail_list_product);
+        mRecyclerProduct.setLayoutManager(new GridLayoutManager(this, 3));
+        mProductAdapter = new StoreDetailProductAdapter(this, new ArrayList<Product>());
+        mRecyclerProduct.setAdapter(mProductAdapter);
 
         //region init list comment
         mListComment = new ArrayList<>();
@@ -184,6 +121,16 @@ public class StoreDetailActivity extends AppCompatActivity {
 
     }
 
+    private void setError() {
+        TextView txt_error_list = findViewById(R.id.txt_error_list);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(10, 20, 10, 20);
+        txt_error_list.setLayoutParams(params);
+        txt_error_list.setText(R.string.store_detail_error_list_mess);
+        txt_error_list.setTextSize(getResources().getDimension(R.dimen.store_detail_error_list_text_size));
+        txt_error_list.setLines(2);
+    }
+
     private void getStoreData() {
         StoreConnector connector = StoreConnector.getInstance();
         Intent intent = getIntent();
@@ -194,6 +141,7 @@ public class StoreDetailActivity extends AppCompatActivity {
                 if(result != null) {
                     store = result;
                     putDataToView();
+                    getProducts();
                 }
             }
             @Override
@@ -276,13 +224,18 @@ public class StoreDetailActivity extends AppCompatActivity {
 
     private void getProducts() {
         ProductConnector connector = ProductConnector.getInstance();
-        connector.getProductsOfStore(store.getId(), "", new IResult<List<org.nam.object.Product>>() {
+        connector.getProductsOfStore(store.getId(), mProductAdapter.getLastProductId(),
+                new IResult<List<org.nam.object.Product>>() {
             @Override
             public void onResult(List<org.nam.object.Product> result) {
-
+                if(result.size() != 0) {
+                    mProductAdapter.addData(result);
+                }
             }
             @Override
-            public void onFailure(@NonNull Exception exp) { }
+            public void onFailure(@NonNull Exception exp) {
+                setError();
+            }
         });
     }
 
@@ -293,16 +246,7 @@ public class StoreDetailActivity extends AppCompatActivity {
     }
 
     public void loadMoreProduct(View view) {
-        Collection<Product> mNewList = new ArrayList<>();
-        mNewList.add(new Product("Sản phẩm 3", R.mipmap.minh_test_upload));
-        mNewList.add(new Product("Sản phẩm 4", R.mipmap.minh_test_upload));
-        mNewList.add(new Product("Sản phẩm 5", R.mipmap.minh_test_upload));
-        mNewList.add(new Product("Sản phẩm 6", R.mipmap.minh_test_upload));
-        mNewList.add(new Product("Sản phẩm 7", R.mipmap.minh_test_upload));
-        mNewList.add(new Product("Sản phẩm 8", R.mipmap.minh_test_upload));
-        mNewList.add(new Product("Sản phẩm 9", R.mipmap.minh_test_upload));
-        mNewList.add(new Product("Sản phẩm 10", R.mipmap.minh_test_upload));
-        mProductAdapter.addData(mNewList);
+        getProducts();
     }
 
 
@@ -363,18 +307,11 @@ public class StoreDetailActivity extends AppCompatActivity {
     }
 
     public void loadMoreComments(View view) {
-        Collection<Comment> mNewList = new ArrayList<>();
-        mNewList.add(new Comment("1", "Minh", R.drawable.minh_ic_home_around_me, "comment 1 đây", 5, "01/12/2018 23:22"));
-        mNewList.add(new Comment("2", "Nam", R.mipmap.minh_test_upload, "comment 2 đây", 4, "02/12/2018 23:22"));
-        mNewList.add(new Comment("1", "Minh", R.drawable.minh_ic_home_around_me, "comment 1 đây", 2, "01/12/2018 23:22"));
-        mNewList.add(new Comment("1", "Minh", R.drawable.minh_ic_home_around_me, "comment 1 đây", 5, "01/12/2018 23:22"));
-        mNewList.add(new Comment("2", "Nam", R.mipmap.minh_test_upload, "comment 2 đây", 4, "02/12/2018 23:22"));
-        mNewList.add(new Comment("1", "Minh", R.drawable.minh_ic_home_around_me, "comment 1 đây", 2, "01/12/2018 23:22"));
-        mCommentAdapter.addData(mNewList);
+
     }
 
     public void actionContactToStore(View view) {
-        String phoneNumber = "0988575470";
-        startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
+        startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",
+                store.getContact(), null)));
     }
 }

@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nam.R;
-import org.nam.minh.object.Product;
+import org.nam.object.Product;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,8 +42,8 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
     // binds the data to the TextView in each cell
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.store_detail_product_name.setText(mData.get(position).getName());
-        holder.store_detail_product_image.setImageResource(mData.get(position).getImage());
+        holder.store_detail_product_name.setText(mData.get(position).getTitle());
+        holder.store_detail_product_image.setImageResource(R.drawable.ic_packing);
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -51,7 +51,7 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
                 ImageView img_product = mDialogProduct.findViewById(R.id.store_detail_product_img_dialog);
                 img_product.setImageResource(R.mipmap.minh_test_upload);
                 TextView txt_product_name = mDialogProduct.findViewById(R.id.store_detail_product_name);
-                txt_product_name.setText(mData.get(position).getName());
+                txt_product_name.setText(mData.get(position).getTitle());
                 TextView txt_product_type = mDialogProduct.findViewById(R.id.store_detail_product_type);
                 txt_product_type.setText("Linh kiện điện tử: " + position);
                 TextView txt_product_price = mDialogProduct.findViewById(R.id.store_detail_product_price);
@@ -77,9 +77,9 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
     }
 
     public void addData(Collection<Product> data) {
-        int lenght = mData.size();
+        int length = mData.size();
         mData.addAll(data);
-        notifyItemRangeInserted(lenght, data.size());
+        notifyItemRangeInserted(length, data.size());
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -89,7 +89,7 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
         CardView product_item;
         private ItemClickListener itemClickListener;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(View itemView) {
             super(itemView);
             store_detail_product_name = itemView.findViewById(R.id.store_detail_product_name);
             store_detail_product_image = itemView.findViewById(R.id.store_detail_product_image);
@@ -97,7 +97,7 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
             itemView.setOnClickListener(this);
         }
 
-        public void setItemClickListener(ItemClickListener itemClickListener) {
+        private void setItemClickListener(ItemClickListener itemClickListener) {
             this.itemClickListener = itemClickListener;
         }
 
@@ -110,5 +110,12 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onClick(View view, int position);
+    }
+
+    public String getLastProductId() {
+        if(mData.size() > 0) {
+            return mData.get(mData.size() - 1).getId();
+        }
+        return "";
     }
 }
