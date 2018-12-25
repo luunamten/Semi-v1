@@ -68,18 +68,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
                                 if (result != null) {
                                     logoImageView.setImageBitmap(result);
                                 } else {
-                                    logoImageView.setImageResource(R.drawable.ic_store);
+                                    logoImageView.setImageResource(R.drawable.ic_packing);
                                 }
                             }
                             @Override
                             public void onFailure(@NonNull Exception exp) {
-                                logoImageView.setImageResource(R.drawable.ic_store);
+                                logoImageView.setImageResource(R.drawable.ic_packing);
                             }
                         });
                     }
                 });
             } else {
-                logoImageView.setImageResource(R.drawable.ic_store);
+                logoImageView.setImageResource(R.drawable.ic_packing);
             }
         }
     }

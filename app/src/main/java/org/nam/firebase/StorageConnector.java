@@ -2,25 +2,14 @@ package org.nam.firebase;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StreamDownloadTask;
 
 import org.nam.util.MathUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class StorageConnector {
     private static final long MAX_SIZE = 1024 * 1024;

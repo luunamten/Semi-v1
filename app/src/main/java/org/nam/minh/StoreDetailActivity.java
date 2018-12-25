@@ -218,10 +218,12 @@ public class StoreDetailActivity extends AppCompatActivity {
             public void onResult(Bitmap result) {
                 if(result != null) {
                     storeImage.setImageBitmap(result);
+                } else {
+                    storeImage.setImageResource(R.drawable.ic_store);
                 }
             }
             @Override
-            public void onFailure(@NonNull Exception exp) { }
+            public void onFailure(@NonNull Exception exp) { storeImage.setImageResource(R.drawable.ic_store);}
         });
     }
 
@@ -278,7 +280,9 @@ public class StoreDetailActivity extends AppCompatActivity {
         //open google map (can be app or browser)
         Uri url = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=" + store.getGeo());
         Intent intent = new Intent(Intent.ACTION_VIEW, url);
-        startActivity(intent);
+        if(intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     public void actionSaveStore(View view) {
@@ -290,15 +294,15 @@ public class StoreDetailActivity extends AppCompatActivity {
     }
 
     public void actionShareStore(View view) {
-        Uri imageUri = Uri.parse("android.resource://" + getPackageName()
-                + "/mipmap/" + "minh_test_upload");
+        //Uri imageUri = Uri.parse("https://www.naturehills.com/media/catalog/product/n/o/norway-spruce-tree-1-600x600.jpg");
         String str_mess = store_detail_name.getText() + "\n" + store_detail_address.getText() + ".";
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, str_mess);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-        shareIntent.setType("image/jpeg");
-        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        shareIntent.setType("text/plain");
+        //shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        //shareIntent.setType("image/*");
+        //shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(shareIntent, getString(R.string.store_detail_product_share_mess)));
     }
 

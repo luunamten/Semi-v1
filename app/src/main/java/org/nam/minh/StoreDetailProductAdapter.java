@@ -3,6 +3,7 @@ package org.nam.minh;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,32 +43,7 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
     // binds the data to the TextView in each cell
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.store_detail_product_name.setText(mData.get(position).getTitle());
-        holder.store_detail_product_image.setImageResource(R.drawable.ic_packing);
-        holder.setItemClickListener(new ItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                mDialogProduct.setContentView(R.layout.minh_store_detail_dialog_product);
-                ImageView img_product = mDialogProduct.findViewById(R.id.store_detail_product_img_dialog);
-                img_product.setImageResource(R.mipmap.minh_test_upload);
-                TextView txt_product_name = mDialogProduct.findViewById(R.id.store_detail_product_name);
-                txt_product_name.setText(mData.get(position).getTitle());
-                TextView txt_product_type = mDialogProduct.findViewById(R.id.store_detail_product_type);
-                txt_product_type.setText("Linh kiện điện tử: " + position);
-                TextView txt_product_price = mDialogProduct.findViewById(R.id.store_detail_product_price);
-                txt_product_price.setText("5.000.000" + " VND");
-                TextView txt_product_description = mDialogProduct.findViewById(R.id.store_detail_product_description);
-                txt_product_description.setText(position+ " -- Đây là mô tả: mô tả \na\na\na\n aaaa\na\na\na\na\na");
-                Button btn_close_dialog_product = mDialogProduct.findViewById(R.id.store_detail_btn_close_product);
-                btn_close_dialog_product.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mDialogProduct.dismiss();
-                    }
-                });
-                mDialogProduct.show();
-            }
-        });
+        holder.setProduct(mData.get(position));
     }
 
     // total number of cells
@@ -85,7 +61,7 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView store_detail_product_name;
-        ImageView store_detail_product_image;
+        AppCompatImageView store_detail_product_image;
         CardView product_item;
         private ItemClickListener itemClickListener;
 
@@ -99,6 +75,35 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
 
         private void setItemClickListener(ItemClickListener itemClickListener) {
             this.itemClickListener = itemClickListener;
+        }
+
+        private void setProduct(Product product) {
+            store_detail_product_name.setText(product.getTitle());
+            store_detail_product_image.setImageResource(R.drawable.ic_packing);
+            setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    mDialogProduct.setContentView(R.layout.minh_store_detail_dialog_product);
+                    ImageView img_product = mDialogProduct.findViewById(R.id.store_detail_product_img_dialog);
+                    img_product.setImageResource(R.mipmap.minh_test_upload);
+                    TextView txt_product_name = mDialogProduct.findViewById(R.id.store_detail_product_name);
+                    txt_product_name.setText(mData.get(position).getTitle());
+                    TextView txt_product_type = mDialogProduct.findViewById(R.id.store_detail_product_type);
+                    txt_product_type.setText("Linh kiện điện tử: " + position);
+                    TextView txt_product_price = mDialogProduct.findViewById(R.id.store_detail_product_price);
+                    txt_product_price.setText("5.000.000" + " VND");
+                    TextView txt_product_description = mDialogProduct.findViewById(R.id.store_detail_product_description);
+                    txt_product_description.setText(position+ " -- Đây là mô tả: mô tả \na\na\na\n aaaa\na\na\na\na\na");
+                    Button btn_close_dialog_product = mDialogProduct.findViewById(R.id.store_detail_btn_close_product);
+                    btn_close_dialog_product.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDialogProduct.dismiss();
+                        }
+                    });
+                    mDialogProduct.show();
+                }
+            });
         }
 
         @Override
