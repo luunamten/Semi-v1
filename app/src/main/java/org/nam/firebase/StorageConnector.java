@@ -18,7 +18,6 @@ public class StorageConnector {
     private StorageConnector(){}
 
     public void getBitmap(String path, final int desiredWidth , final IResult<Bitmap> result) {
-        Log.w("fafa", String.valueOf(desiredWidth));
         if(path == null || path.trim().equals("") || desiredWidth <= 0) {
             return;
         }
@@ -27,7 +26,6 @@ public class StorageConnector {
         reference.getBytes(MAX_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                Log.w("fafa", String.valueOf(desiredWidth));
                 if(bytes == null) {
                     result.onResult(null);
                 } else {

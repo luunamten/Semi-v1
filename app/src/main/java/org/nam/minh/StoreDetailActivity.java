@@ -213,7 +213,7 @@ public class StoreDetailActivity extends AppCompatActivity {
         }
         //set store image
         ObjectUtils.setBitmapToImage(store.getImageURL(),
-                storeImage, R.drawable.ic_store, null);
+                storeImage, R.drawable.ic_store);
     }
 
     private boolean isOpened(String startEndStr) {

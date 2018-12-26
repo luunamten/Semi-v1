@@ -59,7 +59,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             costTextView.setText(StringUtils.toVNDCurrency(product.getCost()));
             distanceTextView.setText(distanceStr);
             ObjectUtils.setBitmapToImage(product.getImageURL(), logoImageView,
-                    R.drawable.ic_store, null);
+                    R.drawable.ic_store);
         }
     }
 

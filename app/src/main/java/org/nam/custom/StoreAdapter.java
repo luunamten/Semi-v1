@@ -66,7 +66,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
                 }
             }
             ObjectUtils.setBitmapToImage(store.getImageURL(), logoImageView,
-                    R.drawable.ic_store, null);
+                    R.drawable.ic_store);
         }
     }
 

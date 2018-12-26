@@ -2,6 +2,8 @@ package org.nam.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +35,7 @@ import org.nam.custom.StoreInfoWindowAdapter;
 import org.nam.firebase.IResult;
 import org.nam.firebase.StorageConnector;
 import org.nam.firebase.StoreConnector;
+import org.nam.minh.StoreDetailActivity;
 import org.nam.object.Store;
 import org.nam.util.LocationUtils;
 import org.nam.util.ObjectUtils;
@@ -55,6 +58,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     private AppCompatImageView flagImageView;
     private int scaleFactor;
     private long latestCallId;
+    private ThreadLocal<Bitmap> bitmapHolder;
+
     public MyMapFragment() {
         // Required empty public constructor
     }
@@ -62,8 +67,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof IUseFragment) {
-            ((IUseFragment)context).onFragmentAttached(this);
+        if (context instanceof IUseFragment) {
+            ((IUseFragment) context).onFragmentAttached(this);
         }
         mode = Contract.STORE_MODE;
         storeConnector = StoreConnector.getInstance();
@@ -72,6 +77,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         query = "";
         markers = new ArrayList<>();
         latestCallId = 0L;
+        bitmapHolder = new ThreadLocal<>();
     }
 
     @Override
@@ -102,19 +108,11 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN);
         map.setMyLocationEnabled(true);
         map.setIndoorEnabled(false);
-        map.setInfoWindowAdapter(new StoreInfoWindowAdapter());
+        map.setInfoWindowAdapter(new StoreInfoWindowAdapter(bitmapHolder));
         map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
-                LatLng cameraTarget = map.getCameraPosition().target;
-                flagImageView.setVisibility(View.INVISIBLE);
-                if(!searchBox.isContains(cameraTarget)) {
-                    searchBox.setCenter(cameraTarget);
-                    searchBox.draw(map);
-                    searchNearbyCenterStores(true);
-                } else {
-                    searchNearbyCenterStores(false);
-                }
+                updatePlacesWhenMoveIdle();
             }
         });
         map.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
@@ -129,31 +127,55 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
                 final LatLng location = new LatLng(result.getLatitude(), result.getLongitude());
                 moveCameraToSearchBox(location);
             }
+
             @Override
-            public void onFailure(@NonNull Exception exp) { }
+            public void onFailure(@NonNull Exception exp) {
+            }
         });
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 initInfoWindow(marker);
-                return true;
+                return false;
+            }
+        });
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent storeIntent = new Intent(MyApp.getInstance(), StoreDetailActivity.class);
+                storeIntent.putExtra(Contract.BUNDLE_STORE_ID_KEY, ((Store)marker.getTag()).getId());
+                startActivity(storeIntent);
             }
         });
     }
 
-    private void initInfoWindow(final Marker marker) {
-        View view = LayoutInflater.from(
-                MyApp.getInstance()).inflate(R.layout.store_info_window, null);
-        AppCompatImageView imageImageView = view.findViewById(R.id.imageImageView);
-        TextView titleTextView = view.findViewById(R.id.titleTextView);
-        TextView addressTextView = view.findViewById(R.id.addressTextView);
-        Store store = (Store)marker.getTag();
-        titleTextView.setText(store.getTitle());
-        addressTextView.setText(store.getAddress().toString());
-        while (true) {
-            Log.w("ffaa", String.valueOf(imageImageView.getWidth()));
+    private void updatePlacesWhenMoveIdle() {
+        LatLng cameraTarget = map.getCameraPosition().target;
+        flagImageView.setVisibility(View.INVISIBLE);
+        if (!searchBox.isContains(cameraTarget)) {
+            searchBox.setCenter(cameraTarget);
+            searchBox.draw(map);
+            searchNearbyCenterStores(true);
+        } else {
+            searchNearbyCenterStores(false);
         }
+    }
 
+    private void initInfoWindow(final Marker marker) {
+        final Store store = (Store) marker.getTag();
+        final int markerImageSizeInPixels = getResources().getDimensionPixelSize(R.dimen.markerImageSize);
+        StorageConnector.getInstance().getBitmap(store.getImageURL(), markerImageSizeInPixels, new IResult<Bitmap>() {
+            @Override
+            public void onResult(Bitmap result) {
+                if(result != null) {
+                    bitmapHolder.set(result);
+                    marker.showInfoWindow();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Exception exp) { }
+        });
     }
 
     private void getLastLocation(final IResult<android.location.Location> result) {
@@ -161,23 +183,23 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
                 .addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
                     @Override
                     public void onSuccess(@Nullable android.location.Location location) {
-                        if(location == null) {
+                        if (location == null) {
                             return;
                         }
                         result.onResult(location);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        result.onFailure(e);
-                    }
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                result.onFailure(e);
+            }
         });
     }
 
     private void moveCameraToSearchBox(LatLng location) {
         searchBox.setCenter(location);
         searchBox.draw(map);
-        LatLngBounds bounds = new LatLngBounds( searchBox.getSouthWest(),
+        LatLngBounds bounds = new LatLngBounds(searchBox.getSouthWest(),
                 searchBox.getNorthEast());
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, Contract.VISIBLE_BOX_PADDING));
     }
@@ -191,37 +213,38 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     }
 
     private void searchNearbyCenterStores(final boolean isGetNew) {
-        if(isGetNew) {
+        if (isGetNew) {
             removePlaces();
         }
         final long currentCallId = ++latestCallId;
         IResult<List<Store>> result = new IResult<List<Store>>() {
             @Override
             public void onResult(@NonNull List<Store> result) {
-                Log.w("test_order", String.valueOf(currentCallId));
-                if(currentCallId != latestCallId || result.size() == 0) {
+                if (currentCallId != latestCallId || result.size() == 0) {
                     return;
                 }
                 addPlaces(result);
             }
+
             @Override
-            public void onFailure(@NonNull Exception exp) { }
+            public void onFailure(@NonNull Exception exp) {
+            }
         };
-        if(mode == Contract.STORE_MODE) {
+        if (mode == Contract.STORE_MODE) {
             storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), markers.size(),
                     productOrStoretype, query, searchBox.getDimen(), result);
-        } else if(mode == Contract.PRODUCT_MODE) {
+        } else if (mode == Contract.PRODUCT_MODE) {
             storeConnector.getNearbyStoresByProducts(searchBox.getLocationCenter(), markers.size(),
                     productOrStoretype, query, searchBox.getDimen(), result);
         }
     }
 
     private void addPlaces(List<Store> stores) {
-        for(Store store : stores) {
+        for (Store store : stores) {
             MarkerOptions options = new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.place))
                     .title(store.getTitle())
-                    .anchor(0.5f,0.5f) //center icon
+                    .anchor(0.5f, 0.5f) //center icon
                     .position(new LatLng(store.getGeo().getLatitude(),
                             store.getGeo().getLongitude()));
             Marker marker = map.addMarker(options);
@@ -231,19 +254,21 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     }
 
     private void removePlaces() {
-        for(Marker marker : markers) {
+        for (Marker marker : markers) {
             marker.remove();
         }
         markers.clear();
     }
 
     @Override
-    public void scroll(String lastId) { }
+    public void scroll(String lastId) {
+    }
 
     @Override
-    public void clickItem(String id) { }
+    public void clickItem(String id) {
+    }
 
-    private void updateWhenScaleSearchBox() {
+    private void updatePlacesWhenScaleSearchBox() {
         searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN * (1 << scaleFactor));
         moveCameraToSearchBox(searchBox.getCenter());
     }
@@ -252,19 +277,19 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.upButton:
-                if(scaleFactor == Contract.DIMEN_SCALE_FACTOR_MAX) {
+                if (scaleFactor == Contract.DIMEN_SCALE_FACTOR_MAX) {
                     return;
                 }
                 scaleFactor++;
-                updateWhenScaleSearchBox();
+                updatePlacesWhenScaleSearchBox();
                 break;
             case R.id.downButton:
-                if(scaleFactor == 0) {
+                if (scaleFactor == 0) {
                     return;
                 }
                 scaleFactor--;
                 removePlaces();
-                updateWhenScaleSearchBox();
+                updatePlacesWhenScaleSearchBox();
                 break;
         }
     }

@@ -1,5 +1,6 @@
 package org.nam.custom;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
@@ -19,6 +20,11 @@ import java.util.Map;
 
 public class StoreInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
+    private ThreadLocal<Bitmap> bitmapHolder;
+
+    public StoreInfoWindowAdapter(ThreadLocal<Bitmap> bitmapHolder) {
+        this.bitmapHolder = bitmapHolder;
+    }
     @Override
     public View getInfoWindow(Marker marker) {
         return null;
@@ -26,7 +32,19 @@ public class StoreInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoContents(final Marker marker) {
-
-        return null;
+        final View view = LayoutInflater.from(
+                MyApp.getInstance()).inflate(R.layout.store_info_window, null);
+        final AppCompatImageView imageImageView = view.findViewById(R.id.imageImageView);
+        final TextView titleTextView = view.findViewById(R.id.titleTextView);
+        final TextView addressTextView = view.findViewById(R.id.addressTextView);
+        final Store store = (Store) marker.getTag();
+        titleTextView.setText(store.getTitle());
+        addressTextView.setText(store.getAddress().toString());
+        Bitmap bitmap = bitmapHolder.get();
+        if(bitmap != null) {
+            imageImageView.setImageBitmap(bitmap);
+            bitmapHolder.set(null);
+        }
+        return view;
     }
 }

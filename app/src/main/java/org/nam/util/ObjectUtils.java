@@ -155,10 +155,9 @@ public final class ObjectUtils {
         return new Location(location.getLatitude(), location.getLongitude());
     }
 
-    public static void setBitmapToImage(final String storagePath, final AppCompatImageView imageView, final int defaultResource,
-                                        final Runnable optionAction) {
+    public static void setBitmapToImage(final String storagePath, final AppCompatImageView imageView, final int defaultResource) {
         if (!storagePath.trim().equals("")) {
-            imageView.post(new Runnable() {
+            Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     StorageConnector.getInstance().getBitmap(storagePath,
@@ -170,21 +169,19 @@ public final class ObjectUtils {
                                     } else {
                                         imageView.setImageResource(defaultResource);
                                     }
-                                    if(optionAction != null) {
-                                        optionAction.run();
-                                    }
                                 }
-
                                 @Override
                                 public void onFailure(@NonNull Exception exp) {
                                     imageView.setImageResource(defaultResource);
-                                    if(optionAction != null) {
-                                        optionAction.run();
-                                    }
                                 }
                             });
                 }
-            });
+            };
+            if (imageView.getWidth() > 0) {
+                runnable.run();
+            } else {
+                imageView.post(runnable);
+            }
         } else {
             imageView.setImageResource(defaultResource);
         }
