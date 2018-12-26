@@ -24,6 +24,7 @@ import org.nam.util.MathUtils;
 import org.nam.util.ObjectUtils;
 import org.nam.util.StringUtils;
 
+import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,6 +42,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         private TextView ratingTextView;
         private TextView distanceTextView;
         private AppCompatImageView logoImageView;
+        private LongBuffer lastCallId;
 
         private StoreViewHolder(View view) {
             super(view);
@@ -49,6 +51,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
             ratingTextView = view.findViewById(R.id.storeRVRating);
             distanceTextView = view.findViewById(R.id.storeRVDistance);
             logoImageView = view.findViewById(R.id.storeRVLogo);
+            lastCallId = LongBuffer.allocate(1);
         }
 
         private void setStore(final Store store, String distanceStr) {
@@ -65,8 +68,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
                     ratingTextView.setTextColor(Contract.RATING_COLORS[i]);
                 }
             }
-            ObjectUtils.setBitmapToImage(store.getImageURL(), logoImageView,
-                    R.drawable.ic_store);
+            ObjectUtils.setBitmapToImage(store.getImageURL(), logoImageView, lastCallId);
         }
     }
 

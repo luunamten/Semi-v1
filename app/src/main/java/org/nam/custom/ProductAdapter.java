@@ -21,6 +21,7 @@ import org.nam.util.MathUtils;
 import org.nam.util.ObjectUtils;
 import org.nam.util.StringUtils;
 
+import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +43,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         private TextView costTextView;
         private TextView distanceTextView;
         private AppCompatImageView logoImageView;
+        private LongBuffer lastCallId;
 
         private ProductHolder(View view) {
             super(view);
@@ -50,16 +52,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             costTextView = view.findViewById(R.id.productRVCost);
             distanceTextView = view.findViewById(R.id.productRVDistance);
             logoImageView = view.findViewById(R.id.productRVLogo);
+            lastCallId = LongBuffer.allocate(1);
         }
 
         private void setProduct(final Product product, String distanceStr) {
-            String imageURL = product.getImageURL();
             titleTextView.setText(product.getTitle());
             addressTextView.setText(product.getStore().getAddress().toString());
             costTextView.setText(StringUtils.toVNDCurrency(product.getCost()));
             distanceTextView.setText(distanceStr);
-            ObjectUtils.setBitmapToImage(product.getImageURL(), logoImageView,
-                    R.drawable.ic_packing);
+            logoImageView.setImageResource(R.drawable.ic_packing);
+            ObjectUtils.setBitmapToImage(product.getImageURL(), logoImageView, lastCallId);
         }
     }
 

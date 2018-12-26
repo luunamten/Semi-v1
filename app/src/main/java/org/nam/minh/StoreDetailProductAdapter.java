@@ -17,6 +17,7 @@ import org.nam.R;
 import org.nam.object.Product;
 import org.nam.util.ObjectUtils;
 
+import java.nio.LongBuffer;
 import java.util.Collection;
 import java.util.List;
 
@@ -65,12 +66,14 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
         AppCompatImageView store_detail_product_image;
         CardView product_item;
         private ItemClickListener itemClickListener;
+        private LongBuffer lastCallId;
 
         private ViewHolder(View itemView) {
             super(itemView);
             store_detail_product_name = itemView.findViewById(R.id.store_detail_product_name);
             store_detail_product_image = itemView.findViewById(R.id.store_detail_product_image);
             product_item = itemView.findViewById(R.id.product_item);
+            lastCallId = LongBuffer.allocate(1);
             itemView.setOnClickListener(this);
         }
 
@@ -81,8 +84,7 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
         private void setProduct(Product product) {
             store_detail_product_name.setText(product.getTitle());
             store_detail_product_image.setImageResource(R.drawable.ic_packing);
-            ObjectUtils.setBitmapToImage(product.getImageURL(), store_detail_product_image,
-                    R.drawable.ic_packing);
+            ObjectUtils.setBitmapToImage(product.getImageURL(), store_detail_product_image, lastCallId);
             setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int position) {

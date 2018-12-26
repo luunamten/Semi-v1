@@ -20,6 +20,7 @@ import org.nam.object.Store;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -155,8 +156,9 @@ public final class ObjectUtils {
         return new Location(location.getLatitude(), location.getLongitude());
     }
 
-    public static void setBitmapToImage(final String storagePath, final AppCompatImageView imageView, final int defaultResource) {
+    public static void setBitmapToImage(final String storagePath, final AppCompatImageView imageView) {
         if (!storagePath.trim().equals("")) {
+
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -166,14 +168,10 @@ public final class ObjectUtils {
                                 public void onResult(Bitmap result) {
                                     if (result != null) {
                                         imageView.setImageBitmap(result);
-                                    } else {
-                                        imageView.setImageResource(defaultResource);
                                     }
                                 }
                                 @Override
-                                public void onFailure(@NonNull Exception exp) {
-                                    imageView.setImageResource(defaultResource);
-                                }
+                                public void onFailure(@NonNull Exception exp) { }
                             });
                 }
             };
@@ -182,8 +180,35 @@ public final class ObjectUtils {
             } else {
                 imageView.post(runnable);
             }
-        } else {
-            imageView.setImageResource(defaultResource);
+        }
+    }
+
+    public static void setBitmapToImage(@NonNull final String storagePath, final AppCompatImageView imageView,
+                                        @NonNull final LongBuffer lastCallIdHolder) {
+        final long currentCallId = lastCallIdHolder.get(0) + 1;
+        lastCallIdHolder.put(0, currentCallId);
+        if (!storagePath.trim().equals("")) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    StorageConnector.getInstance().getBitmap(storagePath,
+                            imageView.getWidth(), new IResult<Bitmap>() {
+                                @Override
+                                public void onResult(Bitmap result) {
+                                    if (result != null && currentCallId == lastCallIdHolder.get(0)) {
+                                        imageView.setImageBitmap(result);
+                                    }
+                                }
+                                @Override
+                                public void onFailure(@NonNull Exception exp) { }
+                            });
+                }
+            };
+            if (imageView.getWidth() > 0) {
+                runnable.run();
+            } else {
+                imageView.post(runnable);
+            }
         }
     }
 }

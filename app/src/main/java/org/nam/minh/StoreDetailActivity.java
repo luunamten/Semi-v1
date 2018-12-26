@@ -169,6 +169,8 @@ public class StoreDetailActivity extends AppCompatActivity {
         store_detail_time.setText(store.getStartEnd());
         store_detail_description.setText(store.getDescription());
         store_detail_total_rating.setText(String.format("%.1f", store.getRating()));
+        store_detail_total_product.setText(String.valueOf(store.getNumProducts()));
+        store_detail_total_comment.setText(String.valueOf(store.getNumComments()));
         //set color for opened or closed
         if (isOpened(store.getStartEnd())) {
             store_detail_state.setText(getResources().getString(R.string.store_detail_state_open));
@@ -212,8 +214,7 @@ public class StoreDetailActivity extends AppCompatActivity {
             store_detail_utilities.addView(img_utility);
         }
         //set store image
-        ObjectUtils.setBitmapToImage(store.getImageURL(),
-                storeImage, R.drawable.ic_store);
+        ObjectUtils.setBitmapToImage(store.getImageURL(), storeImage);
     }
 
     private boolean isOpened(String startEndStr) {
@@ -231,10 +232,6 @@ public class StoreDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return false;
-    }
-
-    private void getNumberOfProduct() {
-        StoreConnector connector = StoreConnector.getInstance();
     }
 
     private void getProducts() {

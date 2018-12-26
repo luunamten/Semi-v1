@@ -232,6 +232,9 @@ public class StoreConnector {
                                             ));
                             store.setUtilities(getStoreUtilities(map));
                             store.setGeo(getGeo(map));
+                            store.setNumProducts(((Number)map.get(DBContract.Store.NUM_PRODUCTS)).intValue());
+                            store.setNumComments(((Number)map.get(DBContract.Store.NUM_COMMENTS)).intValue());
+                            store.setNumPoints(((Number)map.get(DBContract.Store.NUM_POINTS)).intValue());
                             IResult.onResult(store);
                         } else {
                             IResult.onResult(null);

@@ -17,6 +17,9 @@ public class Store implements IHaveIdAndName<String> {
     private String imageURL;
     private String startEnd;
     private List<Product> products;
+    private int numComments;
+    private int numPoints;
+    private int numProducts;
 
     public static class Type implements IHaveIdAndName<Integer> {
         private int id;
@@ -176,5 +179,29 @@ public class Store implements IHaveIdAndName<String> {
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    public int getNumComments() {
+        return numComments;
+    }
+
+    public void setNumComments(int numComments) {
+        this.numComments = numComments;
+    }
+
+    public int getNumPoints() {
+        return numPoints;
+    }
+
+    public void setNumPoints(int numPoints) {
+        this.numPoints = numPoints;
+    }
+
+    public int getNumProducts() {
+        return numProducts;
+    }
+
+    public void setNumProducts(int numProducts) {
+        this.numProducts = numProducts;
     }
 }

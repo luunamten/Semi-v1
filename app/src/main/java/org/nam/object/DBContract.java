@@ -26,6 +26,9 @@ public class DBContract {
         public static final String GRID_NUMBER = "gridNumber";
         public static final String RATING = "rating";
         public static final String CONTACT = "contact";
+        public static final String NUM_PRODUCTS = "numProducts";
+        public static final String NUM_COMMENTS = "numComments";
+        public static final String NUM_POINTS = "numPoints";
     }
 
     public static class Product {

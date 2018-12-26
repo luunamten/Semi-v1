@@ -57,7 +57,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
     private List<Marker> markers;
     private AppCompatImageView flagImageView;
     private int scaleFactor;
-    private long latestCallId;
+    private long lastCallId;
     private ThreadLocal<Bitmap> bitmapHolder;
 
     public MyMapFragment() {
@@ -76,7 +76,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         productOrStoretype = -1;
         query = "";
         markers = new ArrayList<>();
-        latestCallId = 0L;
+        lastCallId = 0L;
         bitmapHolder = new ThreadLocal<>();
     }
 
@@ -216,11 +216,11 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         if (isGetNew) {
             removePlaces();
         }
-        final long currentCallId = ++latestCallId;
+        final long currentCallId = ++lastCallId;
         IResult<List<Store>> result = new IResult<List<Store>>() {
             @Override
             public void onResult(@NonNull List<Store> result) {
-                if (currentCallId != latestCallId || result.size() == 0) {
+                if (currentCallId != lastCallId || result.size() == 0) {
                     return;
                 }
                 addPlaces(result);
