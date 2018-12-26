@@ -11,8 +11,7 @@
         android:id="@+id/store_detail_product_img_dialog"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/minh_test_upload"
+        android:src="@drawable/ic_packing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,9 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Tên của sản phẩm"
         android:textAlignment="center"
-        android:textColor="@color/colorBlack"
+        android:textAppearance="@style/StoreRVTheme.Title"
         app:layout_constraintEnd_toEndOf="@+id/store_detail_product_img_dialog"
         app:layout_constraintStart_toStartOf="@+id/store_detail_product_img_dialog"
         app:layout_constraintTop_toBottomOf="@+id/store_detail_product_img_dialog" />
@@ -49,7 +47,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Loại sản phẩm"
             android:textAlignment="center"
             android:textColor="@color/colorBlack" />
 
@@ -63,9 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="5.000.000"
             android:textAlignment="center"
-            android:textColor="@color/colorBlack" />
+            android:textAppearance="@style/StoreRVTheme.Cost" />
     </LinearLayout>
 
 
@@ -85,8 +81,7 @@
             android:layout_margin="5dp"
             android:layout_marginBottom="8dp"
             android:gravity=""
-            android:text="Mô tả của sản phẩmMô tả của sản phẩmMô tả của sản phẩmMô tả của sản phẩmMô tả của sản phẩmcủa sản phẩmMô tả của sản phẩmMô tả của sản phẩmMô tả của sản phẩcủa sản phẩmMô tả của sản phẩmMô tả của sản phẩmMô tả của sản phẩMô tả của sản phẩmMô tả của sản phẩmMô tả của sản phẩmMô tả của sản phẩm"
-            android:textSize="12sp" />
+            android:textAppearance="@style/StoreRVTheme.Address" />
     </ScrollView>
 
 
