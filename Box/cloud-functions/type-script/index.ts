@@ -100,6 +100,11 @@ export const nearbyStoresByKeywords = functions.https.onCall((data, context) => 
     const bottomRight: LatLng = new LatLng(center.latitude - halfLatDimen, center.longitude + halfLngDimen);
     const promises: Promise<FirebaseFirestore.QuerySnapshot>[] = [];
     let keywordArray: string[] = null;
+    let lastKeyword: string;
+    if(keywords !== undefined && keywords !== '') {
+        keywordArray = keywords.split(/\s+/);
+        lastKeyword = keywordArray.pop();
+    } 
     //Query firestore
     for(const rect of rects) {
         const limitRect: number = rect + limit;
@@ -111,10 +116,7 @@ export const nearbyStoresByKeywords = functions.https.onCall((data, context) => 
             colRef = colRef.where('type', '==', type);
         }
         if(keywords !== undefined && keywords !== '') {
-            keywordArray = keywords.split(/\s+/);
-            colRef = colRef.where('keywords', 
-            'array-contains', keywordArray[keywordArray.length - 1]);
-            keywordArray.pop();
+            colRef = colRef.where('keywords', 'array-contains', lastKeyword);
         }
         promises.push(colRef.get());
     }
@@ -438,4 +440,139 @@ export const nearbyProducts = functions.https.onCall((data, context) => {
     });
 });
 
+/** input:
+*data.from
+*data.centerLat
+*data.centerLng
+*data.storeType
+*data.dimen
+*data.keywords
+*/
+export const nearbyStoresByProducts = functions.https.onCall(async (data, context) => {
+    const grid: EarthQuadGrid = EarthQuadGrid.instance;
+    const from: number = data.from;
+    const type: number = data.productType;
+    const center: LatLng = new LatLng(data.centerLat, data.centerLng);
+    const dimen: number = data.dimen;
+    const keywords: string = data.keywords;
+    const latDimen: number = utils.kmToLat(dimen);
+    const lngDimen: number = utils.kmToLng(dimen, center.latitude);
+    const maxDimen: number = (latDimen >= lngDimen)?latDimen:lngDimen;
+    const rects: Set<number> = grid.searchCollisionBoxes(center, maxDimen);
+    const limit: number = Math.pow(4, EarthQuadGrid.MAX_LEVELS - grid.getCollisionLevel(maxDimen));
+    const halfLatDimen: number = latDimen / 2;
+    const halfLngDimen: number = lngDimen / 2;
+    const topLeft: LatLng = new LatLng(center.latitude + halfLatDimen, center.longitude - halfLngDimen);
+    const bottomRight: LatLng = new LatLng(center.latitude - halfLatDimen, center.longitude + halfLngDimen);
+    const productPromises: Promise<FirebaseFirestore.QuerySnapshot>[] = [];
+    const storePromises: Promise<FirebaseFirestore.DocumentSnapshot>[] = [];
+    let keywordArray: string[] = null;
+    let lastKeyword: string;
+    //Query firestore
+    if(keywords !== undefined && keywords !== '') {
+        keywordArray = keywords.split(/\s+/);
+        lastKeyword = keywordArray.pop();
+    } else {
+        return getNearbyStores(rects, limit, from, topLeft, bottomRight, center);
+    }
+    for(const rect of rects) {
+        const limitRect: number = rect + limit;
+        let colRef: FirebaseFirestore.Query = admin.firestore().collection('product')
+                        .select('geo', 'keywords', 'storeId')
+                        .where('gridNumber', '>=', rect)
+                        .where('gridNumber', '<', limitRect);
+        if(type !== undefined && type >= 0) {
+            colRef = colRef.where('type', '==', type);
+        }
+        if(keywords !== undefined && keywords !== '') {
+            colRef = colRef.where('keywords', 'array-contains', lastKeyword);
+        }
+        productPromises.push(colRef.get());
+    }
+    try {
+        const snapshots = await Promise.all(productPromises);
+        const storeIdSet: Set<string> = new Set();
+        snapshots.forEach(snapshot => {
+            snapshot.forEach(product => {
+                const productData: FirebaseFirestore.DocumentData = product.data();
+                const location: LatLng = new LatLng(productData.geo.latitude, 
+                    productData.geo.longitude);
+                if(utils.isObjectInRect(topLeft, bottomRight, location) && 
+                    utils.containsKeywords(keywordArray, productData.keywords)) {
+                        storeIdSet.add(productData.storeId);
+                }
+            });
+        });
+        for(const storeId of storeIdSet) {
+            const storePromise = admin.firestore().doc('store/' + storeId).get();
+            storePromises.push(storePromise);
+        }
+    } catch(err) {
+        console.log(err);
+        return [];
+    }
+    //
+    return Promise.all(storePromises).then(snapshots => {
+        const distance2s: number[] = [];
+        const stores: Object[] = [];
+        snapshots.forEach(snapshot => {
+            const storeData: FirebaseFirestore.DocumentData = snapshot.data();
+            const newData: Object = {
+                id: snapshot.id,
+                title: storeData.title,
+                imageURL: storeData.imageURL,
+                address: storeData.address,
+                geo: storeData.geo
+            };
+            const location = new LatLng(storeData.geo.latitude, 
+                storeData.geo.longitude);
+            distance2s.push(utils.distance2(location, center));
+            stores.push(newData);
+            utils.sortAsc(distance2s, stores);
+        });
+        return stores.splice(from, from + C.NUM_NEARBY_STORES_BY_KEYWORDS);
+    }).catch(err => {
+        console.log(err);
+        return [];
+    });
+});
 
+function getNearbyStores(rects: Set<number>, limit: number, from: number, 
+    topLeft: LatLng, bottomRight: LatLng, center: LatLng) {
+    const promises: Promise<FirebaseFirestore.QuerySnapshot>[] = [];
+    for(const rect of rects) {
+        const limitRect: number = rect + limit;
+        let colRef: FirebaseFirestore.Query = admin.firestore().collection('store')
+                        .select('title', 'address', 'imageURL', 'rating', 'geo')
+                        .where('gridNumber', '>=', rect)
+                        .where('gridNumber', '<', limitRect);
+        promises.push(colRef.get());
+    }
+    return Promise.all(promises).then(snapshots => {
+        const stores: Object[] = [];
+        const distance2s: number[] = [];
+        snapshots.forEach(snapshot => {
+            snapshot.forEach(store => {
+                const storeData: FirebaseFirestore.DocumentData = store.data();
+                const location: LatLng = new LatLng(storeData.geo.latitude, 
+                    storeData.geo.longitude);
+                if(utils.isObjectInRect(topLeft, bottomRight, location)) {
+                    const newdata: Object = {
+                        id : store.id,
+                        title : storeData.title,
+                        address : storeData.address,
+                        imageURL : storeData.imageURL,
+                        geo : storeData.geo
+                    }
+                    distance2s.push(utils.distance2(location, center));
+                    stores.push(newdata);
+                    utils.sortAsc(distance2s, stores);
+                }
+            });
+        });
+        return stores.slice(from, from + C.NUM_NEARBY_STORES_BY_KEYWORDS);
+    }).catch(err => {
+        console.log(err);
+        return [];
+    });
+}

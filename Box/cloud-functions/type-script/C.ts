@@ -1,7 +1,7 @@
 export class C {
     //store
     public static readonly NUM_NEARBY_STORES = 20;
-    public static readonly NUM_NEARBY_STORES_BY_KEYWORDS = 30;
+    public static readonly NUM_NEARBY_STORES_BY_KEYWORDS = 5;
     public static readonly NUM_STORES_BY_KEYWORDS = 20;
     public static readonly NUM_STORES_PER_QUERY = 50;
     //product
