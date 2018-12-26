@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import org.nam.R;
 import org.nam.object.Product;
+import org.nam.util.ObjectUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -80,6 +81,8 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
         private void setProduct(Product product) {
             store_detail_product_name.setText(product.getTitle());
             store_detail_product_image.setImageResource(R.drawable.ic_packing);
+            ObjectUtils.setBitmapToImage(product.getImageURL(), store_detail_product_image,
+                    R.drawable.ic_packing);
             setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int position) {
