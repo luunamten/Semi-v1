@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import org.nam.R;
 import org.nam.StoreMapActivity;
 import org.nam.contract.Contract;
+import org.nam.custom.OnItemClickListener;
 import org.nam.firebase.IResult;
 import org.nam.firebase.ProductConnector;
 import org.nam.firebase.StorageConnector;
@@ -52,7 +53,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class StoreDetailActivity extends AppCompatActivity {
+public class StoreDetailActivity extends AppCompatActivity implements OnItemClickListener<Product> {
     private Toolbar toolbar_store_detail;
     private TextView toolbar_store_detail_name;
     private TextView store_detail_name, store_detail_address, store_detail_type, store_detail_state, store_detail_time,
@@ -76,12 +77,13 @@ public class StoreDetailActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        //Action bar
         toolbar_store_detail = findViewById(R.id.toolbar_store_detail);
         toolbar_store_detail.setTitle("");
         setSupportActionBar(toolbar_store_detail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        //normal view
         toolbar_store_detail_name = findViewById(R.id.toolbar_store_detail_name);
         store_detail_type = findViewById(R.id.store_detail_type);
         store_detail_name = findViewById(R.id.store_detail_name);
@@ -99,6 +101,7 @@ public class StoreDetailActivity extends AppCompatActivity {
         mRecyclerProduct = findViewById(R.id.store_detail_list_product);
         mRecyclerProduct.setLayoutManager(new GridLayoutManager(this, 3));
         mProductAdapter = new StoreDetailProductAdapter(this, new ArrayList<Product>());
+        mProductAdapter.setOnItemClickListener(this);
         mRecyclerProduct.setAdapter(mProductAdapter);
 
         //region init list comment
@@ -330,5 +333,42 @@ public class StoreDetailActivity extends AppCompatActivity {
     public void actionContactToStore(View view) {
         startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",
                 store.getContact(), null)));
+    }
+
+    @Override
+    public void onItemClick(final Product product) {
+        ProductConnector.getInstance().getProductById(product.getId(), new IResult<Product>() {
+            @Override
+            public void onResult(Product result) {
+                if(result == null) {
+                    return;
+                }
+                final Dialog mDialogProduct = new Dialog(StoreDetailActivity.this);
+                mDialogProduct.setContentView(R.layout.minh_store_detail_dialog_product);
+                AppCompatImageView img_product = mDialogProduct.findViewById(R.id.store_detail_product_img_dialog);
+                TextView txt_product_name = mDialogProduct.findViewById(R.id.store_detail_product_name);
+                TextView txt_product_type = mDialogProduct.findViewById(R.id.store_detail_product_type);
+                TextView txt_product_price = mDialogProduct.findViewById(R.id.store_detail_product_price);
+                TextView txt_product_description = mDialogProduct.findViewById(R.id.store_detail_product_description);
+                Button btn_close_dialog_product = mDialogProduct.findViewById(R.id.store_detail_btn_close_product);
+                txt_product_name.setText(result.getTitle());
+                txt_product_type.setText(result.getType().getName());
+                txt_product_price.setText(StringUtils.toVNDCurrency(result.getCost()));
+                txt_product_description.setText(result.getDescription());
+                ObjectUtils.setBitmapToImage(product.getImageURL(), img_product);
+                btn_close_dialog_product.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialogProduct.dismiss();
+                    }
+                });
+                mDialogProduct.show();
+            }
+            @Override
+            public void onFailure(@NonNull Exception exp) {
+
+            }
+        });
+
     }
 }

@@ -7,7 +7,7 @@
     android:background="@color/colorBlackTransparent10"
     android:padding="5dp">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/store_detail_product_img_dialog"
         android:layout_width="match_parent"
         android:layout_height="200dp"

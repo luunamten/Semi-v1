@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nam.R;
+import org.nam.custom.OnItemClickListener;
 import org.nam.object.Product;
 import org.nam.util.ObjectUtils;
 
@@ -24,12 +25,11 @@ import java.util.List;
 public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailProductAdapter.ViewHolder> {
     private Context mRootContext;
     private List<Product> mData;
-    private Dialog mDialogProduct;
+    private OnItemClickListener<Product> listener;
 
     // data is passed into the constructor
     StoreDetailProductAdapter(Context mRootContext, List<Product> data) {
         this.mRootContext = mRootContext;
-        mDialogProduct = new Dialog(mRootContext);
         this.mData = data;
     }
 
@@ -44,8 +44,19 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
 
     // binds the data to the TextView in each cell
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.setProduct(mData.get(position));
+        if(listener == null) {
+            return;
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null) {
+                    listener.onItemClick(mData.get(position));
+                }
+            }
+        });
     }
 
     // total number of cells
@@ -61,7 +72,7 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
     }
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView store_detail_product_name;
         AppCompatImageView store_detail_product_image;
         CardView product_item;
@@ -74,46 +85,11 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
             store_detail_product_image = itemView.findViewById(R.id.store_detail_product_image);
             product_item = itemView.findViewById(R.id.product_item);
             lastCallId = LongBuffer.allocate(1);
-            itemView.setOnClickListener(this);
         }
-
-        private void setItemClickListener(ItemClickListener itemClickListener) {
-            this.itemClickListener = itemClickListener;
-        }
-
         private void setProduct(Product product) {
             store_detail_product_name.setText(product.getTitle());
             store_detail_product_image.setImageResource(R.drawable.ic_packing);
             ObjectUtils.setBitmapToImage(product.getImageURL(), store_detail_product_image, lastCallId);
-            setItemClickListener(new ItemClickListener() {
-                @Override
-                public void onClick(View view, int position) {
-                    mDialogProduct.setContentView(R.layout.minh_store_detail_dialog_product);
-                    ImageView img_product = mDialogProduct.findViewById(R.id.store_detail_product_img_dialog);
-                    img_product.setImageResource(R.mipmap.minh_test_upload);
-                    TextView txt_product_name = mDialogProduct.findViewById(R.id.store_detail_product_name);
-                    txt_product_name.setText(mData.get(position).getTitle());
-                    TextView txt_product_type = mDialogProduct.findViewById(R.id.store_detail_product_type);
-                    txt_product_type.setText("Linh kiện điện tử: " + position);
-                    TextView txt_product_price = mDialogProduct.findViewById(R.id.store_detail_product_price);
-                    txt_product_price.setText("5.000.000" + " VND");
-                    TextView txt_product_description = mDialogProduct.findViewById(R.id.store_detail_product_description);
-                    txt_product_description.setText(position+ " -- Đây là mô tả: mô tả \na\na\na\n aaaa\na\na\na\na\na");
-                    Button btn_close_dialog_product = mDialogProduct.findViewById(R.id.store_detail_btn_close_product);
-                    btn_close_dialog_product.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDialogProduct.dismiss();
-                        }
-                    });
-                    mDialogProduct.show();
-                }
-            });
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (itemClickListener != null) itemClickListener.onClick(view, getAdapterPosition());
         }
     }
 
@@ -127,5 +103,9 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
             return mData.get(mData.size() - 1).getId();
         }
         return "";
+    }
+
+    public void setOnItemClickListener(OnItemClickListener<Product> listener) {
+        this.listener = listener;
     }
 }
