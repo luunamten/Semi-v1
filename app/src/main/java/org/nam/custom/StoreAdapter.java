@@ -21,6 +21,7 @@ import org.nam.firebase.StorageConnector;
 import org.nam.object.Location;
 import org.nam.object.Store;
 import org.nam.util.MathUtils;
+import org.nam.util.ObjectUtils;
 import org.nam.util.StringUtils;
 
 import java.util.ArrayList;
@@ -64,30 +65,8 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
                     ratingTextView.setTextColor(Contract.RATING_COLORS[i]);
                 }
             }
-            if (!imageURL.equals("")) {
-                logoImageView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        StorageConnector.getInstance().getBitmap(store.getImageURL(),
-                                logoImageView.getMeasuredWidth(), new IResult<Bitmap>() {
-                            @Override
-                            public void onResult(Bitmap result) {
-                                if (result != null) {
-                                    logoImageView.setImageBitmap(result);
-                                } else {
-                                    logoImageView.setImageResource(R.drawable.ic_store);
-                                }
-                            }
-                            @Override
-                            public void onFailure(@NonNull Exception exp) {
-                                logoImageView.setImageResource(R.drawable.ic_store);
-                            }
-                        });
-                    }
-                });
-            } else {
-                logoImageView.setImageResource(R.drawable.ic_store);
-            }
+            ObjectUtils.setBitmapToImage(store.getImageURL(), logoImageView,
+                    R.drawable.ic_store, null);
         }
     }
 

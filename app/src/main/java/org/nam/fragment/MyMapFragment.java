@@ -2,8 +2,6 @@ package org.nam.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,40 +12,36 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
+import org.nam.MyApp;
 import org.nam.R;
 import org.nam.contract.Contract;
+import org.nam.custom.StoreInfoWindowAdapter;
 import org.nam.firebase.IResult;
+import org.nam.firebase.StorageConnector;
 import org.nam.firebase.StoreConnector;
-import org.nam.object.IHaveIdAndName;
-import org.nam.object.Location;
 import org.nam.object.Store;
 import org.nam.util.LocationUtils;
-import org.nam.util.MathUtils;
+import org.nam.util.ObjectUtils;
 import org.nam.util.SearchBox;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISearch, View.OnClickListener {
 
@@ -108,6 +102,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         searchBox.setDimen(Contract.VISIBLE_BOX_MIN_DIMEN);
         map.setMyLocationEnabled(true);
         map.setIndoorEnabled(false);
+        map.setInfoWindowAdapter(new StoreInfoWindowAdapter());
         map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
@@ -137,6 +132,28 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
             @Override
             public void onFailure(@NonNull Exception exp) { }
         });
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                initInfoWindow(marker);
+                return true;
+            }
+        });
+    }
+
+    private void initInfoWindow(final Marker marker) {
+        View view = LayoutInflater.from(
+                MyApp.getInstance()).inflate(R.layout.store_info_window, null);
+        AppCompatImageView imageImageView = view.findViewById(R.id.imageImageView);
+        TextView titleTextView = view.findViewById(R.id.titleTextView);
+        TextView addressTextView = view.findViewById(R.id.addressTextView);
+        Store store = (Store)marker.getTag();
+        titleTextView.setText(store.getTitle());
+        addressTextView.setText(store.getAddress().toString());
+        while (true) {
+            Log.w("ffaa", String.valueOf(imageImageView.getWidth()));
+        }
+
     }
 
     private void getLastLocation(final IResult<android.location.Location> result) {
@@ -208,6 +225,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
                     .position(new LatLng(store.getGeo().getLatitude(),
                             store.getGeo().getLongitude()));
             Marker marker = map.addMarker(options);
+            marker.setTag(store);
             markers.add(marker);
         }
     }

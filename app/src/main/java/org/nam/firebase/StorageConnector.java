@@ -3,6 +3,7 @@ package org.nam.firebase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -17,6 +18,7 @@ public class StorageConnector {
     private StorageConnector(){}
 
     public void getBitmap(String path, final int desiredWidth , final IResult<Bitmap> result) {
+        Log.w("fafa", String.valueOf(desiredWidth));
         if(path == null || path.trim().equals("") || desiredWidth <= 0) {
             return;
         }
@@ -25,6 +27,7 @@ public class StorageConnector {
         reference.getBytes(MAX_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
+                Log.w("fafa", String.valueOf(desiredWidth));
                 if(bytes == null) {
                     result.onResult(null);
                 } else {

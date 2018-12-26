@@ -212,19 +212,8 @@ public class StoreDetailActivity extends AppCompatActivity {
             store_detail_utilities.addView(img_utility);
         }
         //set store image
-        StorageConnector.getInstance().getBitmap(store.getImageURL(), storeImage.getWidth(),
-                new IResult<Bitmap>() {
-            @Override
-            public void onResult(Bitmap result) {
-                if(result != null) {
-                    storeImage.setImageBitmap(result);
-                } else {
-                    storeImage.setImageResource(R.drawable.ic_store);
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Exception exp) { storeImage.setImageResource(R.drawable.ic_store);}
-        });
+        ObjectUtils.setBitmapToImage(store.getImageURL(),
+                storeImage, R.drawable.ic_store, null);
     }
 
     private boolean isOpened(String startEndStr) {

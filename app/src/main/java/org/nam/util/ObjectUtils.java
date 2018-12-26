@@ -2,10 +2,17 @@ package org.nam.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatImageView;
+import android.util.Log;
 
 import org.nam.MyApp;
 import org.nam.R;
 import org.nam.contract.Contract;
+import org.nam.firebase.IResult;
+import org.nam.firebase.StorageConnector;
 import org.nam.object.Location;
 import org.nam.object.Product;
 import org.nam.object.Store;
@@ -31,18 +38,19 @@ public final class ObjectUtils {
 
     /**
      * Get All store types from CSV file.
+     *
      * @return A Map<id, name> of store types.
      */
     public static List<Store.Type> getNewStoreTypes() {
         List<Store.Type> types = new ArrayList<>();
-        try(BufferedReader bufReader = new BufferedReader(new InputStreamReader(
+        try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(
                 MyApp.getInstance().getResources().openRawResource(R.raw.store_type)
         ))) {
             String line;
             int id = 0;
-            while((line = bufReader.readLine()) != null) {
+            while ((line = bufReader.readLine()) != null) {
                 String[] arr = line.split(",");
-                types.add(new Store.Type(id++,  arr[1]));
+                types.add(new Store.Type(id++, arr[1]));
             }
             Store.Type lastType = types.get(types.size() - 1);
             lastType.setId(-1);
@@ -55,16 +63,17 @@ public final class ObjectUtils {
 
     /**
      * Get all store utilities from CSV file.
+     *
      * @return A Map<id, name> of store utilities
      */
     public static List<Store.Utility> getNewStoreUtilities() {
         List<Store.Utility> utilities = new ArrayList<>();
-        try(BufferedReader bufReader = new BufferedReader(new InputStreamReader(
+        try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(
                 MyApp.getInstance().getResources().openRawResource(R.raw.utilities)
         ))) {
             String line;
             int id = 0;
-            while((line = bufReader.readLine()) != null) {
+            while ((line = bufReader.readLine()) != null) {
                 String[] arr = line.split(",");
                 utilities.add(new Store.Utility(id++, arr[1]));
             }
@@ -76,16 +85,17 @@ public final class ObjectUtils {
 
     /**
      * Get new all product types from CSV file.
+     *
      * @return A Map<id, name> of product types
      */
     public static List<Product.Type> getNewProductTypes() {
         List<Product.Type> types = new ArrayList<>();
-        try(BufferedReader bufReader = new BufferedReader(new InputStreamReader(
+        try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(
                 MyApp.getInstance().getResources().openRawResource(R.raw.product_type)
         ))) {
             String line;
             int id = 0;
-            while((line = bufReader.readLine()) != null) {
+            while ((line = bufReader.readLine()) != null) {
                 String[] arr = line.split(",");
                 types.add(new Product.Type(id++, arr[1]));
             }
@@ -99,21 +109,21 @@ public final class ObjectUtils {
     }
 
     public static Store.Type getStoreType(int id) {
-        if(storeTypes == null || storeTypes.size() == 0) {
+        if (storeTypes == null || storeTypes.size() == 0) {
             return null;
         }
         return storeTypes.get(id);
     }
 
     public static Store.Utility getStoreUtility(int id) {
-        if(storeUtilities == null || storeUtilities.size() == 0) {
+        if (storeUtilities == null || storeUtilities.size() == 0) {
             return null;
         }
         return storeUtilities.get(id);
     }
 
     public static Product.Type getProductType(int id) {
-        if(productTypes == null || productTypes.size() == 0) {
+        if (productTypes == null || productTypes.size() == 0) {
             return null;
         }
         return productTypes.get(id);
@@ -125,6 +135,7 @@ public final class ObjectUtils {
 
     /**
      * Get all store utilities.
+     *
      * @return A Map<id, name> of store utilities
      */
     public static List<Store.Utility> getStoreUtilities() {
@@ -133,6 +144,7 @@ public final class ObjectUtils {
 
     /**
      * Get all product types.
+     *
      * @return A Map<id, name> of product types
      */
     public static List<Product.Type> getProductTypes() {
@@ -141,5 +153,40 @@ public final class ObjectUtils {
 
     public static Location toMyLocation(android.location.Location location) {
         return new Location(location.getLatitude(), location.getLongitude());
+    }
+
+    public static void setBitmapToImage(final String storagePath, final AppCompatImageView imageView, final int defaultResource,
+                                        final Runnable optionAction) {
+        if (!storagePath.trim().equals("")) {
+            imageView.post(new Runnable() {
+                @Override
+                public void run() {
+                    StorageConnector.getInstance().getBitmap(storagePath,
+                            imageView.getWidth(), new IResult<Bitmap>() {
+                                @Override
+                                public void onResult(Bitmap result) {
+                                    if (result != null) {
+                                        imageView.setImageBitmap(result);
+                                    } else {
+                                        imageView.setImageResource(defaultResource);
+                                    }
+                                    if(optionAction != null) {
+                                        optionAction.run();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(@NonNull Exception exp) {
+                                    imageView.setImageResource(defaultResource);
+                                    if(optionAction != null) {
+                                        optionAction.run();
+                                    }
+                                }
+                            });
+                }
+            });
+        } else {
+            imageView.setImageResource(defaultResource);
+        }
     }
 }

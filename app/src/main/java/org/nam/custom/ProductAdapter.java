@@ -18,6 +18,7 @@ import org.nam.firebase.StorageConnector;
 import org.nam.object.Location;
 import org.nam.object.Product;
 import org.nam.util.MathUtils;
+import org.nam.util.ObjectUtils;
 import org.nam.util.StringUtils;
 
 import java.util.ArrayList;
@@ -57,30 +58,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
             addressTextView.setText(product.getStore().getAddress().toString());
             costTextView.setText(StringUtils.toVNDCurrency(product.getCost()));
             distanceTextView.setText(distanceStr);
-            if (!imageURL.equals("")) {
-                logoImageView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        StorageConnector.getInstance().getBitmap(product.getImageURL(),
-                                logoImageView.getWidth(), new IResult<Bitmap>() {
-                            @Override
-                            public void onResult(Bitmap result) {
-                                if (result != null) {
-                                    logoImageView.setImageBitmap(result);
-                                } else {
-                                    logoImageView.setImageResource(R.drawable.ic_packing);
-                                }
-                            }
-                            @Override
-                            public void onFailure(@NonNull Exception exp) {
-                                logoImageView.setImageResource(R.drawable.ic_packing);
-                            }
-                        });
-                    }
-                });
-            } else {
-                logoImageView.setImageResource(R.drawable.ic_packing);
-            }
+            ObjectUtils.setBitmapToImage(product.getImageURL(), logoImageView,
+                    R.drawable.ic_store, null);
         }
     }
 
