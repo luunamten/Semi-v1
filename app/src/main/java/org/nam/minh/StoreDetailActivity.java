@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.nam.R;
+import org.nam.StoreMapActivity;
 import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 import org.nam.firebase.ProductConnector;
@@ -141,7 +142,7 @@ public class StoreDetailActivity extends AppCompatActivity {
     private void getStoreData() {
         StoreConnector connector = StoreConnector.getInstance();
         Intent intent = getIntent();
-        String storeId = intent.getStringExtra(Contract.BUNDLE_STORE_ID_KEY);
+        String storeId = intent.getStringExtra(Contract.BUNDLE_STORE_KEY);
         connector.getStoreById(storeId, new IResult<Store>() {
             @Override
             public void onResult(Store result) {
@@ -293,7 +294,9 @@ public class StoreDetailActivity extends AppCompatActivity {
     }
 
     public void actionShowMap(View view) {
-
+        final Intent mapIntent = new Intent(this, StoreMapActivity.class);
+        mapIntent.putExtra(Contract.BUNDLE_STORE_KEY, store);
+        startActivity(mapIntent);
     }
 
     public void loadMoreUtility(View view) {

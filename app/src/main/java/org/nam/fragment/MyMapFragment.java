@@ -143,7 +143,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Intent storeIntent = new Intent(MyApp.getInstance(), StoreDetailActivity.class);
-                storeIntent.putExtra(Contract.BUNDLE_STORE_ID_KEY, ((Store)marker.getTag()).getId());
+                storeIntent.putExtra(Contract.BUNDLE_STORE_KEY, ((Store)marker.getTag()).getId());
                 startActivity(storeIntent);
             }
         });

@@ -2,7 +2,9 @@ package org.nam.object;
 
 import android.content.Intent;
 
-public class Product implements IHaveIdAndName<String>{
+import java.io.Serializable;
+
+public class Product implements IHaveIdAndName<String>, Serializable {
     private String id;
     private Store store;
     private String title;
@@ -11,7 +13,7 @@ public class Product implements IHaveIdAndName<String>{
     private long cost;
     private String imageURL;
     private Type type;
-    public static class Type implements IHaveIdAndName<Integer> {
+    public static class Type implements IHaveIdAndName<Integer>, Serializable {
         private int id;
         private String name;
         public Type() {}

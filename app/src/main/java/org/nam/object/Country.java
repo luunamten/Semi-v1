@@ -1,6 +1,8 @@
 package org.nam.object;
 
-public class Country implements IHaveIdAndName<Integer> {
+import java.io.Serializable;
+
+public class Country implements IHaveIdAndName<Integer>, Serializable {
     private int id;
     private String name;
 

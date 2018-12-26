@@ -1,9 +1,10 @@
 package org.nam.object;
 import android.content.Intent;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Store implements IHaveIdAndName<String> {
+public class Store implements IHaveIdAndName<String>, Serializable {
     private String id;
     private String title;
     private String name;
@@ -21,7 +22,7 @@ public class Store implements IHaveIdAndName<String> {
     private int numPoints;
     private int numProducts;
 
-    public static class Type implements IHaveIdAndName<Integer> {
+    public static class Type implements IHaveIdAndName<Integer>, Serializable {
         private int id;
         private String name;
         public Type() {}
@@ -49,7 +50,7 @@ public class Store implements IHaveIdAndName<String> {
         public String toString() {return Type.this.name;}
     }
 
-    public static class Utility implements IHaveIdAndName<Integer> {
+    public static class Utility implements IHaveIdAndName<Integer>, Serializable {
         private int id;
         private String name;
         public Utility() {}

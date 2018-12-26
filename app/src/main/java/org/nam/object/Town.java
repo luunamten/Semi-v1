@@ -1,6 +1,8 @@
 package org.nam.object;
 
-public class Town implements IHaveIdAndName<Integer>  {
+import java.io.Serializable;
+
+public class Town implements IHaveIdAndName<Integer>, Serializable {
     private int id;
     private String name;
 

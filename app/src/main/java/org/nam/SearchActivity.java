@@ -191,10 +191,12 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
         fragments.get(currentItem).clickItem(obj.getId());
         if(mode == Contract.STORE_MODE) {
             Intent storeIntent = new Intent(this, StoreDetailActivity.class);
-            storeIntent.putExtra(Contract.BUNDLE_STORE_ID_KEY, obj.getId());
+            storeIntent.putExtra(Contract.BUNDLE_STORE_KEY, obj.getId());
             startActivity(storeIntent);
         } else if(mode == Contract.PRODUCT_MODE) {
-
+            Intent storeIntent = new Intent(this, StoreDetailActivity.class);
+            storeIntent.putExtra(Contract.BUNDLE_STORE_KEY, obj.getId());
+            startActivity(storeIntent);
         }
     }
 

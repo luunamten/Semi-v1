@@ -1,6 +1,8 @@
 package org.nam.object;
 
-public class District implements IHaveIdAndName<Integer> {
+import java.io.Serializable;
+
+public class District implements IHaveIdAndName<Integer>, Serializable {
     private int id;
     private String name;
 

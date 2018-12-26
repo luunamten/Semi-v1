@@ -1,6 +1,8 @@
 package org.nam.object;
 
-public class Address {
+import java.io.Serializable;
+
+public class Address implements Serializable {
     private Country country;
     private City city;
     private District district;

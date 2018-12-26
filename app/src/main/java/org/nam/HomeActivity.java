@@ -445,7 +445,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
     public void onItemClick(IHaveIdAndName<String> obj) {
         if(obj instanceof Store) {
             Intent storeIntent = new Intent(this, StoreDetailActivity.class);
-            storeIntent.putExtra(Contract.BUNDLE_STORE_ID_KEY, obj.getId());
+            storeIntent.putExtra(Contract.BUNDLE_STORE_KEY, obj.getId());
             startActivity(storeIntent);
         } else if(obj instanceof Product) {
 

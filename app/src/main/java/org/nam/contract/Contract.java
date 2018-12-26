@@ -26,8 +26,8 @@ public final class Contract {
     public static final String BUNDLE_SEARCH_HINT_KEY = "string";
     public static final String BUNDLE_ACTION_LOGO_KEY = "logo";
     public static final String BUNDLE_MODE_TYPE_KEY = "type";
-    public static final String BUNDLE_STORE_ID_KEY = "storeId";
-    public static final String BUNDLE_PRODUCT_ID_KEY = "productId";
+    public static final String BUNDLE_STORE_KEY = "storeId";
+    public static final String BUNDLE_PRODUCT_KEY = "productId";
     //currency
     public static final String VN_CURRENCY = "đ";
     //location
