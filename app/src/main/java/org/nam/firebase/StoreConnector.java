@@ -17,6 +17,7 @@ import org.nam.object.Store;
 import org.nam.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +31,17 @@ public class StoreConnector {
 
     public void getNearbyStores(Location location, int from, int storeType,
                                final IResult<List<Store>> IResult) {
+        String[] selectedFields = {
+                DBContract.Store.TITLE, DBContract.Store.IMAGE_URL, DBContract.Store.ADDRESS,
+                DBContract.Store.GEO, DBContract.Store.RATING
+        };
         //Cloud functions data
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(NearbyStores.CENTER_LATITUDE, location.getLatitude());
         data.put(NearbyStores.CENTER_LONGITUDE, location.getLongitude());
         data.put(NearbyStores.FROM, from);
         data.put(NearbyStores.STORE_TYPE, storeType);
+        data.put(NearbyStores.SELECTED_FIELDS, Arrays.asList(selectedFields));
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(NearbyStores.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -72,6 +78,10 @@ public class StoreConnector {
     public void getNearbyStoresByKeywords(Location location,
                                           int from, int storeType, String keywords, double dimen,
                                           final IResult<List<Store>> IResult) {
+        String[] selectedFields = {
+                DBContract.Store.TITLE, DBContract.Store.IMAGE_URL, DBContract.Store.ADDRESS,
+                DBContract.Store.GEO, DBContract.Store.RATING
+        };
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(NearbyStoresByKeywords.CENTER_LATITUDE, location.getLatitude());
@@ -80,6 +90,7 @@ public class StoreConnector {
         data.put(NearbyStoresByKeywords.STORE_TYPE, storeType);
         data.put(NearbyStoresByKeywords.KEYWORDS, keywords);
         data.put(NearbyStoresByKeywords.RECT_DIMENSION, dimen);
+        data.put(NearbyStoresByKeywords.SELECTED_FIELDS, Arrays.asList(selectedFields));
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(NearbyStoresByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -118,6 +129,10 @@ public class StoreConnector {
     public void getNearbyStoresByProducts(Location location,
                                           int from, int productType, String keywords, double dimen,
                                           final IResult<List<Store>> IResult) {
+        String[] selectedFields = {
+                DBContract.Store.TITLE, DBContract.Store.IMAGE_URL, DBContract.Store.ADDRESS,
+                DBContract.Store.GEO
+        };
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(NearbyStoresByProducts.CENTER_LATITUDE, location.getLatitude());
@@ -126,6 +141,7 @@ public class StoreConnector {
         data.put(NearbyStoresByProducts.PRODUCT_TYPE, productType);
         data.put(NearbyStoresByProducts.KEYWORDS, keywords);
         data.put(NearbyStoresByProducts.RECT_DIMENSION, dimen);
+        data.put(NearbyStoresByProducts.SELECTED_FIELDS, Arrays.asList(selectedFields));
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(NearbyStoresByProducts.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -162,8 +178,12 @@ public class StoreConnector {
     public void getStoresByKeywords(int storeType, String keywords, String lastId,
                                     Object[] addressIds,
                                     final IResult<List<Store>> IResult) {
-        //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
+        String[] selectedFields = {
+                DBContract.Store.TITLE, DBContract.Store.IMAGE_URL,
+                DBContract.Store.ADDRESS, DBContract.Store.GEO, DBContract.Store.RATING
+        };
+        //Cloud function data
         data.put(StoresByKeywords.STORE_TYPE, storeType);
         data.put(StoresByKeywords.KEYWORDS, keywords);
         data.put(StoresByKeywords.LAST_STORE_ID, lastId);
@@ -171,6 +191,7 @@ public class StoreConnector {
         data.put(StoresByKeywords.CITY, addressIds[1]);
         data.put(StoresByKeywords.DISTRICT, addressIds[2]);
         data.put(StoresByKeywords.TOWN, addressIds[3]);
+        data.put(StoresByKeywords.SELECTED_FIELDS, Arrays.asList(selectedFields));
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(StoresByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -260,6 +281,9 @@ public class StoreConnector {
 
     private Address getAddress(Map<String, Object> map) {
         Map<String, Object> addressMap = (Map<String, Object>)map.get(DBContract.Store.ADDRESS);
+        if(addressMap == null) {
+            return null;
+        }
         int countryId = (int)addressMap.get(DBContract.Store.ADDRESS_COUNTRY);
         int cityId = (int)addressMap.get(DBContract.Store.ADDRESS_CITY);
         int districtId = (int)addressMap.get(DBContract.Store.ADDRESS_DISTRICT);
@@ -277,6 +301,9 @@ public class StoreConnector {
 
     private Location getGeo(Map<String, Object> map) {
         Map<String, Double> geoMap = (Map<String, Double>)map.get(DBContract.Store.GEO);
+        if(geoMap == null) {
+            return null;
+        }
         double latitude = geoMap.get(DBContract.Store.GEO_LATITUDE);
         double longitude = geoMap.get(DBContract.Store.GEO_LONGITUDE);
         return new Location(latitude, longitude);

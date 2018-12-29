@@ -8,6 +8,7 @@ public final class CFContract {
         public static final String CENTER_LONGITUDE = "centerLng";
         public static final String FROM = "from";
         public static final String STORE_TYPE = "storeType";
+        public static final String SELECTED_FIELDS = "selectedFields";
     }
 
     public static final class NearbyStoresByKeywords {
@@ -18,6 +19,7 @@ public final class CFContract {
         public static final String RECT_DIMENSION = "dimen";
         public static final String STORE_TYPE = "storeType";
         public static final String KEYWORDS = "keywords";
+        public static final String SELECTED_FIELDS = "selectedFields";
     }
 
     public static final class StoresByKeywords {
@@ -29,6 +31,7 @@ public final class CFContract {
         public static final String CITY = "city";
         public static final String DISTRICT = "district";
         public static final String TOWN = "town";
+        public static final String SELECTED_FIELDS = "selectedFields";
     }
 
     public static final class ProductsByKeywords {
@@ -40,6 +43,7 @@ public final class CFContract {
         public static final String CITY = "city";
         public static final String DISTRICT = "district";
         public static final String TOWN = "town";
+        public static final String SELECTED_FIELDS = "selectedFields";
     }
 
     public static final class ProductById {
@@ -50,12 +54,14 @@ public final class CFContract {
     public static final class StoreById {
         public static final String NAME = "storeById";
         public static final String STORE_ID = "storeId";
+        public static final String SELECTED_FIELDS = "selectedFields";
     }
 
     public static final class ProductsOfStore {
         public static final String NAME = "productsOfStore";
         public static final String STORE_ID = "storeId";
         public static final String LAST_PRODUCT_ID = "lastId";
+        public static final String SELECTED_FIELDS = "selectedFields";
     }
 
     public static final class NearbyProducts {
@@ -64,6 +70,7 @@ public final class CFContract {
         public static final String CENTER_LONGITUDE = "centerLng";
         public static final String FROM = "from";
         public static final String PRODUCT_TYPE = "productType";
+        public static final String SELECTED_FIELDS = "selectedFields";
     }
 
     public static final class NearbyStoresByProducts {
@@ -74,5 +81,6 @@ public final class CFContract {
         public static final String RECT_DIMENSION = "dimen";
         public static final String PRODUCT_TYPE = "productType";
         public static final String KEYWORDS = "keywords";
+        public static final String SELECTED_FIELDS = "selectedFields";
     }
 }

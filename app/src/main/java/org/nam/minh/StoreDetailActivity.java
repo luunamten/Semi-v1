@@ -67,6 +67,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     private List<Comment> mListComment;
     private Dialog mDialogUtility;
     private Store store;
+    private long lastCallId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,10 +241,14 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
 
     private void getProducts() {
         ProductConnector connector = ProductConnector.getInstance();
+        final long currentCallId = ++lastCallId;
         connector.getProductsOfStore(store.getId(), mProductAdapter.getLastProductId(),
                 new IResult<List<org.nam.object.Product>>() {
             @Override
             public void onResult(List<org.nam.object.Product> result) {
+                if(currentCallId != lastCallId) {
+                    return;
+                }
                 if(result.size() != 0) {
                     mProductAdapter.addData(result);
                 }

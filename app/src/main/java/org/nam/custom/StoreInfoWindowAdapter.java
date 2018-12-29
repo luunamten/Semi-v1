@@ -19,7 +19,6 @@ import org.nam.util.ObjectUtils;
 import java.util.Map;
 
 public class StoreInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
     private ThreadLocal<Bitmap> bitmapHolder;
 
     public StoreInfoWindowAdapter(ThreadLocal<Bitmap> bitmapHolder) {

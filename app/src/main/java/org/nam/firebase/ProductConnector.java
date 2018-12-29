@@ -18,6 +18,7 @@ import org.nam.util.ObjectUtils;
 import static org.nam.firebase.CFContract.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +32,17 @@ public class ProductConnector {
 
     public void getNearbyProducts(Location location, int from, int productType,
                                 final IResult<List<Product>> IResult) {
+        String[] selectedFields = {
+                DBContract.Product.TITLE, DBContract.Product.IMAGE_URL, DBContract.Store.ADDRESS,
+                DBContract.Store.GEO, DBContract.Product.COST
+        };
         //Cloud functions data
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(NearbyProducts.CENTER_LATITUDE, location.getLatitude());
         data.put(NearbyProducts.CENTER_LONGITUDE, location.getLongitude());
         data.put(NearbyProducts.FROM, from);
         data.put(NearbyProducts.PRODUCT_TYPE, productType);
+        data.put(NearbyProducts.SELECTED_FIELDS, Arrays.asList(selectedFields));
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(NearbyProducts.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -112,10 +118,14 @@ public class ProductConnector {
     }
 
     public void getProductsOfStore(String storeId, String lastId, final IResult<List<Product>> IResult) {
+        String[] selectedFields = {
+                DBContract.Product.TITLE, DBContract.Product.IMAGE_URL, DBContract.Product.COST
+        };
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(ProductsOfStore.STORE_ID, storeId);
         data.put(ProductsOfStore.LAST_PRODUCT_ID, lastId);
+        data.put(ProductsOfStore.SELECTED_FIELDS, Arrays.asList(selectedFields));
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(CFContract.ProductsOfStore.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -150,6 +160,10 @@ public class ProductConnector {
     public void getProductsByKeywords(int productType, String keywords, String lastId,
                                       Object[] addressIds,
                                     final IResult<List<Product>> IResult) {
+        String[] selectedFields = {
+                DBContract.Product.TITLE, DBContract.Product.IMAGE_URL, DBContract.Store.ADDRESS,
+                DBContract.Store.GEO, DBContract.Product.COST
+        };
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(ProductsByKeywords.PRODUCT_TYPE, productType);
@@ -159,6 +173,7 @@ public class ProductConnector {
         data.put(ProductsByKeywords.CITY, addressIds[1]);
         data.put(ProductsByKeywords.DISTRICT, addressIds[2]);
         data.put(ProductsByKeywords.TOWN, addressIds[3]);
+        data.put(ProductsByKeywords.SELECTED_FIELDS, Arrays.asList(selectedFields));
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(CFContract.ProductsByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -203,6 +218,9 @@ public class ProductConnector {
 
     private Location getGeo(Map<String, Object> map) {
         Map<String, Double> geoMap = (Map<String, Double>)map.get(DBContract.Store.GEO);
+        if(geoMap == null) {
+            return null;
+        }
         double latitude = geoMap.get(DBContract.Store.GEO_LATITUDE);
         double longitude = geoMap.get(DBContract.Store.GEO_LONGITUDE);
         return new Location(latitude, longitude);
@@ -210,6 +228,9 @@ public class ProductConnector {
 
     private Address getAddress(Map<String, Object> map) {
         Map<String, Object> addressMap = (Map<String, Object>)map.get(DBContract.Store.ADDRESS);
+        if(addressMap == null) {
+            return null;
+        }
         int countryId = (int)addressMap.get(DBContract.Store.ADDRESS_COUNTRY);
         int cityId = (int)addressMap.get(DBContract.Store.ADDRESS_CITY);
         int districtId = (int)addressMap.get(DBContract.Store.ADDRESS_DISTRICT);
