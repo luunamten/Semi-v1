@@ -98,6 +98,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.store_recyclerview_item, viewGroup, false);
         StoreViewHolder vh = new StoreViewHolder(view);
+        Log.w("Tagme", String.valueOf(i));
         return vh;
     }
 
