@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="5dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:elevation="2dp"
+    android:elevation="1dp"
     android:theme="@style/StoreRVTheme">
 
     <android.support.v7.widget.AppCompatImageView
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/productRVLogo"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginStart="10dp"
         android:textAppearance="@style/StoreRVTheme.Title" />
     <TextView
@@ -32,24 +32,24 @@
         android:layout_alignStart="@+id/productRVTitle"
         android:layout_marginEnd="10dp"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:maxLines="1"
         android:textAppearance="@style/StoreRVTheme.Address" />
     <TextView
         android:id="@+id/productRVCost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:layout_alignStart="@+id/productRVAddress"
-        android:layout_alignBottom="@+id/productRVLogo"
+        android:layout_below="@id/productRVAddress"
         android:textAppearance="@style/StoreRVTheme.Cost"/>
     <TextView
         android:id="@+id/productRVDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/productRVLogo"
+        android:layout_below="@id/productRVAddress"
         android:textAppearance="@style/StoreRVTheme.Address" />
 
 </RelativeLayout>

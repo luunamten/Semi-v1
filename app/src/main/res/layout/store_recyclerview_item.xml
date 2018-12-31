@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="5dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:elevation="2dp"
+    android:elevation="1dp"
     android:theme="@style/StoreRVTheme">
 
     <android.support.v7.widget.AppCompatImageView
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/storeRVLogo"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:ellipsize="end"
         android:maxLines="1"
@@ -35,25 +35,25 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:maxLines="1"
         android:textAppearance="@style/StoreRVTheme.Address" />
     <TextView
         android:id="@+id/storeRVRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_alignStart="@+id/storeRVAddress"
-        android:layout_alignBottom="@+id/storeRVLogo"
+        android:layout_alignStart="@id/storeRVAddress"
+        android:layout_below="@id/storeRVAddress"
         android:textAppearance="@style/StoreRVTheme.Rating" />
     <TextView
         android:id="@+id/storeRVDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/storeRVLogo"
+        android:layout_below="@+id/storeRVAddress"
         android:textAppearance="@style/StoreRVTheme.Address" />
 
 </RelativeLayout>
