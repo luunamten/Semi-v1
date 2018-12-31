@@ -73,7 +73,7 @@ public class FragmentCreator {
         }
         try {
             savedFragment = fragmentClass.newInstance();
-            Bundle bundle = bundles.get(argIndex);
+            final Bundle bundle = bundles.get(argIndex);
             if(bundle != null) {
                 savedFragment.setArguments(bundle);
             }
@@ -99,7 +99,7 @@ public class FragmentCreator {
         if(savedFragment == null) {
             return;
         }
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        final FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(container, savedFragment, TAG);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         try {
