@@ -72,6 +72,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/DefaultBackground"
+    android:id="@+id/homeFragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
@@ -135,16 +136,9 @@
             android:text="@string/nearbyStoreLabel"
             style="@style/NearbyStoreLabel" />
     </android.support.design.widget.AppBarLayout>
-
-    <!--<android.support.v4.widget.NestedScrollView
+    <!--<FrameLayout
         android:id="@+id/homeFragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    </android.support.v4.widget.NestedScrollView>-->
-    <FrameLayout
-        android:id="@+id/homeFragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
 </android.support.design.widget.CoordinatorLayout>

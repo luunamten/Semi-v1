@@ -86,13 +86,10 @@ public class StoreViewFragment extends Fragment {
 
     public void updateDataSet(List<Store> stores, Location location) {
         recyclerViewAdapter.setDataSet(stores, location);
-        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     public void addDataSet(List<Store> stores, Location location) {
         recyclerViewAdapter.addDataSet(stores, location);
-        recyclerViewAdapter.notifyItemRangeInserted(
-                recyclerViewAdapter.getItemCount(), stores.size());
     }
 
     public int getItemCount() {

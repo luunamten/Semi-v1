@@ -55,7 +55,6 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
         }
 
         private void setStore(final Store store, String distanceStr) {
-            String imageURL = store.getImageURL();
             float ratingValue = store.getRating();
             titleTextView.setText(store.getTitle());
             addressTextView.setText(store.getAddress().toString());
