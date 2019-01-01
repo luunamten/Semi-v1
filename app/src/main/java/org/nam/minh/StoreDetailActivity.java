@@ -251,7 +251,13 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     private void getProducts() {
         ProductConnector connector = ProductConnector.getInstance();
         final long currentCallId = ++lastCallId;
-        connector.getProductsOfStore(storeId, mProductAdapter.getLastProductId(), NUM_PRODUCTS_PER_REQUEST,
+        String lastId = mProductAdapter.getLastProductId();
+        if(productId != null) {
+            if(!lastId.equals(productId)) {
+                lastId = "";
+            }
+        }
+        connector.getProductsOfStore(storeId, lastId, NUM_PRODUCTS_PER_REQUEST,
                 new IResult<List<org.nam.object.Product>>() {
             @Override
             public void onResult(List<org.nam.object.Product> result) {
