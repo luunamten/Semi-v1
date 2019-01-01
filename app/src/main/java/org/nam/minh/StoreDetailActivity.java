@@ -35,6 +35,7 @@ import org.nam.firebase.ProductConnector;
 import org.nam.firebase.StorageConnector;
 import org.nam.firebase.StoreConnector;
 import org.nam.minh.object.Comment;
+import org.nam.object.IHaveIdAndName;
 import org.nam.object.Product;
 import org.nam.object.Store;
 import org.nam.util.LocationUtils;
@@ -47,8 +48,11 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -248,6 +252,15 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         return false;
     }
 
+    private int findPreferedProductIndex(List<Product> products, Product product) {
+        return Collections.binarySearch(products, product, new Comparator<Product>() {
+            @Override
+            public int compare(Product o1, Product o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+    }
+
     private void getProducts() {
         ProductConnector connector = ProductConnector.getInstance();
         final long currentCallId = ++lastCallId;
@@ -260,7 +273,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         connector.getProductsOfStore(storeId, lastId, NUM_PRODUCTS_PER_REQUEST,
                 new IResult<List<org.nam.object.Product>>() {
             @Override
-            public void onResult(List<org.nam.object.Product> result) {
+            public void onResult(List<Product> result) {
                 if(currentCallId != lastCallId) {
                     return;
                 }
