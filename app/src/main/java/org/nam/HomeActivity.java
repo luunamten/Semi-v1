@@ -232,7 +232,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
             return;
         }
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
-        storeConnector.getNearbyStores(currentLocation, 0, selectedItem.getId(),
+        storeConnector.getNearbyStores(currentLocation, 0, Contract.NUM_STORES_PER_REQUEST, selectedItem.getId(),
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {
@@ -272,7 +272,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
             return;
         }
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
-        productConnector.getNearbyProducts(currentLocation, 0, selectedItem.getId(),
+        productConnector.getNearbyProducts(currentLocation, 0, Contract.NUM_PRODUCTS_PER_REQUEST, selectedItem.getId(),
                 new IResult<List<Product>>() {
                     @Override
                     public void onResult(List<Product> result) {
@@ -309,7 +309,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
         if (selectedItem == null) {
             return;
         }
-        productConnector.getNearbyProducts(currentLocation, index, selectedItem.getId(),
+        productConnector.getNearbyProducts(currentLocation, index, Contract.NUM_PRODUCTS_PER_REQUEST, selectedItem.getId(),
                 new IResult<List<Product>>() {
                     @Override
                     public void onResult(List<Product> result) {
@@ -348,7 +348,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
         if (selectedItem == null) {
             return;
         }
-        storeConnector.getNearbyStores(currentLocation, position, selectedItem.getId(),
+        storeConnector.getNearbyStores(currentLocation, position, Contract.NUM_STORES_PER_REQUEST, selectedItem.getId(),
                 new IResult<List<Store>>() {
                     @Override
                     public void onResult(List<Store> result) {

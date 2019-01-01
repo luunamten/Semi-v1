@@ -30,7 +30,7 @@ public class ProductConnector {
 
     }
 
-    public void getNearbyProducts(Location location, int from, int productType,
+    public void getNearbyProducts(Location location, int from, int numResults, int productType,
                                 final IResult<List<Product>> IResult) {
         String[] selectedFields = {
                 DBContract.Product.TITLE, DBContract.Product.IMAGE_URL, DBContract.Store.ADDRESS,
@@ -43,6 +43,7 @@ public class ProductConnector {
         data.put(NearbyProducts.FROM, from);
         data.put(NearbyProducts.PRODUCT_TYPE, productType);
         data.put(NearbyProducts.SELECTED_FIELDS, Arrays.asList(selectedFields));
+        data.put(NearbyProducts.NUM_RESULTS, numResults);
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(NearbyProducts.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -119,7 +120,7 @@ public class ProductConnector {
                 });
     }
 
-    public void getProductsOfStore(String storeId, String lastId, final IResult<List<Product>> IResult) {
+    public void getProductsOfStore(String storeId, String lastId, int numResults, final IResult<List<Product>> IResult) {
         String[] selectedFields = {
                 DBContract.Product.TITLE, DBContract.Product.IMAGE_URL, DBContract.Product.COST
         };
@@ -128,6 +129,7 @@ public class ProductConnector {
         data.put(ProductsOfStore.STORE_ID, storeId);
         data.put(ProductsOfStore.LAST_PRODUCT_ID, lastId);
         data.put(ProductsOfStore.SELECTED_FIELDS, Arrays.asList(selectedFields));
+        data.put(ProductsOfStore.NUM_RESULTS, numResults);
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(CFContract.ProductsOfStore.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -159,7 +161,7 @@ public class ProductConnector {
                 });
     }
 
-    public void getProductsByKeywords(int productType, String keywords, String lastId,
+    public void getProductsByKeywords(int productType, String keywords, String lastId, int numResults,
                                       Object[] addressIds,
                                     final IResult<List<Product>> IResult) {
         String[] selectedFields = {
@@ -176,6 +178,7 @@ public class ProductConnector {
         data.put(ProductsByKeywords.DISTRICT, addressIds[2]);
         data.put(ProductsByKeywords.TOWN, addressIds[3]);
         data.put(ProductsByKeywords.SELECTED_FIELDS, Arrays.asList(selectedFields));
+        data.put(ProductsByKeywords.NUM_RESULTS, numResults);
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(CFContract.ProductsByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {

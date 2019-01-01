@@ -40,5 +40,8 @@ public final class Contract {
     public static final String SHARED_CITY_KEY = "city";
     public static final String SHARED_DISTRICT_KEY = "district";
     public static final String SHARED_TOWN_KEY = "town";
+    //Default Number of requested item in RecyclerView
+    public static final int NUM_STORES_PER_REQUEST = 20;
+    public static final int NUM_PRODUCTS_PER_REQUEST = 20;
     private Contract() {}
 }

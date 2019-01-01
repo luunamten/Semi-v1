@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class StoreDetailActivity extends AppCompatActivity implements OnItemClickListener<Product> {
+    private static final int NUM_PRODUCTS_PER_REQUEST = 6;
     private Toolbar toolbar_store_detail;
     private TextView toolbar_store_detail_name;
     private TextView store_detail_name, store_detail_address, store_detail_type, store_detail_state, store_detail_time,
@@ -116,7 +117,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         //region init list comment
         mListComment = new ArrayList<>();
         mListComment.add(new Comment("1", "Minh", R.drawable.minh_ic_home_around_me, "comment 1 đây", 5, "01/12/2018 23:22"));
-        mListComment.add(new Comment("2", "Nam", R.mipmap.minh_test_upload, "comment 2 đây", 4, "02/12/2018 23:22"));
+        mListComment.add(new Comment("2", "Nam", R.drawable.ic_default, "comment 2 đây", 4, "02/12/2018 23:22"));
         mListComment.add(new Comment("1", "Minh", R.drawable.minh_ic_home_around_me, "comment 1 đây", 2, "01/12/2018 23:22"));
         if (mListComment.size() == 0) {
             /*Toast.makeText(this, "a", Toast.LENGTH_SHORT).show();
@@ -247,7 +248,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     private void getProducts() {
         ProductConnector connector = ProductConnector.getInstance();
         final long currentCallId = ++lastCallId;
-        connector.getProductsOfStore(storeId, mProductAdapter.getLastProductId(),
+        connector.getProductsOfStore(storeId, mProductAdapter.getLastProductId(), NUM_PRODUCTS_PER_REQUEST,
                 new IResult<List<org.nam.object.Product>>() {
             @Override
             public void onResult(List<org.nam.object.Product> result) {

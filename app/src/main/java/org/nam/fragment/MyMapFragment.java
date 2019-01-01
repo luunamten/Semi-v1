@@ -232,10 +232,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         };
         if (mode == Contract.STORE_MODE) {
             storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), markers.size(),
-                    productOrStoretype, query, searchBox.getDimen(), result);
+                    Contract.NUM_STORES_PER_REQUEST, productOrStoretype, query, searchBox.getDimen(), result);
         } else if (mode == Contract.PRODUCT_MODE) {
             storeConnector.getNearbyStoresByProducts(searchBox.getLocationCenter(), markers.size(),
-                    productOrStoretype, query, searchBox.getDimen(), result);
+                    Contract.NUM_STORES_PER_REQUEST,productOrStoretype, query, searchBox.getDimen(), result);
         }
     }
 

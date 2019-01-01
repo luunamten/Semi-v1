@@ -175,7 +175,7 @@ public class StoreSearchFragment extends Fragment implements ISearch,
     private void searchStores() {
 
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
-        storeConnector.getStoresByKeywords(type, query, "",
+        storeConnector.getStoresByKeywords(type, query, "", Contract.NUM_STORES_PER_REQUEST,
                 getAddress(),
                 new IResult<List<Store>>() {
                     @Override
@@ -196,7 +196,7 @@ public class StoreSearchFragment extends Fragment implements ISearch,
     }
 
     private void getMoreStores(String lastId) {
-        storeConnector.getStoresByKeywords(type, query, lastId,
+        storeConnector.getStoresByKeywords(type, query, lastId, Contract.NUM_STORES_PER_REQUEST,
                 getAddress(),
                 new IResult<List<Store>>() {
                     @Override

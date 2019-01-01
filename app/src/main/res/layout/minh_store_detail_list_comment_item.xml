@@ -23,7 +23,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:scaleType="centerCrop"
-            android:src="@mipmap/minh_test_upload"
+            android:src="@drawable/ic_default"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

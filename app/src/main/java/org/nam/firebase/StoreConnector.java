@@ -29,7 +29,7 @@ public class StoreConnector {
     private static StoreConnector instance;
     private StoreConnector() { }
 
-    public void getNearbyStores(Location location, int from, int storeType,
+    public void getNearbyStores(Location location, int from, int numResults, int storeType,
                                final IResult<List<Store>> IResult) {
         String[] selectedFields = {
                 DBContract.Store.TITLE, DBContract.Store.IMAGE_URL, DBContract.Store.ADDRESS,
@@ -42,6 +42,7 @@ public class StoreConnector {
         data.put(NearbyStores.FROM, from);
         data.put(NearbyStores.STORE_TYPE, storeType);
         data.put(NearbyStores.SELECTED_FIELDS, Arrays.asList(selectedFields));
+        data.put(NearbyStores.NUM_RESULTS, numResults);
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(NearbyStores.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -76,7 +77,7 @@ public class StoreConnector {
     }
 
     public void getNearbyStoresByKeywords(Location location,
-                                          int from, int storeType, String keywords, double dimen,
+                                          int from, int numResults, int storeType, String keywords, double dimen,
                                           final IResult<List<Store>> IResult) {
         String[] selectedFields = {
                 DBContract.Store.TITLE, DBContract.Store.IMAGE_URL, DBContract.Store.ADDRESS,
@@ -91,6 +92,7 @@ public class StoreConnector {
         data.put(NearbyStoresByKeywords.KEYWORDS, keywords);
         data.put(NearbyStoresByKeywords.RECT_DIMENSION, dimen);
         data.put(NearbyStoresByKeywords.SELECTED_FIELDS, Arrays.asList(selectedFields));
+        data.put(NearbyStoresByKeywords.NUM_RESULTS, numResults);
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(NearbyStoresByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -127,7 +129,7 @@ public class StoreConnector {
 
     //get stores containing desired products
     public void getNearbyStoresByProducts(Location location,
-                                          int from, int productType, String keywords, double dimen,
+                                          int from, int numResults, int productType, String keywords, double dimen,
                                           final IResult<List<Store>> IResult) {
         String[] selectedFields = {
                 DBContract.Store.TITLE, DBContract.Store.IMAGE_URL, DBContract.Store.ADDRESS,
@@ -142,6 +144,7 @@ public class StoreConnector {
         data.put(NearbyStoresByProducts.KEYWORDS, keywords);
         data.put(NearbyStoresByProducts.RECT_DIMENSION, dimen);
         data.put(NearbyStoresByProducts.SELECTED_FIELDS, Arrays.asList(selectedFields));
+        data.put(NearbyStoresByProducts.NUM_RESULTS, numResults);
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(NearbyStoresByProducts.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
@@ -175,7 +178,7 @@ public class StoreConnector {
         });
     }
 
-    public void getStoresByKeywords(int storeType, String keywords, String lastId,
+    public void getStoresByKeywords(int storeType, String keywords, String lastId, int numResults,
                                     Object[] addressIds,
                                     final IResult<List<Store>> IResult) {
         Map<String, Object> data = new HashMap<String, Object>();
@@ -192,6 +195,7 @@ public class StoreConnector {
         data.put(StoresByKeywords.DISTRICT, addressIds[2]);
         data.put(StoresByKeywords.TOWN, addressIds[3]);
         data.put(StoresByKeywords.SELECTED_FIELDS, Arrays.asList(selectedFields));
+        data.put(StoresByKeywords.NUM_RESULTS, numResults);
         //Call cloud function
         FirebaseFunctions.getInstance().getHttpsCallable(StoresByKeywords.NAME).call(data)
                 .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
