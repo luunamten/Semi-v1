@@ -73,8 +73,6 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     private Dialog mDialogUtility;
     private Store store;
     private Product product;
-    private String storeId;
-    private String productId;
     private long lastCallId;
 
     @Override
@@ -84,13 +82,23 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         initView();
         getStoreAndProductIdFromIntent();
         getStoreData();
-        getProducts();
+        if(product == null) {
+            getProducts();
+        } else {
+            getPreferredProduct();
+        }
     }
 
     private void getStoreAndProductIdFromIntent() {
-        Intent intent = getIntent();
-        storeId = intent.getStringExtra(Contract.BUNDLE_STORE_KEY);
-        productId = intent.getStringExtra(Contract.BUNDLE_PRODUCT_KEY);
+        final Intent intent = getIntent();
+        final String storeId = intent.getStringExtra(Contract.BUNDLE_STORE_KEY);
+        final String productId = intent.getStringExtra(Contract.BUNDLE_PRODUCT_KEY);
+        store = new Store();
+        store.setId(storeId);
+        if(productId != null) {
+            product = new Product();
+            product.setId(productId);
+        }
     }
 
     private void initView() {
@@ -150,8 +158,8 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     private void setError() {
-        TextView txt_error_list = findViewById(R.id.txt_error_list);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        final TextView txt_error_list = findViewById(R.id.txt_error_list);
+        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(10, 20, 10, 20);
         txt_error_list.setLayoutParams(params);
         txt_error_list.setText(R.string.store_detail_error_list_mess);
@@ -161,7 +169,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
 
     private void getStoreData() {
         StoreConnector connector = StoreConnector.getInstance();
-        connector.getStoreById(storeId, new IResult<Store>() {
+        connector.getStoreById(store.getId(), new IResult<Store>() {
             @Override
             public void onResult(Store result) {
                 if(result != null) {
@@ -222,9 +230,9 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
             public void onFailure(@NonNull Exception e) { }
         });
         //set utilities
-        List<Store.Utility> utilities = store.getUtilities();
-        int numberOfUtilities = utilities.size();
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+        final List<Store.Utility> utilities = store.getUtilities();
+        final int numberOfUtilities = utilities.size();
+        final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
         for(int i = 0; i < numberOfUtilities; i++) {
             ImageView img_utility = new ImageView(this);
             img_utility.setImageResource(Contract.UTILITY_RESOURCES[utilities.get(i).getId()]);
@@ -236,15 +244,15 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     private boolean isOpened(String startEndStr) {
-        String[] array = startEndStr.split("-");
-        String startStr = array[0];
-        String endStr = array[1];
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String nowStr = formatter.format(Calendar.getInstance().getTime());
+        final String[] array = startEndStr.split("-");
+        final String startStr = array[0];
+        final String endStr = array[1];
+        final SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        final String nowStr = formatter.format(Calendar.getInstance().getTime());
         try {
-            Date now = formatter.parse(nowStr);
-            Date startTime = formatter.parse(startStr);
-            Date endTime = formatter.parse(endStr);
+            final Date now = formatter.parse(nowStr);
+            final Date startTime = formatter.parse(startStr);
+            final Date endTime = formatter.parse(endStr);
             return now.after(startTime) && now.before(endTime);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -252,34 +260,26 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         return false;
     }
 
-    private int findPreferedProductIndex(List<Product> products, Product product) {
-        return Collections.binarySearch(products, product, new Comparator<Product>() {
-            @Override
-            public int compare(Product o1, Product o2) {
-                return o1.getId().compareTo(o2.getId());
-            }
-        });
-    }
-
     private void getProducts() {
-        ProductConnector connector = ProductConnector.getInstance();
+        final ProductConnector connector = ProductConnector.getInstance();
         final long currentCallId = ++lastCallId;
-        String lastId = mProductAdapter.getLastProductId();
-        if(productId != null) {
-            if(!lastId.equals(productId)) {
-                lastId = "";
+        String lastProductId = mProductAdapter.getLastProductId();
+        if(product != null) {
+            if(lastProductId.equals(product.getId())) {
+                lastProductId = "";
             }
         }
-        connector.getProductsOfStore(storeId, lastId, NUM_PRODUCTS_PER_REQUEST,
+        connector.getProductsOfStore(store.getId(), lastProductId, NUM_PRODUCTS_PER_REQUEST,
                 new IResult<List<org.nam.object.Product>>() {
             @Override
             public void onResult(List<Product> result) {
-                if(currentCallId != lastCallId) {
+                if(currentCallId != lastCallId || result.size() == 0) {
                     return;
                 }
-                if(result.size() != 0) {
-                    mProductAdapter.addData(result);
+                if(product != null) {
+                    removePreferredProduct(result);
                 }
+                mProductAdapter.addData(result);
             }
             @Override
             public void onFailure(@NonNull Exception exp) {
@@ -288,7 +288,20 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         });
     }
 
-    private void getPreferedProduct() {
+    private void removePreferredProduct(List<Product> products) {
+        int productIndex = Collections.binarySearch(products, product, new Comparator<Product>() {
+            @Override
+            public int compare(Product o1, Product o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+        if(productIndex >= 0) {
+            products.remove(productIndex);
+        }
+    }
+
+    private void getPreferredProduct() {
+        String productId = product.getId();
         if(productId == null) {
             return;
         }
@@ -296,6 +309,11 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         connector.getProductById(productId, new IResult<Product>() {
             @Override
             public void onResult(Product result) {
+                if(result == null) {
+                    return;
+                }
+                mProductAdapter.addData(result);
+                getProducts();
             }
 
             @Override

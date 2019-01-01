@@ -71,6 +71,12 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
         notifyItemRangeInserted(length, data.size());
     }
 
+    public void addData(Product data) {
+        int length = mData.size();
+        mData.add(data);
+        notifyItemRangeInserted(length, 1);
+    }
+
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView store_detail_product_name;

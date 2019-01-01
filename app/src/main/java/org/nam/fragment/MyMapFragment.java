@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISearch, View.OnClickListener {
-
+    private static final int NUM_STORES_PER_REQUEST = 5;
     private GoogleMap map;
     private int productOrStoretype;
     private int mode;
@@ -232,10 +232,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         };
         if (mode == Contract.STORE_MODE) {
             storeConnector.getNearbyStoresByKeywords(searchBox.getLocationCenter(), markers.size(),
-                    Contract.NUM_STORES_PER_REQUEST, productOrStoretype, query, searchBox.getDimen(), result);
+                    NUM_STORES_PER_REQUEST, productOrStoretype, query, searchBox.getDimen(), result);
         } else if (mode == Contract.PRODUCT_MODE) {
             storeConnector.getNearbyStoresByProducts(searchBox.getLocationCenter(), markers.size(),
-                    Contract.NUM_STORES_PER_REQUEST,productOrStoretype, query, searchBox.getDimen(), result);
+                    NUM_STORES_PER_REQUEST, productOrStoretype, query, searchBox.getDimen(), result);
         }
     }
 
