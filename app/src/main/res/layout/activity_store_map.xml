@@ -7,7 +7,7 @@
     tools:context=".StoreMapActivity">
     <include
         android:id="@+id/my_toolbar"
-        layout="@layout/main_toolbar"
+        layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

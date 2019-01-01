@@ -48,9 +48,8 @@ public class StoreMapActivity extends AppCompatActivity implements OnMapReadyCal
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setIcon(R.drawable.ic_actionbar_logo);
+        actionBar.setTitle(getString(R.string.storeMapActivityLabel));
     }
 
     @Override

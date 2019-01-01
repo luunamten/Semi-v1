@@ -2,14 +2,10 @@ package org.nam.custom;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
-
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
-
 import org.nam.R;
 import org.nam.util.SignInUtils;
 

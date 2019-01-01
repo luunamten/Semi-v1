@@ -20,8 +20,7 @@ public class CommentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setIcon(R.drawable.ic_actionbar_logo);
+        actionBar.setTitle(getString(R.string.commentActivityLabel));
     }
 
     @Override

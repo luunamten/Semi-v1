@@ -36,4 +36,8 @@
     <string name="closeDialogButtonLabel">Close</string>
     <string name="helloLabel">Hello </string>
     <string name="failToSignInLabel">Sign in failed!</string>
+    <string name="commentEditTextHint">What is your comment?</string>
+    <string name="commentButtonLabel"> Post comment</string>
+    <string name="commentActivityLabel">Your comment</string>
+    <string name="storeMapActivityLabel">Store location on Map</string>
 </resources>

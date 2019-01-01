@@ -36,4 +36,9 @@
     <string name="closeDialogButtonLabel">Đóng</string>
     <string name="helloLabel">Xin chào </string>
     <string name="failToSignInLabel">Đăng nhập thất bại!</string>
+    <string name="commentEditTextHint">Bạn muốn bình luận gì?</string>
+    <string name="commentButtonLabel"> Đăng bình luận</string>
+    <string name="commentActivityLabel">Bình luận - Đánh giá</string>
+    <string name="storeMapActivityLabel">Vị trí trên bản đồ</string>
+
 </resources>

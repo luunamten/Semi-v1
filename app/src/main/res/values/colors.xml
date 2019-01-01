@@ -21,4 +21,6 @@
     <color name="colorLoadingText">#ffffff</color>
     <color name="colorPrimaryButton">#ffffff</color>
     <color name="colorSignInLabel">#ffffff</color>
+    <color name="colorDefaultEditTextHint">#777777</color>
+    <color name="colorDefaultEditText">#ffffff</color>
 </resources>
