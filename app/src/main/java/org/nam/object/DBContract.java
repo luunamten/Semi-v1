@@ -40,5 +40,6 @@ public class DBContract {
         public static final String IMAGE_URL = "imageURL";
         public static final String COST = "cost";
         public static final String TYPE = "type";
+        public static final String STORE_ID = "storeId";
     }
 }

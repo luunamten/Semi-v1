@@ -190,14 +190,23 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
         final int currentItem = viewPager.getCurrentItem();
         fragments.get(currentItem).clickItem(obj.getId());
         if(mode == Contract.STORE_MODE) {
-            Intent storeIntent = new Intent(this, StoreDetailActivity.class);
-            storeIntent.putExtra(Contract.BUNDLE_STORE_KEY, obj.getId());
-            startActivity(storeIntent);
+            showStoreDetail((Store)obj);
         } else if(mode == Contract.PRODUCT_MODE) {
-            Intent storeIntent = new Intent(this, StoreDetailActivity.class);
-            storeIntent.putExtra(Contract.BUNDLE_STORE_KEY, obj.getId());
-            startActivity(storeIntent);
+            showProductDetail((Product)obj);
         }
+    }
+
+    private void showStoreDetail(Store store) {
+        Intent storeIntent = new Intent(this, StoreDetailActivity.class);
+        storeIntent.putExtra(Contract.BUNDLE_STORE_KEY, store.getId());
+        startActivity(storeIntent);
+    }
+
+    private void showProductDetail(Product product) {
+        Intent storeIntent = new Intent(this, StoreDetailActivity.class);
+        storeIntent.putExtra(Contract.BUNDLE_STORE_KEY, product.getStore().getId());
+        storeIntent.putExtra(Contract.BUNDLE_PRODUCT_KEY, product.getId());
+        startActivity(storeIntent);
     }
 
     @Override

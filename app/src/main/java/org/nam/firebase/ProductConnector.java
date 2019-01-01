@@ -34,7 +34,7 @@ public class ProductConnector {
                                 final IResult<List<Product>> IResult) {
         String[] selectedFields = {
                 DBContract.Product.TITLE, DBContract.Product.IMAGE_URL, DBContract.Store.ADDRESS,
-                DBContract.Store.GEO, DBContract.Product.COST
+                DBContract.Store.GEO, DBContract.Product.COST, DBContract.Product.STORE_ID
         };
         //Cloud functions data
         Map<String, Object> data = new HashMap<String, Object>();
@@ -59,6 +59,7 @@ public class ProductConnector {
                                 product.setId((String) map.get(DBContract.ID));
                                 product.setTitle((String) map.get(DBContract.Product.TITLE));
                                 product.setImageURL((String) map.get(DBContract.Product.IMAGE_URL));
+                                store.setId((String) map.get(DBContract.Product.STORE_ID));
                                 store.setAddress(getAddress(map));
                                 store.setGeo(getGeo(map));
                                 product.setStore(store);
@@ -101,6 +102,7 @@ public class ProductConnector {
                                     ObjectUtils.getProductType(
                                             ((Number)map.get(DBContract.Product.TYPE)).intValue()
                                     ));
+                            store.setId((String) map.get(DBContract.Product.STORE_ID));
                             store.setAddress(getAddress(map));
                             product.setStore(store);
                             IResult.onResult(product);
@@ -162,7 +164,7 @@ public class ProductConnector {
                                     final IResult<List<Product>> IResult) {
         String[] selectedFields = {
                 DBContract.Product.TITLE, DBContract.Product.IMAGE_URL, DBContract.Store.ADDRESS,
-                DBContract.Store.GEO, DBContract.Product.COST
+                DBContract.Store.GEO, DBContract.Product.COST, DBContract.Product.STORE_ID
         };
         //Cloud function data
         Map<String, Object> data = new HashMap<String, Object>();
@@ -190,6 +192,7 @@ public class ProductConnector {
                                 product.setId((String) map.get(DBContract.ID));
                                 product.setTitle((String) map.get(DBContract.Product.TITLE));
                                 product.setImageURL((String) map.get(DBContract.Product.IMAGE_URL));
+                                store.setId((String) map.get(DBContract.Product.STORE_ID));
                                 store.setAddress(getAddress(map));
                                 store.setGeo(getGeo(map));
                                 product.setStore(store);

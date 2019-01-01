@@ -67,6 +67,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     private List<Comment> mListComment;
     private Dialog mDialogUtility;
     private Store store;
+    private String storeId;
     private long lastCallId;
 
     @Override
@@ -74,7 +75,14 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.minh_activity_store_detail);
         initView();
+        getStoreIdFromIntent();
         getStoreData();
+        getProducts();
+    }
+
+    private void getStoreIdFromIntent() {
+        Intent intent = getIntent();
+        storeId = intent.getStringExtra(Contract.BUNDLE_STORE_KEY);
     }
 
     private void initView() {
@@ -145,15 +153,12 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
 
     private void getStoreData() {
         StoreConnector connector = StoreConnector.getInstance();
-        Intent intent = getIntent();
-        String storeId = intent.getStringExtra(Contract.BUNDLE_STORE_KEY);
         connector.getStoreById(storeId, new IResult<Store>() {
             @Override
             public void onResult(Store result) {
                 if(result != null) {
                     store = result;
                     putDataToView();
-                    getProducts();
                     closeLoading();
                 }
             }
@@ -242,7 +247,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     private void getProducts() {
         ProductConnector connector = ProductConnector.getInstance();
         final long currentCallId = ++lastCallId;
-        connector.getProductsOfStore(store.getId(), mProductAdapter.getLastProductId(),
+        connector.getProductsOfStore(storeId, mProductAdapter.getLastProductId(),
                 new IResult<List<org.nam.object.Product>>() {
             @Override
             public void onResult(List<org.nam.object.Product> result) {
