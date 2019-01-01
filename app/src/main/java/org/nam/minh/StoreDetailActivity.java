@@ -68,7 +68,9 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     private List<Comment> mListComment;
     private Dialog mDialogUtility;
     private Store store;
+    private Product product;
     private String storeId;
+    private String productId;
     private long lastCallId;
 
     @Override
@@ -76,14 +78,15 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.minh_activity_store_detail);
         initView();
-        getStoreIdFromIntent();
+        getStoreAndProductIdFromIntent();
         getStoreData();
         getProducts();
     }
 
-    private void getStoreIdFromIntent() {
+    private void getStoreAndProductIdFromIntent() {
         Intent intent = getIntent();
         storeId = intent.getStringExtra(Contract.BUNDLE_STORE_KEY);
+        productId = intent.getStringExtra(Contract.BUNDLE_PRODUCT_KEY);
     }
 
     private void initView() {
@@ -266,6 +269,21 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         });
     }
 
+    private void getPreferedProduct() {
+        if(productId == null) {
+            return;
+        }
+        ProductConnector connector = ProductConnector.getInstance();
+        connector.getProductById(productId, new IResult<Product>() {
+            @Override
+            public void onResult(Product result) {
+            }
+
+            @Override
+            public void onFailure(@NonNull Exception exp) { }
+        });
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -354,32 +372,34 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
                 if(result == null) {
                     return;
                 }
-                final Dialog mDialogProduct = new Dialog(StoreDetailActivity.this);
-                mDialogProduct.setContentView(R.layout.minh_store_detail_dialog_product);
-                AppCompatImageView img_product = mDialogProduct.findViewById(R.id.store_detail_product_img_dialog);
-                TextView txt_product_name = mDialogProduct.findViewById(R.id.store_detail_product_name);
-                TextView txt_product_type = mDialogProduct.findViewById(R.id.store_detail_product_type);
-                TextView txt_product_price = mDialogProduct.findViewById(R.id.store_detail_product_price);
-                TextView txt_product_description = mDialogProduct.findViewById(R.id.store_detail_product_description);
-                Button btn_close_dialog_product = mDialogProduct.findViewById(R.id.store_detail_btn_close_product);
-                txt_product_name.setText(result.getTitle());
-                txt_product_type.setText(result.getType().getName());
-                txt_product_price.setText(StringUtils.toVNDCurrency(result.getCost()));
-                txt_product_description.setText(result.getDescription());
-                ObjectUtils.setBitmapToImage(product.getImageURL(), img_product);
-                btn_close_dialog_product.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mDialogProduct.dismiss();
-                    }
-                });
-                mDialogProduct.show();
+                showProductInfo(result);
             }
             @Override
-            public void onFailure(@NonNull Exception exp) {
-
-            }
+            public void onFailure(@NonNull Exception exp) { }
         });
 
+    }
+
+    private void showProductInfo(Product product) {
+        final Dialog mDialogProduct = new Dialog(StoreDetailActivity.this);
+        mDialogProduct.setContentView(R.layout.minh_store_detail_dialog_product);
+        AppCompatImageView img_product = mDialogProduct.findViewById(R.id.store_detail_product_img_dialog);
+        TextView txt_product_name = mDialogProduct.findViewById(R.id.store_detail_product_name);
+        TextView txt_product_type = mDialogProduct.findViewById(R.id.store_detail_product_type);
+        TextView txt_product_price = mDialogProduct.findViewById(R.id.store_detail_product_price);
+        TextView txt_product_description = mDialogProduct.findViewById(R.id.store_detail_product_description);
+        Button btn_close_dialog_product = mDialogProduct.findViewById(R.id.store_detail_btn_close_product);
+        txt_product_name.setText(product.getTitle());
+        txt_product_type.setText(product.getType().getName());
+        txt_product_price.setText(StringUtils.toVNDCurrency(product.getCost()));
+        txt_product_description.setText(product.getDescription());
+        ObjectUtils.setBitmapToImage(product.getImageURL(), img_product);
+        btn_close_dialog_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialogProduct.dismiss();
+            }
+        });
+        mDialogProduct.show();
     }
 }

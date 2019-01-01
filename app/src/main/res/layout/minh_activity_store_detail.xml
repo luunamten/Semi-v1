@@ -383,6 +383,7 @@
                     app:layout_constraintStart_toEndOf="@+id/store_detail_ic_utilities"
                     app:layout_constraintTop_toBottomOf="@+id/store_detail_description"
                     android:clickable="true"
+                    android:focusable="true"
                     android:onClick="loadMoreUtility">
 
                 </LinearLayout>
