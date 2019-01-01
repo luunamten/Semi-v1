@@ -34,4 +34,6 @@
     <string name="townLabel">Xã/phường</string>
     <string name="signInLabel">Sign In</string>
     <string name="closeDialogButtonLabel">Close</string>
+    <string name="helloLabel">Hello </string>
+    <string name="failToSignInLabel">Sign in failed!</string>
 </resources>

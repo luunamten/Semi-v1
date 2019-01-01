@@ -37,6 +37,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_google_sign_in);
         GoogleSignInOptions opts = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client_id))
+                .requestEmail()
                 .requestScopes(new Scope(Scopes.PROFILE))
                 .build();
         client = GoogleSignIn.getClient(this, opts);

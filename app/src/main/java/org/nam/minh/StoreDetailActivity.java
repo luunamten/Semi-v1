@@ -23,9 +23,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 
+import org.nam.CommentActivity;
 import org.nam.R;
 import org.nam.StoreMapActivity;
 import org.nam.contract.Contract;
@@ -42,6 +48,7 @@ import org.nam.object.Store;
 import org.nam.util.LocationUtils;
 import org.nam.util.MathUtils;
 import org.nam.util.ObjectUtils;
+import org.nam.util.SignInUtils;
 import org.nam.util.StringUtils;
 
 import java.io.InputStream;
@@ -347,8 +354,12 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     public void actionCommentToStore(View view) {
-        SignInDialog signInDialog = new SignInDialog(this);
-        signInDialog.show();
+        if(SignInUtils.getCurrentUser() == null) {
+            SignInDialog signInDialog = new SignInDialog(this);
+            signInDialog.show();
+        } else {
+            launchCommentActivity();
+        }
     }
 
     public void actionShareStore(View view) {
@@ -440,5 +451,47 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
             }
         });
         mDialogProduct.show();
+    }
+
+    @Override
+    public void onActivityResult(final int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
+        if(request == SignInUtils.SIGN_IN_CODE) {
+            if(result == RESULT_OK) {
+                Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
+                GoogleSignInAccount account = accountTask.getResult();
+                if(account != null) {
+                    SignInUtils.firebaseAuthWithGoogle(account, new IResult<AuthResult>() {
+                        @Override
+                        public void onResult(AuthResult result) {
+                            if(result != null && result.getUser() != null) {
+                                String hello = getString(R.string.helloLabel) + result.getUser().getDisplayName();
+                                Toast.makeText(StoreDetailActivity.this, hello,
+                                        Toast.LENGTH_SHORT).show();
+                                launchCommentActivity();
+                            } else {
+                                Toast.makeText(StoreDetailActivity.this, getString(R.string.failToSignInLabel),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Exception exp) {
+                            Toast.makeText(StoreDetailActivity.this, getString(R.string.failToSignInLabel),
+                                    Toast.LENGTH_SHORT).show();
+                            Log.w("my_error", exp.getMessage());
+                        }
+                    });
+                } else {
+                    Toast.makeText(StoreDetailActivity.this, getString(R.string.failToSignInLabel),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void launchCommentActivity() {
+        Intent commentIntent = new Intent(this, CommentActivity.class);
+        startActivity(commentIntent);
     }
 }

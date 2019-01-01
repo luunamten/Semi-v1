@@ -73,7 +73,8 @@
         <activity
             android:name=".minh.StoreDetailActivity"
             android:theme="@style/minh_AppTheme" />
-        <activity android:name=".StoreMapActivity"></activity>
+        <activity android:name=".StoreMapActivity" />
+        <activity android:name=".CommentActivity"></activity>
     </application>
 
 </manifest>
