@@ -30,6 +30,7 @@ import org.nam.R;
 import org.nam.StoreMapActivity;
 import org.nam.contract.Contract;
 import org.nam.custom.OnItemClickListener;
+import org.nam.custom.SignInDialog;
 import org.nam.firebase.IResult;
 import org.nam.firebase.ProductConnector;
 import org.nam.firebase.StorageConnector;
@@ -346,7 +347,8 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     public void actionCommentToStore(View view) {
-        Toast.makeText(this, "Comment store on new fragment", Toast.LENGTH_SHORT).show();
+        SignInDialog signInDialog = new SignInDialog(this);
+        signInDialog.show();
     }
 
     public void actionShareStore(View view) {

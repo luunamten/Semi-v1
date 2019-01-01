@@ -19,4 +19,6 @@
     <color name="colorAddress">#555555</color>
     <color name="colorLoadingBackground">#82000000</color>
     <color name="colorLoadingText">#ffffff</color>
+    <color name="colorPrimaryButton">#ffffff</color>
+    <color name="colorSignInLabel">#ffffff</color>
 </resources>

@@ -7,7 +7,7 @@
     <com.google.android.gms.common.SignInButton
         android:id="@+id/gg_sign_in_but"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_centerInParent="true"
         />
 </RelativeLayout>

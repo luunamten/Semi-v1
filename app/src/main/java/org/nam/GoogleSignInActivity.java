@@ -35,7 +35,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_sign_in);
-        GoogleSignInOptions opts = new GoogleSignInOptions.Builder()
+        GoogleSignInOptions opts = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client_id))
                 .requestScopes(new Scope(Scopes.PROFILE))
                 .build();

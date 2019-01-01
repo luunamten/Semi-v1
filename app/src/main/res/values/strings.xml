@@ -32,4 +32,6 @@
     <string name="cityLabel">Thành phố</string>
     <string name="districtLabel">Quận/huyện</string>
     <string name="townLabel">Xã/phường</string>
+    <string name="signInLabel">Đăng nhập</string>
+    <string name="closeDialogButtonLabel">Đóng</string>
 </resources>

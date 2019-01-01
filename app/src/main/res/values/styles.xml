@@ -50,7 +50,7 @@
         <item name="android:textSize">20sp</item>
     </style>
     <style name="SearchTabTheme" parent="Widget.MaterialComponents.TabLayout">
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
     <style name="DefaultBackground" parent="AppTheme">
         <item name="android:background">@color/colorDefaultBackground</item>
@@ -67,5 +67,13 @@
         <item name="android:gravity">center</item>
         <item name="android:text">@string/loadingText</item>
         <item name="android:clickable">true</item>
+    </style>
+    <style name="SignInLabel" parent="AppTheme">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorSignInLabel</item>
+    </style>
+    <style name="PrimaryButton" parent="AppTheme">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimaryButton</item>
     </style>
 </resources>
