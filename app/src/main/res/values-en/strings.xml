@@ -46,4 +46,8 @@
     <string name="comment_toolbar_label">Comment</string>
     <string name="comment_action_rating_label">Rating</string>
     <string name="comment_action_cancel_label">Cancel</string>
+    <string name="bookmark_toolbar_label">Bookmark</string>
+    <string name="store_detail_hide_product_label">Hide all product</string>
+    <string name="comment_no_save_mess">Sorry, nothing store here</string>
+    <string name="dialog_utility_label">Utilities</string>
 </resources>

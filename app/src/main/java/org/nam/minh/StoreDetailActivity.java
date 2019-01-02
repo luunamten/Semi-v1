@@ -89,7 +89,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         initView();
         getStoreAndProductIdFromIntent();
         getStoreData();
-        if(product == null) {
+        if (product == null) {
             getProducts();
         } else {
             getPreferredProduct();
@@ -102,7 +102,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         final String productId = intent.getStringExtra(Contract.BUNDLE_PRODUCT_KEY);
         store = new Store();
         store.setId(storeId);
-        if(productId != null) {
+        if (productId != null) {
             product = new Product();
             product.setId(productId);
         }
@@ -179,14 +179,16 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         connector.getStoreById(store.getId(), new IResult<Store>() {
             @Override
             public void onResult(Store result) {
-                if(result != null) {
+                if (result != null) {
                     store = result;
                     putDataToView();
                     closeLoading();
                 }
             }
+
             @Override
-            public void onFailure(@NonNull Exception exp) { }
+            public void onFailure(@NonNull Exception exp) {
+            }
         });
     }
 
@@ -215,8 +217,8 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         //set color for rating value
         float rating = store.getRating();
         int loopLimit = Contract.RATING_LEVELS.length - 1;
-        for(int i = 0; i < loopLimit; i++) {
-            if(Contract.RATING_LEVELS[i] <= rating && Contract.RATING_LEVELS[i + 1] > rating) {
+        for (int i = 0; i < loopLimit; i++) {
+            if (Contract.RATING_LEVELS[i] <= rating && Contract.RATING_LEVELS[i + 1] > rating) {
                 store_detail_total_rating.setTextColor(Contract.RATING_COLORS[i]);
             }
         }
@@ -234,13 +236,14 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) { }
+            public void onFailure(@NonNull Exception e) {
+            }
         });
         //set utilities
         final List<Store.Utility> utilities = store.getUtilities();
         final int numberOfUtilities = utilities.size();
         final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-        for(int i = 0; i < numberOfUtilities; i++) {
+        for (int i = 0; i < numberOfUtilities; i++) {
             ImageView img_utility = new ImageView(this);
             img_utility.setImageResource(Contract.UTILITY_RESOURCES[utilities.get(i).getId()]);
             img_utility.setLayoutParams(lp);
@@ -271,28 +274,29 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         final ProductConnector connector = ProductConnector.getInstance();
         final long currentCallId = ++lastCallId;
         String lastProductId = mProductAdapter.getLastProductId();
-        if(product != null) {
-            if(lastProductId.equals(product.getId())) {
+        if (product != null) {
+            if (lastProductId.equals(product.getId())) {
                 lastProductId = "";
             }
         }
         connector.getProductsOfStore(store.getId(), lastProductId, NUM_PRODUCTS_PER_REQUEST,
                 new IResult<List<org.nam.object.Product>>() {
-            @Override
-            public void onResult(List<Product> result) {
-                if(currentCallId != lastCallId || result.size() == 0) {
-                    return;
-                }
-                if(product != null) {
-                    removePreferredProduct(result);
-                }
-                mProductAdapter.addData(result);
-            }
-            @Override
-            public void onFailure(@NonNull Exception exp) {
-                setError();
-            }
-        });
+                    @Override
+                    public void onResult(List<Product> result) {
+                        if (currentCallId != lastCallId || result.size() == 0) {
+                            return;
+                        }
+                        if (product != null) {
+                            removePreferredProduct(result);
+                        }
+                        mProductAdapter.addData(result);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Exception exp) {
+                        setError();
+                    }
+                });
     }
 
     private void removePreferredProduct(List<Product> products) {
@@ -302,21 +306,21 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
                 return o1.getId().compareTo(o2.getId());
             }
         });
-        if(productIndex >= 0) {
+        if (productIndex >= 0) {
             products.remove(productIndex);
         }
     }
 
     private void getPreferredProduct() {
         String productId = product.getId();
-        if(productId == null) {
+        if (productId == null) {
             return;
         }
         ProductConnector connector = ProductConnector.getInstance();
         connector.getProductById(productId, new IResult<Product>() {
             @Override
             public void onResult(Product result) {
-                if(result == null) {
+                if (result == null) {
                     return;
                 }
                 mProductAdapter.addData(result);
@@ -324,7 +328,8 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
             }
 
             @Override
-            public void onFailure(@NonNull Exception exp) { }
+            public void onFailure(@NonNull Exception exp) {
+            }
         });
     }
 
@@ -338,12 +343,15 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         getProducts();
     }
 
+    public void hideAllProduct(View view) {
+        mProductAdapter.clear();
+    }
 
     public void actionDirectToStore(View view) {
         //open google map (can be app or browser)
         Uri url = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=" + store.getGeo());
         Intent intent = new Intent(Intent.ACTION_VIEW, url);
-        if(intent.resolveActivity(getPackageManager()) != null) {
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
     }
@@ -353,7 +361,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     public void actionCommentToStore(View view) {
-        if(SignInUtils.getCurrentUser() == null) {
+        if (SignInUtils.getCurrentUser() == null) {
             SignInDialog signInDialog = new SignInDialog(this);
             signInDialog.show();
         } else {
@@ -382,7 +390,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
 
     public void loadMoreUtility(View view) {
         List<Store.Utility> utilities = store.getUtilities();
-        if(utilities.size() == 0) {
+        if (utilities.size() == 0) {
             return;
         }
         if (mDialogUtility == null) {
@@ -418,13 +426,15 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         ProductConnector.getInstance().getProductById(product.getId(), new IResult<Product>() {
             @Override
             public void onResult(Product result) {
-                if(result == null) {
+                if (result == null) {
                     return;
                 }
                 showProductInfo(result);
             }
+
             @Override
-            public void onFailure(@NonNull Exception exp) { }
+            public void onFailure(@NonNull Exception exp) {
+            }
         });
 
     }
@@ -455,15 +465,15 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     @Override
     public void onActivityResult(final int request, int result, Intent data) {
         super.onActivityResult(request, result, data);
-        if(request == SignInUtils.SIGN_IN_CODE) {
-            if(result == RESULT_OK) {
+        if (request == SignInUtils.SIGN_IN_CODE) {
+            if (result == RESULT_OK) {
                 Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
                 GoogleSignInAccount account = accountTask.getResult();
-                if(account != null) {
+                if (account != null) {
                     SignInUtils.firebaseAuthWithGoogle(account, new IResult<AuthResult>() {
                         @Override
                         public void onResult(AuthResult result) {
-                            if(result != null && result.getUser() != null) {
+                            if (result != null && result.getUser() != null) {
                                 String hello = getString(R.string.helloLabel) + result.getUser().getDisplayName();
                                 Toast.makeText(StoreDetailActivity.this, hello,
                                         Toast.LENGTH_SHORT).show();

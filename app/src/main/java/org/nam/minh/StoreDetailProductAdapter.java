@@ -46,13 +46,13 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.setProduct(mData.get(position));
-        if(listener == null) {
+        if (listener == null) {
             return;
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener != null) {
+                if (listener != null) {
                     listener.onItemClick(mData.get(position));
                 }
             }
@@ -63,6 +63,13 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public void clear() {
+        if (mData != null) {
+            mData.clear();
+            notifyDataSetChanged();
+        }
     }
 
     public void addData(Collection<Product> data) {
@@ -92,6 +99,7 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
             product_item = itemView.findViewById(R.id.product_item);
             lastCallId = LongBuffer.allocate(1);
         }
+
         private void setProduct(Product product) {
             store_detail_product_name.setText(product.getTitle());
             store_detail_product_image.setImageResource(R.drawable.ic_packing);
@@ -105,7 +113,7 @@ public class StoreDetailProductAdapter extends RecyclerView.Adapter<StoreDetailP
     }
 
     public String getLastProductId() {
-        if(mData.size() > 0) {
+        if (mData.size() > 0) {
             return mData.get(mData.size() - 1).getId();
         }
         return "";
