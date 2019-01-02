@@ -76,7 +76,9 @@
         <activity android:name=".StoreMapActivity" />
         <activity
             android:name=".minh.CommentActivity"
-            android:theme="@style/minh_AppTheme"></activity>
+            android:theme="@style/minh_AppTheme" />
+        <activity android:name=".minh.BookmarkActivity"
+            android:theme="@style/minh_AppTheme"/>
     </application>
 
 </manifest>

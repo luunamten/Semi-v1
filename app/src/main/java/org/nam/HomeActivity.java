@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -51,6 +52,7 @@ import org.nam.fragment.StoreViewFragment;
 import org.nam.listener.ModeSpinnerItemSelectedListener;
 import org.nam.listener.NearbyTextViewClickListener;
 import org.nam.listener.TypeSpinnerItemSelectedListener;
+import org.nam.minh.BookmarkActivity;
 import org.nam.minh.StoreDetailActivity;
 import org.nam.object.IHaveIdAndName;
 import org.nam.object.Product;
@@ -71,6 +73,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
     private AppCompatSpinner searchModeSpinner;
     private AppCompatSpinner typeSpinner;
     private ModeSpinnerItemSelectedListener modeListener;
+    private BottomNavigationView mBottomNavigationView;
     //this Fragment's desired to be attached to Activity, but not sure it's attached
     private TextView nearbyTextView;
     private Toolbar toolbar;
@@ -97,10 +100,29 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
         productConnector = ProductConnector.getInstance();
         locationUtils = new LocationUtils();
         setupFragmentCreator();
+        //init bottom navigation bar
+        mBottomNavigationView = findViewById(R.id.nav_bot);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_bot_item_bookmark:
+                        Intent actionToBookmarkActivity = new Intent(HomeActivity.this, BookmarkActivity.class);
+                        startActivity(actionToBookmarkActivity);
+                        return true;
+                }
+                return false;
+            }
+        });
         //event, permission, config
         searchModeSpinner.setOnItemSelectedListener(modeListener);
-        typeSpinner.setOnItemSelectedListener(new TypeSpinnerItemSelectedListener(this));
-        nearbyTextView.setOnClickListener(new NearbyTextViewClickListener(this));
+        typeSpinner.setOnItemSelectedListener(new
+
+                TypeSpinnerItemSelectedListener(this));
+        nearbyTextView.setOnClickListener(new
+
+                NearbyTextViewClickListener(this));
+
         checkAndRequestPermission();
     }
 
@@ -119,12 +141,12 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
         loading.putString(ErrorFragment.MESSAGE, getString(R.string.loadMessage));
         fragmentCreator = new FragmentCreator(R.id.homeFragmentContainer,
                 getSupportFragmentManager());
-        fragmentCreator.add(StoreViewFragment.class, (Bundle)null)
-        .add(ProductViewFragment.class, (Bundle) null)
-        .add(ErrorFragment.class, networkError)
-        .add(ErrorFragment.class, emptyError)
-        .add(ErrorFragment.class, locationError)
-        .add(ErrorFragment.class, loading);
+        fragmentCreator.add(StoreViewFragment.class, (Bundle) null)
+                .add(ProductViewFragment.class, (Bundle) null)
+                .add(ErrorFragment.class, networkError)
+                .add(ErrorFragment.class, emptyError)
+                .add(ErrorFragment.class, locationError)
+                .add(ErrorFragment.class, loading);
     }
 
     private void setupActionBar() {
@@ -148,7 +170,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
     }
 
     private void checkAndRequestPermission() {
-        if(LocationUtils.checkAndRequestPermission(this)) {
+        if (LocationUtils.checkAndRequestPermission(this)) {
             onPermissionGranted();
         }
     }
@@ -158,7 +180,8 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == LocationUtils.REQUEST_LOCATION_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 onPermissionGranted();
@@ -213,10 +236,13 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
                     }
                 }
             }
+
             @Override
-            public void onFailure(@NonNull Exception exp) { }
+            public void onFailure(@NonNull Exception exp) {
+            }
         });
     }
+
     //load from offset 0,discard old data in RecyclerView and load new data to it.
     public void loadAllNewStores() {
         if (currentLocation == null) {
@@ -250,6 +276,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
                                 fragmentCreator.setCurrentFragmentNoArgs(STORE_VIEW);
                         fragment.updateDataSet(result, currentLocation);
                     }
+
                     @Override
                     public void onFailure(@NonNull Exception exp) {
                         fragmentCreator.setCurrentFragment(NETWORK_ERR_VIEW);
@@ -290,6 +317,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
                                 fragmentCreator.setCurrentFragmentNoArgs(PRODUCT_VIEW);
                         fragment.updateDataSet(result, currentLocation);
                     }
+
                     @Override
                     public void onFailure(@NonNull Exception exp) {
                         fragmentCreator.setCurrentFragment(NETWORK_ERR_VIEW);
@@ -320,16 +348,17 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
                             return;
                         }
                         Fragment tmpFragment = fragmentCreator.getCurrentFragment();
-                        if(!(tmpFragment instanceof ProductViewFragment)) {
+                        if (!(tmpFragment instanceof ProductViewFragment)) {
                             return;
                         }
-                        ProductViewFragment fragment = (ProductViewFragment)tmpFragment;
+                        ProductViewFragment fragment = (ProductViewFragment) tmpFragment;
                         if (result.size() == 0 && fragment.getItemCount() == 0) {
                             fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
                             return;
                         }
                         fragment.addDataSet(result, currentLocation);
                     }
+
                     @Override
                     public void onFailure(@NonNull Exception exp) {
                     }
@@ -359,16 +388,17 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
                             return;
                         }
                         Fragment tmpFragment = fragmentCreator.getCurrentFragment();
-                        if(!(tmpFragment instanceof StoreViewFragment)) {
+                        if (!(tmpFragment instanceof StoreViewFragment)) {
                             return;
                         }
-                        StoreViewFragment fragment = (StoreViewFragment)tmpFragment;
+                        StoreViewFragment fragment = (StoreViewFragment) tmpFragment;
                         if (result.size() == 0 && fragment.getItemCount() == 0) {
                             fragmentCreator.setCurrentFragment(EMPTY_ERR_VIEW);
                             return;
                         }
                         fragment.addDataSet(result, currentLocation);
                     }
+
                     @Override
                     public void onFailure(@NonNull Exception exp) {
                     }
@@ -399,12 +429,12 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
         if (selectedItem == null) {
             return;
         }
-        if(mode == Contract.STORE_MODE) {
+        if (mode == Contract.STORE_MODE) {
             intent.putExtra(Contract.BUNDLE_MODE_KEY, Contract.STORE_MODE);
             intent.putExtra(Contract.BUNDLE_SEARCH_HINT_KEY, R.string.storeSearchHint);
             intent.putExtra(Contract.BUNDLE_ACTION_LOGO_KEY, R.drawable.ic_actionbar_shop);
             intent.putExtra(Contract.BUNDLE_MODE_TYPE_KEY, selectedItem.getId());
-        } else if(mode == Contract.PRODUCT_MODE) {
+        } else if (mode == Contract.PRODUCT_MODE) {
             intent.putExtra(Contract.BUNDLE_MODE_KEY, Contract.PRODUCT_MODE);
             intent.putExtra(Contract.BUNDLE_SEARCH_HINT_KEY, R.string.productSearchHint);
             intent.putExtra(Contract.BUNDLE_ACTION_LOGO_KEY, R.drawable.ic_actionbar_product);
@@ -428,6 +458,7 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
                     loadAllNewProducts();
                 }
             }
+
             @Override
             public void onFailure(@NonNull Exception exp) {
                 fragmentCreator.setCurrentFragment(LOCATION_ERR_VIEW);
@@ -443,10 +474,10 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
 
     @Override
     public void onItemClick(IHaveIdAndName<String> obj) {
-        if(obj instanceof Store) {
+        if (obj instanceof Store) {
             showStoreDetail((Store) obj);
-        } else if(obj instanceof Product) {
-            showProductDetail((Product)obj);
+        } else if (obj instanceof Product) {
+            showProductDetail((Product) obj);
         }
     }
 
@@ -465,9 +496,9 @@ public class HomeActivity extends AppCompatActivity implements IInteractionWithL
 
     @Override
     public void onScrollToLimit(IHaveIdAndName<String> obj, int position) {
-        if(obj instanceof Store) {
+        if (obj instanceof Store) {
             loadStoresAt(position + 1);
-        } else if(obj instanceof Product) {
+        } else if (obj instanceof Product) {
             loadProductsAt(position + 1);
         }
     }

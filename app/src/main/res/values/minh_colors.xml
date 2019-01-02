@@ -51,4 +51,7 @@
     <color name="material_yellow_a100">#FFF9C4</color>
     <color name="material_yellow_a300">#FFF176</color>
     <color name="material_yellow_a500">#FFEB3B</color>
+    <color name="material_yellow_700">#FBC02D</color>
+    <color name="material_yellow_800">#F9A825</color>
+    <color name="material_yellow_900">#F57F17</color>
 </resources>

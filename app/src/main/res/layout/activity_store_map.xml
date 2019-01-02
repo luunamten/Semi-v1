@@ -5,19 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StoreMapActivity">
+
     <include
         android:id="@+id/my_toolbar"
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        app:layout_scrollFlags="scroll|enterAlways" />
+        app:layout_scrollFlags="scroll|enterAlways">
+
+    </include>
+
     <fragment
         android:id="@+id/map"
-        android:layout_below="@id/my_toolbar"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/my_toolbar"
         app:cameraZoom="15"
         app:mapType="terrain"
         app:uiCompass="true"

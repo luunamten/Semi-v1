@@ -438,16 +438,40 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <Button
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
-                android:background="@drawable/minh_store_detail_btn_more_state"
-                android:onClick="loadMoreProduct"
-                android:text="@string/store_detail_more_product_label"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/material_blue_300"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:background="@drawable/minh_store_detail_btn_more_state"
+                    android:onClick="hideAllProduct"
+                    android:text="@string/store_detail_hide_product_label"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/material_blue_300"
+                    android:textSize="16sp"
+                    android:layout_weight="1"/>
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/material_gray_300"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:background="@drawable/minh_store_detail_btn_more_state"
+                    android:onClick="loadMoreProduct"
+                    android:text="@string/store_detail_more_product_label"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/material_blue_300"
+                    android:textSize="16sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"

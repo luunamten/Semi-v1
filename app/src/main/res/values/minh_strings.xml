@@ -7,6 +7,7 @@
     <string name="store_detail_total_rating_label">Điểm</string>
     <string name="store_detail_list_produce_label">Sản phẩm</string>
     <string name="store_detail_more_product_label">Xem thêm sản phẩm</string>
+    <string name="store_detail_hide_product_label">Ẩn tất cả sản phẩm</string>
     <string name="store_detail_more_comments_label">Xem thêm bình luận</string>
     <string name="store_detail_product_dialog_price_label">\u0020-\u0020Giá:\u0020</string>
     <string name="store_detail_product_dialog_close_label">Đóng</string>
@@ -19,7 +20,7 @@
     <string name="store_detail_error_comment_mess">Xin lỗi, không có bình luận nào.</string>
     <string name="store_detail_product_share_mess">Chia sẻ</string>
 
-    <string name="loadingText">Đang tải...</string>
+    <string name="loadingText">Đang tải&#8230;</string>
     <string name="directLabel">Chỉ đường</string>
     <string name="saveLabel">Lưu</string>
     <string name="commentLabel">Bình luận</string>
@@ -29,4 +30,7 @@
     <string name="comment_content_label">Viết nội dung bình luận</string>
     <string name="comment_rating_label">Đánh giá</string>
     <string name="comment_toolbar_label">Bình luận</string>
+    <string name="comment_no_save_mess">Hiện tại bạn chưa lưu gì cả</string>
+    <string name="dialog_utility_label">Tiện ích</string>
+
 </resources>
