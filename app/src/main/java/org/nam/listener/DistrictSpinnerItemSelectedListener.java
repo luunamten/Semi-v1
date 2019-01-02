@@ -46,7 +46,6 @@ public class DistrictSpinnerItemSelectedListener implements AdapterView.OnItemSe
             towns.addAll(connector.getTownsFromDistrict(
                     selectedDistrict.getId()));
         }
-        Log.w("ffffff", String.valueOf(view.getContext() == MyApp.getContext()));
         final ArrayAdapter<Town> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, towns);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);

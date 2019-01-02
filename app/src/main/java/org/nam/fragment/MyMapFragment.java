@@ -67,11 +67,9 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         }
         mode = Contract.STORE_MODE;
         storeConnector = StoreConnector.getInstance();
-        scaleFactor = 0;
         productOrStoretype = -1;
         query = "";
         markers = new ArrayList<>();
-        lastCallId = 0L;
         bitmapHolder = new ThreadLocal<>();
     }
 

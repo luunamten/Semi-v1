@@ -217,6 +217,10 @@ public class ProductSearchFragment extends Fragment implements ISearch,
                 } else {
                     currentLocation = ObjectUtils.toMyLocation(result);
                 }
+                Fragment fragment = fragmentCreator.getCurrentFragment();
+                if(fragment instanceof ProductViewFragment) {
+                    ((ProductViewFragment)fragment).updateLocation(currentLocation);
+                }
             }
             @Override
             public void onFailure(@NonNull Exception exp) { }

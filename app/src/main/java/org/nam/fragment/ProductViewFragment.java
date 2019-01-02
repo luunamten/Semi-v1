@@ -92,6 +92,10 @@ public class ProductViewFragment extends Fragment {
         recyclerViewAdapter.addDataSet(products, location);
     }
 
+    public void updateLocation(Location location) {
+        recyclerViewAdapter.setLocation(location);
+    }
+
     public int getItemCount() {
         return recyclerViewAdapter.getItemCount();
     }

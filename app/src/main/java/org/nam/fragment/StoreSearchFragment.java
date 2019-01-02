@@ -48,7 +48,6 @@ public class StoreSearchFragment extends Fragment implements ISearch,
     private LocationUtils locationUtils;
     private int type;
     private String query;
-    private static int x;
 
     @Override
     public void search(int type, String query, int mode) {
@@ -235,6 +234,10 @@ public class StoreSearchFragment extends Fragment implements ISearch,
                     currentLocation = null;
                 } else {
                     currentLocation = ObjectUtils.toMyLocation(result);
+                }
+                Fragment fragment = fragmentCreator.getCurrentFragment();
+                if(fragment instanceof StoreViewFragment) {
+                    ((StoreViewFragment)fragment).updateLocation(currentLocation);
                 }
             }
             @Override

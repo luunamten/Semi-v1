@@ -25,6 +25,7 @@ import com.google.android.gms.maps.MapFragment;
 
 import org.nam.contract.Contract;
 import org.nam.custom.MyFragmentAdapter;
+import org.nam.custom.NonScrollingViewPager;
 import org.nam.firebase.IResult;
 import org.nam.fragment.IInteractionWithList;
 import org.nam.fragment.ISearch;
@@ -48,12 +49,10 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements IUseFragment,
         IInteractionWithList<IHaveIdAndName<String>> {
-    private final static int SEARCH_FRAGMENT = 0;
-    private final static int MAP_FRAGMENT = 1;
     private int mode;
     private int typeId;
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private NonScrollingViewPager viewPager;
     private MyFragmentAdapter fragmentAdapter;
     //init hear because onFragmentAttached was called before onCreate
     private List<ISearch> fragments = new ArrayList<>(2);
@@ -85,6 +84,7 @@ public class SearchActivity extends AppCompatActivity implements IUseFragment,
 
     private void setupViewPager() {
         viewPager = findViewById(R.id.viewPaper);
+        viewPager.setPagingEnabled(false);
         fragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager());
         Fragment searchFragment = null;
         if(mode == Contract.STORE_MODE) {

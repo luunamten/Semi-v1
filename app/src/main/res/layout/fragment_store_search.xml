@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".fragment.StoreSearchFragment">
-
     <HorizontalScrollView
         style="@style/NearbyStoreLabel"
         android:layout_width="match_parent"
@@ -54,8 +55,4 @@
                 android:popupBackground="@drawable/popup_spinner_bg" />
         </LinearLayout>
     </HorizontalScrollView>
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </LinearLayout>

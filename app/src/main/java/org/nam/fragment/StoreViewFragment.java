@@ -92,6 +92,10 @@ public class StoreViewFragment extends Fragment {
         recyclerViewAdapter.addDataSet(stores, location);
     }
 
+    public void updateLocation(Location location) {
+        recyclerViewAdapter.setLocation(location);
+    }
+
     public int getItemCount() {
         return recyclerViewAdapter.getItemCount();
     }
