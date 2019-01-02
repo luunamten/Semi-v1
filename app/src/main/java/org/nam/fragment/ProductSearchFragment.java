@@ -46,7 +46,6 @@ public class ProductSearchFragment extends Fragment implements ISearch,
     private Spinner citySpinner;
     private Spinner districtSpinner;
     private Spinner townSpinner;
-    private ProductConnector productConnector;
     private Location currentLocation;
     private LocationUtils locationUtils;
     private int type;
@@ -61,6 +60,7 @@ public class ProductSearchFragment extends Fragment implements ISearch,
 
     @Override
     public void scroll(String lastId) {
+        final ProductConnector productConnector = ProductConnector.getInstance();
         productConnector.getProductsByKeywords(type, query, lastId, Contract.NUM_PRODUCTS_PER_REQUEST,
                 getAddress(),
                 new IResult<List<Product>>() {
@@ -102,7 +102,6 @@ public class ProductSearchFragment extends Fragment implements ISearch,
             ((IUseFragment)context).onFragmentAttached(this);
         }
         setupFragmentCreator();
-        productConnector = ProductConnector.getInstance();
         locationUtils = new LocationUtils();
     }
 
@@ -161,6 +160,7 @@ public class ProductSearchFragment extends Fragment implements ISearch,
 
     public void searchProducts() {
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
+        final ProductConnector productConnector = ProductConnector.getInstance();
         productConnector.getProductsByKeywords(type, query, "", Contract.NUM_PRODUCTS_PER_REQUEST,
                 getAddress(),
                 new IResult<List<Product>>() {

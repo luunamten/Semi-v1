@@ -7,6 +7,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.Task;
+
 import org.nam.MyApp;
 import org.nam.R;
 import org.nam.contract.Contract;
@@ -28,22 +30,25 @@ public class DistrictSpinnerItemSelectedListener implements AdapterView.OnItemSe
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(view == null) {
+            return;
+        }
         final Spinner townSpinner = user.getTownSpinner();
         if(townSpinner == null) {
             return;
         }
+        final Context context = view.getContext();
         final District selectedDistrict = (District) parent.getSelectedItem();
         final List<Town> towns = new ArrayList<>();
         towns.add(new Town(-1,
-                view.getContext().getString(R.string.townLabel)));
+                context.getString(R.string.townLabel)));
         if(selectedDistrict.getId() != -1) {
             final AddressDBConnector connector = AddressDBConnector.getInstance();
             towns.addAll(connector.getTownsFromDistrict(
                     selectedDistrict.getId()));
         }
         final ArrayAdapter<Town> adapter = new ArrayAdapter<>(
-                view.getContext(),
-                android.R.layout.simple_spinner_item, towns);
+                context, android.R.layout.simple_spinner_item, towns);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         townSpinner.setAdapter(adapter);

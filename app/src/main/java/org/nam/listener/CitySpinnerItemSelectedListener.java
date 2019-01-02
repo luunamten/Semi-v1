@@ -28,22 +28,25 @@ public class CitySpinnerItemSelectedListener implements AdapterView.OnItemSelect
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(view == null) {
+            return;
+        }
         final Spinner districtSpinner = user.getDistrictSpinner();
         if(districtSpinner == null) {
             return;
         }
+        final Context context = view.getContext();
         final City selectedCity = (City) parent.getSelectedItem();
         final List<District> districts = new ArrayList<>();
         districts.add(new District(-1,
-                view.getContext().getString(R.string.districtLabel)));
+                context.getString(R.string.districtLabel)));
         if(selectedCity.getId() != -1) {
             final AddressDBConnector connector = AddressDBConnector.getInstance();
             districts.addAll(connector.getDistrictsFromCity(
                     selectedCity.getId()));
         }
         final ArrayAdapter<District> adapter = new ArrayAdapter<District>(
-                view.getContext(),
-                android.R.layout.simple_spinner_item, districts);
+                context, android.R.layout.simple_spinner_item, districts);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         districtSpinner.setAdapter(adapter);
