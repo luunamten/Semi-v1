@@ -49,6 +49,10 @@
         <item name="android:textColor">@color/colorTextError</item>
         <item name="android:textSize">20sp</item>
     </style>
+    <style name="InfoDialogMessage" parent="AppTheme">
+        <item name="android:textColor">@color/colorInfoDialogMessage</item>
+        <item name="android:textSize">20sp</item>
+    </style>
     <style name="SearchTabTheme" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:background">@color/colorPrimary</item>
     </style>
@@ -71,6 +75,9 @@
     <style name="SignInLabel" parent="AppTheme">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorSignInLabel</item>
+    </style>
+    <style name="DialogTitleLabel" parent="SignInLabel">
+        <item name="android:background">@color/colorPrimaryDark</item>
     </style>
     <style name="PrimaryButton" parent="AppTheme">
         <item name="android:backgroundTint">@color/colorPrimary</item>

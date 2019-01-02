@@ -49,6 +49,7 @@ import org.nam.minh.object.Comment;
 import org.nam.object.IHaveIdAndName;
 import org.nam.object.Product;
 import org.nam.object.Store;
+import org.nam.util.DialogUtils;
 import org.nam.util.LocationUtils;
 import org.nam.util.MathUtils;
 import org.nam.util.ObjectUtils;
@@ -183,17 +184,26 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
                     store = result;
                     putDataToView();
                     closeLoading();
+                } else {
+                    DialogUtils.showInfoDialog(StoreDetailActivity.this, "Không thể tải dữ liệu");
+                    finish();
                 }
+
             }
 
             @Override
             public void onFailure(@NonNull Exception exp) {
+                DialogUtils.showInfoDialog(StoreDetailActivity.this, "Không thể tải dữ liệu");
+                finish();
             }
         });
     }
 
     private void closeLoading() {
         findViewById(R.id.loadingTextView).setVisibility(View.GONE);
+    }
+    private void openLoading() {
+        findViewById(R.id.loadingTextView).setVisibility(View.VISIBLE);
     }
 
     private void putDataToView() {

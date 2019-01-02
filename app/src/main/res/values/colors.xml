@@ -7,6 +7,7 @@
     <color name="colorDefaultBackground">#EEEEEE</color>
     <color name="colorTextDefault">#000000</color>
     <color name="colorTextError">#999999</color>
+    <color name="colorInfoDialogMessage">#333333</color>
     <color name="colorLowRating">#dd0000</color>
     <color name="colorMediumRating">#ff8800</color>
     <color name="colorHighRating">#00aa00</color>

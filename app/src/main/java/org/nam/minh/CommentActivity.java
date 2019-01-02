@@ -25,6 +25,7 @@ import org.nam.firebase.CommentConnector;
 import org.nam.firebase.IResult;
 import org.nam.minh.object.Product;
 import org.nam.object.Store;
+import org.nam.util.DialogUtils;
 
 import javax.annotation.Nullable;
 
@@ -84,14 +85,31 @@ public class CommentActivity extends AppCompatActivity {
     public void onComment(View view){
         float rating = ratingBar.getRating();
         String comment = commentEditText.getText().toString();
+        openLoading();
         CommentConnector.getInstance().postComment(store.getId(), comment, rating, new IResult<Timestamp>() {
             @Override
             public void onResult(Timestamp result) {
-                Log.w("FFFF", String.valueOf(result.getSeconds()));
+                closeLoading();
+                if(result != null) {
+                    DialogUtils.showInfoDialog(CommentActivity.this, "Đã thêm bình luận.");
+                } else {
+                    DialogUtils.showInfoDialog(CommentActivity.this, "Có lỗi xảy ra.");
+                }
+
             }
 
             @Override
-            public void onFailure(@NonNull Exception exp) { }
+            public void onFailure(@NonNull Exception exp) {
+                closeLoading();
+                DialogUtils.showInfoDialog(CommentActivity.this, "Có lỗi xảy ra.");
+            }
         });
+    }
+
+    private void closeLoading() {
+        findViewById(R.id.loadingTextView).setVisibility(View.GONE);
+    }
+    private void openLoading() {
+        findViewById(R.id.loadingTextView).setVisibility(View.VISIBLE);
     }
 }

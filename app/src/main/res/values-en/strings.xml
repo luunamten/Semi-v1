@@ -51,4 +51,6 @@
     <string name="comment_no_save_mess">Sorry, nothing store here</string>
     <string name="dialog_utility_label">Utilities</string>
     <string name="directButtonLabel">Direct to store</string>
+    <string name="infoDialogTitle">Info</string>
+
 </resources>
