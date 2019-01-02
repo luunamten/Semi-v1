@@ -88,6 +88,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         </android.support.v4.widget.NestedScrollView>
+
         <FrameLayout
             android:id="@+id/homeFragmentContainer"
             android:layout_width="match_parent"
