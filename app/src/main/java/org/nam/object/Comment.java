@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 public class Comment implements Serializable {
     private String id;
+    private String userDisplayName;
+    private String userPhotoURL;
     private String storeId;
     private String comment;
     private Timestamp time;
@@ -19,6 +21,22 @@ public class Comment implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUserDisplayName() {
+        return userDisplayName;
+    }
+
+    public void setUserDisplayName(String userName) {
+        this.userDisplayName = userName;
+    }
+
+    public String getUserPhotoURL() {
+        return userPhotoURL;
+    }
+
+    public void setUserPhotoURL(String userPhotoURL) {
+        this.userPhotoURL = userPhotoURL;
     }
 
     public String getStoreId() {

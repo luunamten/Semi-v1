@@ -39,6 +39,8 @@ public class CommentConnector {
                                 comment.setTime(getTimestamp(map, DBContract.Comment.TIME));
                                 comment.setEditTime(getTimestamp(map, DBContract.Comment.EDIT_TIME));
                                 comment.setStoreId((String) map.get(DBContract.Comment.STORE_ID));
+                                comment.setUserDisplayName((String) map.get(DBContract.Comment.USER_DISPLAY_NAME));
+                                comment.setUserPhotoURL((String) map.get(DBContract.Comment.USER_PHOTO_URL));
                                 comments.add(comment);
                             }
                         }

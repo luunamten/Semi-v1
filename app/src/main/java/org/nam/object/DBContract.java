@@ -51,5 +51,7 @@ public class DBContract {
         public static final String EDIT_TIME = "editTime";
         public static final String TIME_SEC = "_seconds";
         public static final String TIME_NANO = "_nanoseconds";
+        public static final String USER_DISPLAY_NAME = "userDisplayName";
+        public static final String USER_PHOTO_URL = "userPhotoURL";
     }
 }
