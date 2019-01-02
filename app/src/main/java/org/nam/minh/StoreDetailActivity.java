@@ -389,6 +389,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
                 Map<String, Object> map = (Map<String, Object>) httpsCallableResult.getData();
                 if(map != null) {
                     Log.w("My_s", (String) map.get("id"));
+                    Log.w("My_s", (String) map.get("ti"));
                 } else {
                     Log.w("My_s", "Fail");
                 }

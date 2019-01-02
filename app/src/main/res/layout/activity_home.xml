@@ -9,7 +9,6 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_gravity="bottom"
         app:menu="@menu/minh_nav_bot_menu" />
 
     <android.support.design.widget.CoordinatorLayout
@@ -31,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                app:layout_scrollFlags="scroll|enterAlways|snap" />
 
             <TextView
                 android:id="@+id/modeTypeTextView"
