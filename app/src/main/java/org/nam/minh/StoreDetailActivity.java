@@ -79,8 +79,6 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     private LinearLayout store_detail_utilities;
     private StoreDetailProductAdapter mProductAdapter;
     private StoreDetailCommentAdapter mCommentAdapter;
-    private RecyclerView mRecyclerProduct, mRecyclerComment;
-    private List<Comment> mListComment;
     private Dialog mDialogUtility;
     private Store store;
     private Product product;
@@ -93,11 +91,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         initView();
         getStoreAndProductIdFromIntent();
         getStoreData();
-        if (product == null) {
-            getProducts();
-        } else {
-            getPreferredProduct();
-        }
+        getProducts();
     }
 
     private void getStoreAndProductIdFromIntent() {
@@ -134,14 +128,14 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
         store_detail_utilities = findViewById(R.id.store_detail_utilities);
         storeImage = findViewById(R.id.img_store);
         //RecyclerView product
-        mRecyclerProduct = findViewById(R.id.store_detail_list_product);
+        final RecyclerView mRecyclerProduct = findViewById(R.id.store_detail_list_product);
         mRecyclerProduct.setLayoutManager(new GridLayoutManager(this, 3));
         mProductAdapter = new StoreDetailProductAdapter(this, new ArrayList<Product>());
         mProductAdapter.setOnItemClickListener(this);
         mRecyclerProduct.setAdapter(mProductAdapter);
 
         //region init list comment
-        mListComment = new ArrayList<>();
+        List<Comment> mListComment = new ArrayList<>();
         mListComment.add(new Comment("1", "Minh", R.drawable.minh_ic_home_around_me, "comment 1 đây", 5, "01/12/2018 23:22"));
         mListComment.add(new Comment("2", "Nam", R.drawable.ic_default, "comment 2 đây", 4, "02/12/2018 23:22"));
         mListComment.add(new Comment("1", "Minh", R.drawable.minh_ic_home_around_me, "comment 1 đây", 2, "01/12/2018 23:22"));
@@ -159,7 +153,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
             txt_error_comment.setTextSize(getResources().getDimension(R.dimen.store_detail_error_list_text_size));
             txt_error_comment.setLines(2);
         } else {
-            mRecyclerComment = findViewById(R.id.store_detail_list_comment);
+            RecyclerView mRecyclerComment = findViewById(R.id.store_detail_list_comment);
             mRecyclerComment.setLayoutManager(new LinearLayoutManager(this));
             mCommentAdapter = new StoreDetailCommentAdapter(this, mListComment);
             mRecyclerComment.setAdapter(mCommentAdapter);
@@ -275,27 +269,52 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     private void getProducts() {
-        if(product != null && product.getTitle() == null) {
-            return;
+        if(product != null) {
+            getProductsWhenHavePreferred();
+        } else {
+            getProductsWhenNoPreferred();
         }
-        final ProductConnector connector = ProductConnector.getInstance();
+    }
+
+    private void getProductsWhenNoPreferred() {
         final long currentCallId = ++lastCallId;
-        String lastProductId = mProductAdapter.getLastProductId();
-        if (product != null) {
-            if (lastProductId.equals(product.getId())) {
-                lastProductId = "";
-            }
-        }
-        connector.getProductsOfStore(store.getId(), lastProductId, NUM_PRODUCTS_PER_REQUEST,
+        ProductConnector.getInstance().getProductsOfStore(store.getId(),
+                mProductAdapter.getLastProductId(), NUM_PRODUCTS_PER_REQUEST,
                 new IResult<List<org.nam.object.Product>>() {
                     @Override
                     public void onResult(List<Product> result) {
                         if (currentCallId != lastCallId || result.size() == 0) {
                             return;
                         }
-                        if (product != null) {
-                            removePreferredProduct(result);
+                        mProductAdapter.addData(result);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Exception exp) {
+                        setError();
+                    }
+                });
+    }
+
+    private void getProductsWhenHavePreferred() {
+        if(mProductAdapter.getItemCount() == 0) {
+            getPreferredProduct();
+            return;
+        }
+        String lastProductId = mProductAdapter.getLastProductId();
+        if (lastProductId.equals(product.getId())) {
+            lastProductId = "";
+        }
+        final long currentCallId = ++lastCallId;
+        ProductConnector.getInstance().getProductsOfStore(store.getId(),
+                lastProductId, NUM_PRODUCTS_PER_REQUEST,
+                new IResult<List<org.nam.object.Product>>() {
+                    @Override
+                    public void onResult(List<Product> result) {
+                        if (currentCallId != lastCallId || result.size() == 0) {
+                            return;
                         }
+                        removePreferredProduct(result);
                         mProductAdapter.addData(result);
                     }
 
@@ -319,24 +338,19 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     private void getPreferredProduct() {
-        String productId = product.getId();
-        if (productId == null) {
-            return;
-        }
-        ProductConnector connector = ProductConnector.getInstance();
-        connector.getProductById(productId, new IResult<Product>() {
+        final long currentCallId = ++lastCallId;
+        ProductConnector.getInstance().getProductById(product.getId(), new IResult<Product>() {
             @Override
             public void onResult(Product result) {
-                if (result == null) {
+                if (result == null || currentCallId != lastCallId) {
                     return;
                 }
+                product = result;
                 mProductAdapter.addData(result);
-                getProducts();
             }
 
             @Override
-            public void onFailure(@NonNull Exception exp) {
-            }
+            public void onFailure(@NonNull Exception exp) { }
         });
     }
 
