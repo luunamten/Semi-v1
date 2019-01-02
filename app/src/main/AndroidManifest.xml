@@ -44,7 +44,7 @@
         <activity android:name=".CloudFunctionsActivity" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/minh_SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -74,7 +74,9 @@
             android:name=".minh.StoreDetailActivity"
             android:theme="@style/minh_AppTheme" />
         <activity android:name=".StoreMapActivity" />
-        <activity android:name=".CommentActivity"></activity>
+        <activity
+            android:name=".minh.CommentActivity"
+            android:theme="@style/minh_AppTheme"></activity>
     </application>
 
 </manifest>

@@ -73,7 +73,7 @@ public class LocationUtils {
 
     @SuppressLint("MissingPermission")
     public static Task<Location> getLastLocation() {
-        final Task<Location> task = LocationServices.getFusedLocationProviderClient(MyApp.getInstance())
+        final Task<Location> task = LocationServices.getFusedLocationProviderClient(MyApp.getContext())
                 .getLastLocation();
         return task;
     }
@@ -95,7 +95,7 @@ public class LocationUtils {
     @SuppressLint("MissingPermission")
     public void requestLocationUpdates(final IResult<Location> result) {
         final FusedLocationProviderClient locationProvider =
-                LocationServices.getFusedLocationProviderClient(MyApp.getInstance());
+                LocationServices.getFusedLocationProviderClient(MyApp.getContext());
         if(callback != null) {
             locationProvider.removeLocationUpdates(callback);
         }
@@ -110,13 +110,13 @@ public class LocationUtils {
                 .setPriority(Contract.LOCATION_ACCURACY)
                 .setInterval(Contract.LOCATION_INTERVAL)
                 .setFastestInterval(Contract.LOCATION_FASTEST_INTERVAL);
-        LocationServices.getFusedLocationProviderClient(MyApp.getInstance())
+        LocationServices.getFusedLocationProviderClient(MyApp.getContext())
                 .requestLocationUpdates(locationRequest, callback, null);
     }
 
     public void removeLocationUpdates() {
         if(callback != null) {
-            LocationServices.getFusedLocationProviderClient(MyApp.getInstance())
+            LocationServices.getFusedLocationProviderClient(MyApp.getContext())
                     .removeLocationUpdates(callback);
             callback = null;
         }

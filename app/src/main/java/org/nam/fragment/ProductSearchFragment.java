@@ -22,13 +22,10 @@ import org.nam.listener.CountrySpinnerItemSelectedListener;
 import org.nam.listener.DistrictSpinnerItemSelectedListener;
 import org.nam.listener.IUseAddressSpinner;
 import org.nam.listener.TownSpinnerItemSelectedListener;
-import org.nam.object.City;
 import org.nam.object.Country;
-import org.nam.object.District;
 import org.nam.object.IHaveIdAndName;
 import org.nam.object.Location;
 import org.nam.object.Product;
-import org.nam.object.Town;
 import org.nam.sqlite.AddressDBConnector;
 import org.nam.util.LocationUtils;
 import org.nam.util.ObjectUtils;
@@ -134,7 +131,7 @@ public class ProductSearchFragment extends Fragment implements ISearch,
                 android.R.layout.simple_spinner_dropdown_item);
         countrySpinner.setAdapter(adapter);
         //Get country's saved value from SharedPreferences, and set it's selected.
-        final SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
+        final SharedPreferences dataStore = MyApp.getContext().getSharedPreferences(Contract.SHARED_MY_STATE,
                 Context.MODE_PRIVATE);
         countrySpinner.setSelection(dataStore.getInt(Contract.SHARED_COUNTRY_KEY, 0));
         return view;

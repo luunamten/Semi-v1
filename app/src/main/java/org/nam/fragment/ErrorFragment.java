@@ -1,19 +1,15 @@
 package org.nam.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.widget.AppCompatImageView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nam.MyApp;
@@ -30,7 +26,7 @@ public class ErrorFragment extends Fragment {
     public static ErrorFragment newInstance(@DrawableRes int imageResource, @StringRes int message){
         Bundle bundle = new Bundle();
         bundle.putInt(IMAGE_RESOURCE, imageResource);
-        bundle.putString(MESSAGE, MyApp.getInstance().getString(message));
+        bundle.putString(MESSAGE, MyApp.getContext().getString(message));
         ErrorFragment fragment = new ErrorFragment();
         fragment.setArguments(bundle);
         return fragment;

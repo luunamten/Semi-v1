@@ -54,12 +54,14 @@
 
         <RatingBar
             android:id="@+id/store_detail_user_comment_rating"
-            style="@style/minh_commentRatingBar"
+            style="@style/RatingBar"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-
+            android:progressBackgroundTint="@color/material_gray_300"
+            android:progressTint="@color/material_yellow_a500"
+            android:secondaryProgressTint="@color/material_yellow_a500"
             android:numStars="5"
             android:rating="4"
             android:stepSize="1"

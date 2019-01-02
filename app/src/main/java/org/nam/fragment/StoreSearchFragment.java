@@ -1,14 +1,10 @@
 package org.nam.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.LogWriter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +13,6 @@ import android.widget.Spinner;
 
 import org.nam.MyApp;
 import org.nam.R;
-import org.nam.SearchActivity;
 import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 import org.nam.firebase.StoreConnector;
@@ -26,17 +21,12 @@ import org.nam.listener.CountrySpinnerItemSelectedListener;
 import org.nam.listener.DistrictSpinnerItemSelectedListener;
 import org.nam.listener.IUseAddressSpinner;
 import org.nam.listener.TownSpinnerItemSelectedListener;
-import org.nam.minh.StoreDetailActivity;
-import org.nam.object.City;
 import org.nam.object.Country;
-import org.nam.object.District;
 import org.nam.object.IHaveIdAndName;
 import org.nam.object.Location;
 import org.nam.object.Store;
-import org.nam.object.Town;
 import org.nam.sqlite.AddressDBConnector;
 import org.nam.util.LocationUtils;
-import org.nam.util.MathUtils;
 import org.nam.util.ObjectUtils;
 
 import java.util.List;
@@ -143,7 +133,7 @@ public class StoreSearchFragment extends Fragment implements ISearch,
                 android.R.layout.simple_spinner_dropdown_item);
         countrySpinner.setAdapter(adapter);
         //Get country's saved value from SharedPreferences, and set it's selected.
-        final SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
+        final SharedPreferences dataStore = MyApp.getContext().getSharedPreferences(Contract.SHARED_MY_STATE,
                 Context.MODE_PRIVATE);
         countrySpinner.setSelection(dataStore.getInt(Contract.SHARED_COUNTRY_KEY, 0));
         return view;

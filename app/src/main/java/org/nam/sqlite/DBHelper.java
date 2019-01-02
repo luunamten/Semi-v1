@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "MyDB";
 
     public DBHelper() {
-        super(MyApp.getInstance(), DB_NAME, null, DB_VERSION);
+        super(MyApp.getContext(), DB_NAME, null, DB_VERSION);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(District.CREATE_STATEMENT);
         db.execSQL(Town.CREATE_STATEMENT);
         //add data
-        Resources resources = MyApp.getInstance().getResources();
+        Resources resources = MyApp.getContext().getResources();
         db.beginTransaction();
         insertFromRawFile(resources.openRawResource(R.raw.contries), db, Country.TABLE_NAME, Country.getInstance());
         insertFromRawFile(resources.openRawResource(R.raw.cities), db, City.TABLE_NAME, City.getInstance());

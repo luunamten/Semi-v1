@@ -120,7 +120,7 @@ public class SignInActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             AuthUI.getInstance().signOut(this);
         }
-        /*AuthUI.getInstance().silentSignIn(this, providers)
+        /*AuthUI.getContext().silentSignIn(this, providers)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
