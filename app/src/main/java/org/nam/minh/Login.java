@@ -1,9 +1,11 @@
 package org.nam.minh;
 
 public class Login {
-    //aa
-    private void work() {
-        //fuyck
+    //a
+    //a
+    // a
+    private Login() {
+
     }
 }
 

@@ -28,4 +28,5 @@
     <string name="comment_title_label">Tiêu đề</string>
     <string name="comment_content_label">Viết nội dung bình luận</string>
     <string name="comment_rating_label">Đánh giá</string>
+    <string name="comment_toolbar_label">Bình luận</string>
 </resources>
