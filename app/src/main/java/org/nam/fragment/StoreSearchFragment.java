@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,11 +44,11 @@ public class StoreSearchFragment extends Fragment implements ISearch,
     private Spinner citySpinner;
     private Spinner districtSpinner;
     private Spinner townSpinner;
-    private StoreConnector storeConnector;
     private Location currentLocation;
     private LocationUtils locationUtils;
     private int type;
     private String query;
+    private static int x;
 
     @Override
     public void search(int type, String query, int mode) {
@@ -76,7 +77,6 @@ public class StoreSearchFragment extends Fragment implements ISearch,
             ((IUseFragment)context).onFragmentAttached(this);
         }
         setupFragmentCreator();
-        storeConnector = StoreConnector.getInstance();
         locationUtils = new LocationUtils();
     }
 
@@ -164,6 +164,7 @@ public class StoreSearchFragment extends Fragment implements ISearch,
 
     private void searchStores() {
 
+        final StoreConnector storeConnector = StoreConnector.getInstance();
         fragmentCreator.setCurrentFragment(LOAD_VIEW);
         storeConnector.getStoresByKeywords(type, query, "", Contract.NUM_STORES_PER_REQUEST,
                 getAddress(),
@@ -186,6 +187,7 @@ public class StoreSearchFragment extends Fragment implements ISearch,
     }
 
     private void getMoreStores(String lastId) {
+        final StoreConnector storeConnector = StoreConnector.getInstance();
         storeConnector.getStoresByKeywords(type, query, lastId, Contract.NUM_STORES_PER_REQUEST,
                 getAddress(),
                 new IResult<List<Store>>() {

@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
+      <module fileurl="file://$PROJECT_DIR$/MyMapRepeating.iml" filepath="$PROJECT_DIR$/MyMapRepeating.iml" />
+=======
       <module fileurl="file://$PROJECT_DIR$/Semi-v1.iml" filepath="$PROJECT_DIR$/Semi-v1.iml" />
+>>>>>>> fc8f545d792cb6bdd19573534bf933afe1ebc54b
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

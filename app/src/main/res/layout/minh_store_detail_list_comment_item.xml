@@ -14,8 +14,6 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/store_detail_user_avatar"
             android:layout_width="50dp"

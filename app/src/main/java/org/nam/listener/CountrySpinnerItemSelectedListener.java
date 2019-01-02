@@ -2,6 +2,7 @@ package org.nam.listener;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,19 +26,20 @@ public class CountrySpinnerItemSelectedListener implements AdapterView.OnItemSel
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        final Spinner citySpinner = user.getCitySpinner();
-        if(citySpinner == null) {
+        if(view == null) {
             return;
         }
+        final Context context = view.getContext();
+        final Spinner citySpinner = user.getCitySpinner();
         final Country selectedCountry = (Country) parent.getSelectedItem();
         final AddressDBConnector connector = AddressDBConnector.getInstance();
         final List<City> cities = new ArrayList<>();
         cities.add(new City(-1,
-                view.getContext().getString(R.string.cityLabel)));
+                context.getString(R.string.cityLabel)));
         cities.addAll(connector.getCitiesFromCountry(
                 selectedCountry.getId()));
         final ArrayAdapter<City> adapter = new ArrayAdapter<City>(
-                view.getContext(),
+                context,
                 android.R.layout.simple_spinner_item, cities);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
