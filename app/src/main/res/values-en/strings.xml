@@ -40,4 +40,7 @@
     <string name="commentButtonLabel"> Post comment</string>
     <string name="commentActivityLabel">Your comment</string>
     <string name="storeMapActivityLabel">Store location on Map</string>
+    <string name="comment_title_label">Title</string>
+    <string name="comment_content_label">Write the comment content for the store</string>
+    <string name="comment_rating_label">Rating</string>
 </resources>

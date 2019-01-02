@@ -2,6 +2,7 @@ package org.nam.listener;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,12 +13,9 @@ import com.google.android.gms.tasks.Task;
 import org.nam.MyApp;
 import org.nam.R;
 import org.nam.contract.Contract;
-import org.nam.object.City;
-import org.nam.object.Country;
 import org.nam.object.District;
 import org.nam.object.Town;
 import org.nam.sqlite.AddressDBConnector;
-import org.nam.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +45,18 @@ public class DistrictSpinnerItemSelectedListener implements AdapterView.OnItemSe
             towns.addAll(connector.getTownsFromDistrict(
                     selectedDistrict.getId()));
         }
+        Log.w("ffffff", String.valueOf(view.getContext() == MyApp.getContext()));
         final ArrayAdapter<Town> adapter = new ArrayAdapter<>(
+<<<<<<< HEAD
                 context, android.R.layout.simple_spinner_item, towns);
+=======
+                MyApp.getContext(),
+                android.R.layout.simple_spinner_item, towns);
+>>>>>>> fc8f545d792cb6bdd19573534bf933afe1ebc54b
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         townSpinner.setAdapter(adapter);
-        final SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
+        final SharedPreferences dataStore = MyApp.getContext().getSharedPreferences(Contract.SHARED_MY_STATE,
                 Context.MODE_PRIVATE);
         if(position != dataStore.getInt(Contract.SHARED_DISTRICT_KEY, 0)) {
             final SharedPreferences.Editor editor = dataStore.edit();

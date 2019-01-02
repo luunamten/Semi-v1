@@ -31,7 +31,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
-import org.nam.CommentActivity;
 import org.nam.R;
 import org.nam.StoreMapActivity;
 import org.nam.contract.Contract;

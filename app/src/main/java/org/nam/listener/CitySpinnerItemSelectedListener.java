@@ -11,11 +11,8 @@ import org.nam.MyApp;
 import org.nam.R;
 import org.nam.contract.Contract;
 import org.nam.object.City;
-import org.nam.object.Country;
 import org.nam.object.District;
-import org.nam.object.Town;
 import org.nam.sqlite.AddressDBConnector;
-import org.nam.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +47,7 @@ public class CitySpinnerItemSelectedListener implements AdapterView.OnItemSelect
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         districtSpinner.setAdapter(adapter);
-        final SharedPreferences dataStore = MyApp.getInstance().getSharedPreferences(Contract.SHARED_MY_STATE,
+        final SharedPreferences dataStore = MyApp.getContext().getSharedPreferences(Contract.SHARED_MY_STATE,
                 Context.MODE_PRIVATE);
         if(position != dataStore.getInt(Contract.SHARED_CITY_KEY, 0)) {
             final SharedPreferences.Editor editor = dataStore.edit();

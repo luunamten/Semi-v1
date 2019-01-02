@@ -1,16 +1,11 @@
 package org.nam.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
-import android.util.Log;
 
 import org.nam.MyApp;
 import org.nam.R;
-import org.nam.contract.Contract;
 import org.nam.firebase.IResult;
 import org.nam.firebase.StorageConnector;
 import org.nam.object.Location;
@@ -22,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.LongBuffer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 //getting stote types, store utilities, product utilites, address + geo from map, utilities,...
@@ -45,7 +39,7 @@ public final class ObjectUtils {
     public static List<Store.Type> getNewStoreTypes() {
         List<Store.Type> types = new ArrayList<>();
         try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(
-                MyApp.getInstance().getResources().openRawResource(R.raw.store_type)
+                MyApp.getContext().getResources().openRawResource(R.raw.store_type)
         ))) {
             String line;
             int id = 0;
@@ -70,7 +64,7 @@ public final class ObjectUtils {
     public static List<Store.Utility> getNewStoreUtilities() {
         List<Store.Utility> utilities = new ArrayList<>();
         try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(
-                MyApp.getInstance().getResources().openRawResource(R.raw.utilities)
+                MyApp.getContext().getResources().openRawResource(R.raw.utilities)
         ))) {
             String line;
             int id = 0;
@@ -92,7 +86,7 @@ public final class ObjectUtils {
     public static List<Product.Type> getNewProductTypes() {
         List<Product.Type> types = new ArrayList<>();
         try (BufferedReader bufReader = new BufferedReader(new InputStreamReader(
-                MyApp.getInstance().getResources().openRawResource(R.raw.product_type)
+                MyApp.getContext().getResources().openRawResource(R.raw.product_type)
         ))) {
             String line;
             int id = 0;

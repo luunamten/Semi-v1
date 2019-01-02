@@ -10,11 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,13 +36,10 @@ import org.nam.firebase.StoreConnector;
 import org.nam.minh.StoreDetailActivity;
 import org.nam.object.Store;
 import org.nam.util.LocationUtils;
-import org.nam.util.ObjectUtils;
 import org.nam.util.SearchBox;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISearch, View.OnClickListener {
     private static final int NUM_STORES_PER_REQUEST = 5;
@@ -142,7 +137,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, ISear
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Intent storeIntent = new Intent(MyApp.getInstance(), StoreDetailActivity.class);
+                Intent storeIntent = new Intent(MyApp.getContext(), StoreDetailActivity.class);
                 storeIntent.putExtra(Contract.BUNDLE_STORE_KEY, ((Store)marker.getTag()).getId());
                 startActivity(storeIntent);
             }

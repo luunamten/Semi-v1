@@ -91,7 +91,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*StoreConnector.getInstance().getStoresByKeywords(2, "quan", "", new IResult<List<Store>>() {
+        /*StoreConnector.getContext().getStoresByKeywords(2, "quan", "", new IResult<List<Store>>() {
             @Override
             public void onResult(List<Store> result) {
                 DialogUtils.showAlert(MapsActivity.this, "F", result.get(0).getTitle());
@@ -102,7 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });*/
-        /*StoreConnector.getInstance().getStoreById("24aMXwR4I1YicUTYu2JH", new IResult<Store>() {
+        /*StoreConnector.getContext().getStoreById("24aMXwR4I1YicUTYu2JH", new IResult<Store>() {
             @Override
             public void onResult(Store result) {
                 DialogUtils.showAlert(MapsActivity.this, "F", result.getFullName());
@@ -113,7 +113,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });*/
-        /*StoreConnector.getInstance().getNearbyStores(10.8497471, 106.7608088, 0, -1, new IResult<List<Store>>() {
+        /*StoreConnector.getContext().getNearbyStores(10.8497471, 106.7608088, 0, -1, new IResult<List<Store>>() {
             @Override
             public void onResult(List<Store> result) {
                 DialogUtils.showAlert(MapsActivity.this, "F", String.valueOf(result.size()));
@@ -124,7 +124,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });*/
-        /*StoreConnector.getInstance().getNearbyStoresByKeywords(10.8497471, 106.7608088, 0, 2, "", 5, new IResult<List<Store>>() {
+        /*StoreConnector.getContext().getNearbyStoresByKeywords(10.8497471, 106.7608088, 0, 2, "", 5, new IResult<List<Store>>() {
             @Override
             public void onResult(List<Store> result) {
                 DialogUtils.showAlert(MapsActivity.this, "F", result.get(0).getTitle());
@@ -135,7 +135,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });*/
-        /*ProductConnector.getInstance().getProductsOfStore("7BnsEbUYNqnQQr3f3WbX", "", new IResult<List<Product>>() {
+        /*ProductConnector.getContext().getProductsOfStore("7BnsEbUYNqnQQr3f3WbX", "", new IResult<List<Product>>() {
             @Override
             public void onResult(List<Product> result) {
                 DialogUtils.showAlert(MapsActivity.this, "F", String.valueOf(result.size()));
@@ -144,7 +144,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onFailure(@NonNull Exception exp) { }
         });*/
-        /*ProductConnector.getInstance().getProductsByKeywords(1, "banh", "", new IResult<List<Product>>() {
+        /*ProductConnector.getContext().getProductsByKeywords(1, "banh", "", new IResult<List<Product>>() {
             @Override
             public void onResult(List<Product> result) {
                 DialogUtils.showAlert(MapsActivity.this, "F", result.get(0).getTitle());
@@ -153,7 +153,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onFailure(@NonNull Exception exp) {}
         });*/
-        /*ProductConnector.getInstance().getProductById("EHBSAKFBwHTsXn3y97i1", new IResult<Product>() {
+        /*ProductConnector.getContext().getProductById("EHBSAKFBwHTsXn3y97i1", new IResult<Product>() {
             @Override
             public void onResult(Product result) {
                 DialogUtils.showAlert(MapsActivity.this, "F", result.getFullName());
