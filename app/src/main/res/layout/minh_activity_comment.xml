@@ -94,58 +94,66 @@
         android:layout_marginRight="4dp"
         android:background="@color/material_gray_500" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:background="@color/material_gray_500" />
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/comment_content_input"
-            android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_width="366dp"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="5dp"
             android:gravity="top"
             android:hint="@string/comment_content_label"
             android:imeOptions="actionDone"
             android:inputType="textMultiLine"
             android:selectAllOnFocus="false"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="0dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/comment_content_input">
+            app:layout_constraintStart_toStartOf="parent">
 
             <Button
+                style="@style/PrimaryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="0.5"
-                android:text="@string/comment_action_cancel_label"
-                android:textAllCaps="false"
                 android:onClick="onCancelled"
-                style="@style/PrimaryButton"/>
+                android:text="@string/comment_action_cancel_label"
+                android:textAllCaps="false" />
 
             <Button
                 android:id="@+id/comment_btn_action"
+                style="@style/PrimaryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1.5"
-                android:text="@string/comment_action_rating_label"
-                android:textAllCaps="false"
                 android:onClick="onComment"
-                style="@style/PrimaryButton" />
+                android:text="@string/comment_action_rating_label"
+                android:textAllCaps="false" />
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>
