@@ -7,6 +7,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
@@ -31,6 +32,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 
@@ -382,30 +384,30 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     public void actionCommentToStore(View view) {
-        FirebaseFunctions.getInstance().getHttpsCallable("postComment")
-                .call().addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
-            @Override
-            public void onSuccess(HttpsCallableResult httpsCallableResult) {
-                Map<String, Object> map = (Map<String, Object>) httpsCallableResult.getData();
-                if(map != null) {
-                    Log.w("My_s", (String) map.get("id"));
-                    Log.w("My_s", (String) map.get("ti"));
-                } else {
-                    Log.w("My_s", "Fail");
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("My_s", e.getMessage());
-            }
-        });
         if(SignInUtils.getCurrentUser() == null) {
-            SignInDialog signInDialog = new SignInDialog(this);
-            signInDialog.show();
+            showSignInDialog();
         } else {
-            launchCommentActivity();
+            SignInUtils.getIdToken(new IResult<GetTokenResult>() {
+                @Override
+                public void onResult(GetTokenResult result) {
+                    if(result != null) {
+                        launchCommentActivity();
+                    } else {
+                        showSignInDialog();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Exception exp) {
+                    showSignInDialog();
+                }
+            });
         }
+    }
+
+    private void showSignInDialog() {
+        SignInDialog signInDialog = new SignInDialog(this);
+        signInDialog.show();
     }
 
     public void actionShareStore(View view) {
