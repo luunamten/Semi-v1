@@ -11,21 +11,16 @@ import org.nam.minh.object.Product;
 
 public class CommentActivity extends AppCompatActivity {
 
-    public static final String CURRENT_ID = "current_id";
-    public static final String CURRENT_NAME = "current_name";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.minh_activity_comment);
-        initView();
+        setupToolbar();
 
-        SharedPrefs.getInstance().put(CURRENT_ID, 123);
-        SharedPrefs.getInstance().put(CURRENT_NAME, "Minh");
 
-        Log.d("semi_test", SharedPrefs.getInstance().get(CURRENT_ID, Integer.class).toString());
-        Log.d("semi_test", SharedPrefs.getInstance().get(CURRENT_NAME, String.class));
     }
-    private void initView(){
+    private void setupToolbar(){
         Toolbar toolbar_store_detail = findViewById(R.id.toolbar_store_detail);
         toolbar_store_detail.setTitle("");
         setSupportActionBar(toolbar_store_detail);
@@ -34,12 +29,12 @@ public class CommentActivity extends AppCompatActivity {
     }
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        finish();
         return true;
     }
 
     public void onCancelled(View view) {
-
+        finish();
     }
 
     public void onComment(View view){
