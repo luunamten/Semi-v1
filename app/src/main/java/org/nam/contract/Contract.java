@@ -10,7 +10,11 @@ public final class Contract {
     public static final int[] UTILITY_RESOURCES = {
             R.drawable.utility_wifi_black,            //0 - wifi
             R.drawable.utility_deliver_black,         //1 - deliver
-            R.drawable.utlity_bike_black              //2 - bike guard
+            R.drawable.utility_local_parking,
+            R.drawable.utility_cool,
+            R.drawable.utility_vip_register,
+            R.drawable.utility_credit_card,
+            R.drawable.utility_24_hour//2 - bike guard
     };
     //spinner position of Store and Product
     public static final int STORE_MODE = 0;
