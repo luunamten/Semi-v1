@@ -37,11 +37,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".MapsActivity" />
-        <activity android:name=".SignInActivity" />
-        <activity android:name=".GoogleSignInActivity" />
-        <activity android:name=".ASignInActivity" />
-        <activity android:name=".CloudFunctionsActivity" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/minh_SplashTheme">
