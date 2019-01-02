@@ -93,7 +93,8 @@ public final class CFContract {
     public static final class GetComments {
         public static final String NAME = "getComments";
         public static final String STORE_ID = "storeId";
-        public static final String FROM_TIME = "fromTime";
+        public static final String FROM_TIME_SEC= "fromTimeSec";
+        public static final String FROM_TIME_NANO= "fromTimeNano";
     }
 
     public static final class PostComment {

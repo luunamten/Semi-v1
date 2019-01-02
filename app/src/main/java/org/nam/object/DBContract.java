@@ -49,5 +49,7 @@ public class DBContract {
         public static final String COMMENT = "comment";
         public static final String TIME = "time";
         public static final String EDIT_TIME = "editTime";
+        public static final String TIME_SEC = "_seconds";
+        public static final String TIME_NANO = "_nanoseconds";
     }
 }

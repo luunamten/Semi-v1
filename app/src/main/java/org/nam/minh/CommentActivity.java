@@ -12,12 +12,21 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
 import org.nam.R;
 import org.nam.contract.Contract;
 import org.nam.firebase.CommentConnector;
 import org.nam.firebase.IResult;
 import org.nam.minh.object.Product;
 import org.nam.object.Store;
+
+import javax.annotation.Nullable;
 
 public class CommentActivity extends AppCompatActivity {
 
@@ -33,11 +42,18 @@ public class CommentActivity extends AppCompatActivity {
         setContentView(R.layout.minh_activity_comment);
         getStoreFromIntent();
         setupToolbar();
+        initView();
+    }
+
+    private void initView() {
         ratingBar = findViewById(R.id.ratingBar);
         commentEditText = findViewById(R.id.comment_content_input);
         storeNameTextView = findViewById(R.id.store_detail_name);
         storeAddressTextView = findViewById(R.id.store_detail_address);
+        storeNameTextView.setText(store.getName());
+        storeAddressTextView.setText(store.getAddress().toString());
     }
+
     private void setupToolbar(){
         Toolbar toolbar_store_detail = findViewById(R.id.toolbar_store_detail);
         toolbar_store_detail.setTitle("");
@@ -68,15 +84,14 @@ public class CommentActivity extends AppCompatActivity {
     public void onComment(View view){
         float rating = ratingBar.getRating();
         String comment = commentEditText.getText().toString();
-        CommentConnector.getInstance().postComment(store.getId(), comment, rating, new IResult<Object>() {
+        CommentConnector.getInstance().postComment(store.getId(), comment, rating, new IResult<Timestamp>() {
             @Override
-            public void onResult(Object result) {
-
+            public void onResult(Timestamp result) {
+                Log.w("FFFF", String.valueOf(result.getSeconds()));
             }
 
             @Override
-            public void onFailure(@NonNull Exception exp) {
-            }
+            public void onFailure(@NonNull Exception exp) { }
         });
     }
 }
