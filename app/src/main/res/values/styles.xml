@@ -85,4 +85,9 @@
         <item name="android:textColorHint">@color/colorDefaultEditTextHint</item>
         <item name="android:textColor">@color/colorTextDefault</item>
     </style>
+    <style name="DirectButton" parent="AppTheme">
+        <item name="android:backgroundTint">@color/colorDirectButton</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:elevation">2dp</item>
+    </style>
 </resources>
