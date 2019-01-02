@@ -151,6 +151,7 @@
                 android:layout_weight="0.5"
                 android:text="@string/comment_action_cancel_label"
                 android:textAllCaps="false"
+                android:onClick="onCancelled"
                 style="@style/PrimaryButton"/>
 
             <Button
@@ -161,6 +162,7 @@
                 android:layout_weight="1.5"
                 android:text="@string/comment_action_rating_label"
                 android:textAllCaps="false"
+                android:onClick="onComment"
                 style="@style/PrimaryButton" />
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>

@@ -30,6 +30,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 
 import org.nam.R;
 import org.nam.StoreMapActivity;
@@ -63,6 +66,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class StoreDetailActivity extends AppCompatActivity implements OnItemClickListener<Product> {
     private static final int NUM_PRODUCTS_PER_REQUEST = 6;
@@ -268,6 +272,9 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     private void getProducts() {
+        if(product != null && product.getTitle() == null) {
+            return;
+        }
         final ProductConnector connector = ProductConnector.getInstance();
         final long currentCallId = ++lastCallId;
         String lastProductId = mProductAdapter.getLastProductId();
@@ -349,10 +356,27 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     public void actionSaveStore(View view) {
-        Toast.makeText(this, "Save Store", Toast.LENGTH_SHORT).show();
+        FirebaseAuth.getInstance().signOut();
     }
 
     public void actionCommentToStore(View view) {
+        FirebaseFunctions.getInstance().getHttpsCallable("postComment")
+                .call().addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
+            @Override
+            public void onSuccess(HttpsCallableResult httpsCallableResult) {
+                Map<String, Object> map = (Map<String, Object>) httpsCallableResult.getData();
+                if(map != null) {
+                    Log.w("My_s", (String) map.get("id"));
+                } else {
+                    Log.w("My_s", "Fail");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("My_s", e.getMessage());
+            }
+        });
         if(SignInUtils.getCurrentUser() == null) {
             SignInDialog signInDialog = new SignInDialog(this);
             signInDialog.show();
