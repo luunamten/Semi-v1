@@ -50,6 +50,8 @@ public final class SignInUtils {
                     result.onFailure(e);
                 }
             });
+        } else {
+            result.onResult(null);
         }
     }
 

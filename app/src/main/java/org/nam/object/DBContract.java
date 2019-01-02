@@ -48,5 +48,6 @@ public class DBContract {
         public static final String STORE_ID = "storeId";
         public static final String COMMENT = "comment";
         public static final String TIME = "time";
+        public static final String EDIT_TIME = "editTime";
     }
 }

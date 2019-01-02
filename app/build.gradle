@@ -49,5 +49,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:16.0.5'
     //circle image
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    //firestore
+    implementation 'com.google.firebase:firebase-firestore:17.1.5'
 }
 apply plugin: 'com.google.gms.google-services'

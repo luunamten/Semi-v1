@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 
@@ -35,7 +36,8 @@ public class CommentConnector {
                                 Comment comment = new Comment();
                                 comment.setId((String) map.get(DBContract.ID));
                                 comment.setComment((String) map.get(DBContract.Comment.COMMENT));
-                                comment.setTime(((Number)map.get(DBContract.Comment.TIME)).longValue());
+                                comment.setTime((Timestamp)map.get(DBContract.Comment.TIME));
+                                comment.setEditTime((Timestamp)map.get(DBContract.Comment.EDIT_TIME));
                                 comment.setStoreId((String) map.get(DBContract.Comment.STORE_ID));
                                 comments.add(comment);
                             }
@@ -51,7 +53,7 @@ public class CommentConnector {
                 });
     }
 
-    public void postComment(String storeId, String comment, String rating, final IResult<Object> result) {
+    public void postComment(String storeId, String comment, float rating, final IResult<Object> result) {
         Map<String, Object> data = new HashMap<>();
         data.put(CFContract.PostComment.STORE_ID, storeId);
         data.put(CFContract.PostComment.COMMENT, comment);

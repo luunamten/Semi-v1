@@ -542,6 +542,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
 
     private void launchCommentActivity() {
         Intent commentIntent = new Intent(this, CommentActivity.class);
+        commentIntent.putExtra(Contract.BUNDLE_STORE_KEY, store);
         startActivity(commentIntent);
     }
 }

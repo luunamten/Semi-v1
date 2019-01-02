@@ -1,12 +1,15 @@
 package org.nam.object;
 
-import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.Timestamp;
 
-public class Comment {
+import java.io.Serializable;
+
+public class Comment implements Serializable {
     private String id;
     private String storeId;
     private String comment;
-    private long time;
+    private Timestamp time;
+    private Timestamp editTime;
 
     public Comment() {}
 
@@ -34,11 +37,19 @@ public class Comment {
         this.comment = comment;
     }
 
-    public long getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void setTime(Timestamp time) {
         this.time = time;
+    }
+
+    public Timestamp getEditTime() {
+        return editTime;
+    }
+
+    public void setEditTime(Timestamp editTime) {
+        this.editTime = editTime;
     }
 }
