@@ -2,6 +2,10 @@ package org.nam.minh;
 
 public class Login {
     //a
-    //aa
+    //a
+    // a
+    private Login() {
+
+    }
 }
 

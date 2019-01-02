@@ -40,5 +40,7 @@
     <string name="commentButtonLabel"> Đăng bình luận</string>
     <string name="commentActivityLabel">Bình luận - Đánh giá</string>
     <string name="storeMapActivityLabel">Vị trí trên bản đồ</string>
+    <string name="comment_action_rating_label">Đánh giá</string>
+    <string name="comment_action_cancel_label">Huỷ</string>
 
 </resources>
