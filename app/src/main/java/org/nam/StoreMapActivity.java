@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -148,5 +149,13 @@ public class StoreMapActivity extends AppCompatActivity implements OnMapReadyCal
                 break;
         }
         return true;
+    }
+
+    public void actionDirectToStore(View view) {
+        Uri url = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=" + store.getGeo());
+        Intent intent = new Intent(Intent.ACTION_VIEW, url);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }
