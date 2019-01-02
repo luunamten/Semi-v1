@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import org.nam.R;
 import org.nam.minh.object.Product;
@@ -16,7 +17,7 @@ public class CommentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.minh_activity_comment);
-
+        initView();
 
         SharedPrefs.getInstance().put(CURRENT_ID, 123);
         SharedPrefs.getInstance().put(CURRENT_NAME, "Minh");
@@ -35,5 +36,13 @@ public class CommentActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onCancelled(View view) {
+
+    }
+
+    public void onComment(View view){
+
     }
 }

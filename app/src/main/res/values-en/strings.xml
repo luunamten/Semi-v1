@@ -34,7 +34,7 @@
     <string name="townLabel">Xã/phường</string>
     <string name="signInLabel">Sign In</string>
     <string name="closeDialogButtonLabel">Close</string>
-    <string name="helloLabel">Hello </string>
+    <string name="helloLabel">Hello\u0020</string>
     <string name="failToSignInLabel">Sign in failed!</string>
     <string name="commentEditTextHint">What is your comment?</string>
     <string name="commentButtonLabel"> Post comment</string>

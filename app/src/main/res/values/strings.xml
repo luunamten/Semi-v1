@@ -34,7 +34,7 @@
     <string name="townLabel">Xã/phường</string>
     <string name="signInLabel">Đăng nhập</string>
     <string name="closeDialogButtonLabel">Đóng</string>
-    <string name="helloLabel">Xin chào </string>
+    <string name="helloLabel">Xin chào\u0020</string>
     <string name="failToSignInLabel">Đăng nhập thất bại!</string>
     <string name="commentEditTextHint">Bạn muốn bình luận gì?</string>
     <string name="commentButtonLabel"> Đăng bình luận</string>
