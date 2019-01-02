@@ -49,9 +49,9 @@ public class StoreConnector {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
                         List<Store> stores = new ArrayList<Store>();
-                        List<Map<String, Object>> listMap = (List<Map<String, Object>>) httpsCallableResult.getData();
-                        if (listMap.size() > 0) {
-                            for (Map map : listMap) {
+                        List<Map<String, Object>> mapList = (List<Map<String, Object>>) httpsCallableResult.getData();
+                        if (mapList.size() > 0) {
+                            for (Map map : mapList) {
                                 /*GET id, title, address, imageURL, rating, geo*/
                                 //Init store
                                 Store store = new Store();
@@ -100,9 +100,9 @@ public class StoreConnector {
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
                         /*GET id, title, address, imageURL, rating, geo*/
                         List<Store> stores = new ArrayList<Store>();
-                        List<Map<String, Object>> listMap = (List<Map<String, Object>>) httpsCallableResult.getData();
-                        if (listMap.size() > 0) {
-                            for (Map map : listMap) {
+                        List<Map<String, Object>> mapList = (List<Map<String, Object>>) httpsCallableResult.getData();
+                        if (mapList.size() > 0) {
+                            for (Map map : mapList) {
                                 /*GET id, title, address, imageURL, rating, geo*/
                                 //Init store
                                 Store store = new Store();
@@ -152,9 +152,9 @@ public class StoreConnector {
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
                         /*GET id, title, address, imageURL, rating, geo*/
                         List<Store> stores = new ArrayList<Store>();
-                        List<Map<String, Object>> listMap = (List<Map<String, Object>>) httpsCallableResult.getData();
-                        if (listMap.size() > 0) {
-                            for (Map map : listMap) {
+                        List<Map<String, Object>> mapList = (List<Map<String, Object>>) httpsCallableResult.getData();
+                        if (mapList.size() > 0) {
+                            for (Map map : mapList) {
                                 /*GET id, title, address, imageURL, rating, geo*/
                                 //Init store
                                 Store store = new Store();
@@ -202,9 +202,9 @@ public class StoreConnector {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
                         List<Store> stores = new ArrayList<Store>();
-                        List<Map<String, Object>> listMap = (List<Map<String, Object>>) httpsCallableResult.getData();
-                        if (listMap.size() > 0) {
-                            for (Map map : listMap) {
+                        List<Map<String, Object>> mapList = (List<Map<String, Object>>) httpsCallableResult.getData();
+                        if (mapList.size() > 0) {
+                            for (Map map : mapList) {
                                 /*GET id, title, address, imageURL, geo, rating*/
                                 //Init store
                                 Store store = new Store();

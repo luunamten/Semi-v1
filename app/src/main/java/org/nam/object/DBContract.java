@@ -42,4 +42,11 @@ public class DBContract {
         public static final String TYPE = "type";
         public static final String STORE_ID = "storeId";
     }
+
+    public static class Comment {
+        private Comment() { }
+        public static final String STORE_ID = "storeId";
+        public static final String COMMENT = "comment";
+        public static final String TIME = "time";
+    }
 }

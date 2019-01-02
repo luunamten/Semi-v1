@@ -50,9 +50,9 @@ public class ProductConnector {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
                         List<Product> products = new ArrayList<Product>();
-                        List<Map<String, Object>> listMap = (List<Map<String, Object>>) httpsCallableResult.getData();
-                        if (listMap.size() > 0) {
-                            for (Map map : listMap) {
+                        List<Map<String, Object>> mapList = (List<Map<String, Object>>) httpsCallableResult.getData();
+                        if (mapList.size() > 0) {
+                            for (Map map : mapList) {
                                 /*GET id, title, address, imageURL, cost*/
                                 //Init store
                                 Store store = new Store();
@@ -136,9 +136,9 @@ public class ProductConnector {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
                         List<Product> products = new ArrayList<Product>();
-                        List<Map<String, Object>> listMap = (List<Map<String, Object>>) httpsCallableResult.getData();
-                        if (listMap.size() > 0) {
-                            for (Map map : listMap) {
+                        List<Map<String, Object>> mapList = (List<Map<String, Object>>) httpsCallableResult.getData();
+                        if (mapList.size() > 0) {
+                            for (Map map : mapList) {
                                 /*GET id, title, imageURL, cost*/
                                 //Init store
                                 Product product = new Product();
@@ -185,9 +185,9 @@ public class ProductConnector {
                     @Override
                     public void onSuccess(HttpsCallableResult httpsCallableResult) {
                         List<Product> products = new ArrayList<Product>();
-                        List<Map<String, Object>> listMap = (List<Map<String, Object>>) httpsCallableResult.getData();
-                        if (listMap.size() > 0) {
-                            for (Map map : listMap) {
+                        List<Map<String, Object>> mapList = (List<Map<String, Object>>) httpsCallableResult.getData();
+                        if (mapList.size() > 0) {
+                            for (Map map : mapList) {
                                 /*GET id, title, address, imageURL, cost*/
                                 //Init store
                                 Store store = new Store();
