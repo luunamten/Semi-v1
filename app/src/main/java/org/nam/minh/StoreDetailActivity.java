@@ -465,7 +465,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     public void loadMoreComments(View view) {
-       
+
     }
 
     public void actionContactToStore(View view) {
