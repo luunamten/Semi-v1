@@ -19,10 +19,8 @@ import java.util.Map;
 public class CommentConnector {
     private static CommentConnector instance;
 
-    public void getComments(String storeId, Timestamp fromTime, final IResult<List<Comment>> result) {
+    public void getComments(String storeId, final IResult<List<Comment>> result) {
         Map<String, Object> data = new HashMap<>();
-        data.put(CFContract.GetComments.FROM_TIME_SEC, fromTime.getSeconds());
-        data.put(CFContract.GetComments.FROM_TIME_NANO, fromTime.getNanoseconds());
         data.put(CFContract.GetComments.STORE_ID, storeId);
         FirebaseFunctions.getInstance().getHttpsCallable(CFContract.GetComments.NAME)
                 .call(data)

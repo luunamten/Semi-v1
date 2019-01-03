@@ -12,6 +12,7 @@ public class Comment implements Serializable {
     private String comment;
     private Timestamp time;
     private Timestamp editTime;
+    private float userRating;
 
     public Comment() {}
 
@@ -69,5 +70,13 @@ public class Comment implements Serializable {
 
     public void setEditTime(Timestamp editTime) {
         this.editTime = editTime;
+    }
+
+    public float getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(float userRating) {
+        this.userRating = userRating;
     }
 }

@@ -41,6 +41,7 @@ import org.nam.StoreMapActivity;
 import org.nam.contract.Contract;
 import org.nam.custom.OnItemClickListener;
 import org.nam.custom.SignInDialog;
+import org.nam.firebase.CommentConnector;
 import org.nam.firebase.IResult;
 import org.nam.firebase.ProductConnector;
 import org.nam.firebase.StorageConnector;
@@ -464,7 +465,7 @@ public class StoreDetailActivity extends AppCompatActivity implements OnItemClic
     }
 
     public void loadMoreComments(View view) {
-
+       
     }
 
     public void actionContactToStore(View view) {

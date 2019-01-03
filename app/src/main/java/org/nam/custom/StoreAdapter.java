@@ -63,8 +63,9 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
             //set rating color
             int loopLimit = Contract.RATING_LEVELS.length - 1;
             for (int i = 0; i < loopLimit; i++) {
-                if (Contract.RATING_LEVELS[i] <= ratingValue && Contract.RATING_LEVELS[i + 1] > ratingValue) {
+                if (Contract.RATING_LEVELS[i] <= ratingValue && Contract.RATING_LEVELS[i + 1] >= ratingValue) {
                     ratingTextView.setTextColor(Contract.RATING_COLORS[i]);
+                    break;
                 }
             }
             ObjectUtils.setBitmapToImage(store.getImageURL(), logoImageView, lastCallId);
